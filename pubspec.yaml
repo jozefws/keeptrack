@@ -9,7 +9,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   cupertino_icons: ^1.0.2
   flutter_dotenv: ^5.0.2
   shared_preferences: ^2.0.15
@@ -17,6 +16,7 @@ dependencies:
   http: ^0.13.5
   flutter_secure_storage: ^6.0.0
   flutter_launcher_icons: ^0.10.0
+  tuple: ^2.0.1
 
 dev_dependencies:
   flutter_test:

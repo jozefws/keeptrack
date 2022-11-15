@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:tuple/tuple.dart';
 
 class NetboxAuthProvider extends ChangeNotifier {
   FlutterSecureStorage? secureStorage;
@@ -46,7 +47,7 @@ class NetboxAuthProvider extends ChangeNotifier {
     return await secureStorage!.read(key: 'nb:token') != null;
   }
 
-  Future<bool> login(String username, String password) async {
+  Future<dynamic> login(String username, String password) async {
     final url = Uri.parse(
         '${dotenv.env['NETBOX_API_URL']!}/api/users/tokens/provision/');
     final expiry =
@@ -64,10 +65,22 @@ class NetboxAuthProvider extends ChangeNotifier {
       await setTokenURL(res['url']);
       await setUsername(username);
       notifyListeners();
-      return true;
+      return const Tuple2<bool, String>(true, "Login successful");
     } else {
+      var message = "";
+
+      if (response.statusCode == 400) {
+        message = "Backend error, HTTP400";
+      } else if (response.statusCode == 403) {
+        message = "Incorrect username or password";
+      } else if (response.statusCode == 404) {
+        message = "User does not exist";
+      } else {
+        message = "Unknown error, HTTP${response.statusCode}";
+      }
+
       notifyListeners();
-      return false;
+      return Tuple2<bool, String>(false, message);
     }
   }
 
@@ -80,6 +93,9 @@ class NetboxAuthProvider extends ChangeNotifier {
       await secureStorage!.delete(key: 'nb:tokenurl');
       return true;
     } else {
+      await secureStorage!.delete(key: 'nb:token');
+      await secureStorage!.delete(key: 'nb:username');
+      await secureStorage!.delete(key: 'nb:tokenurl');
       notifyListeners();
       return false;
     }

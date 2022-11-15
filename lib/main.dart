@@ -11,7 +11,6 @@ import 'views/loginpage.dart';
 void main() async {
   // Load environment variables from .env file in root directory.
   await dotenv.load();
-
   WidgetsFlutterBinding.ensureInitialized();
   // Forces status bar to be transparent
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -85,7 +84,7 @@ class KeepTrackHome extends StatefulWidget {
   final NetboxAuthProvider authProvider;
 
   @override
-  _KeepTrackHomeState createState() => _KeepTrackHomeState();
+  State<KeepTrackHome> createState() => _KeepTrackHomeState();
 }
 
 class _KeepTrackHomeState extends State<KeepTrackHome> {
@@ -97,7 +96,9 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!) {
-                return const HomePage();
+                return HomePage(
+                  authProvider: provider,
+                );
               } else {
                 return const LoginPage();
               }

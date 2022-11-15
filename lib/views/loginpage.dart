@@ -24,7 +24,16 @@ class _LoginPageState extends State<LoginPage> {
 
   void moveToHome() {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const HomePage()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => HomePage(
+                  authProvider: NetboxAuthProvider(),
+                )));
+  }
+
+  void showLoginError(message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Unable to login, $message')));
   }
 
   @override
@@ -77,14 +86,12 @@ class _LoginPageState extends State<LoginPage> {
                           final provider = Provider.of<NetboxAuthProvider>(
                               context,
                               listen: false);
-                          await provider.login(
+                          final result = await provider.login(
                               textUsername.text, textPassword.text);
-
-                          if (await provider.isAuthenticated()) {
+                          if (result.item1) {
                             moveToHome();
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Login failed')));
+                            showLoginError(result.item2);
                           }
                         }
                       },
