@@ -1,14 +1,20 @@
+import 'package:keeptrack/models/tenant.dart';
+
 class Rack {
   final int id;
   final String name;
   final String url;
-  final int locationID;
+  final Tenant? tenant;
+  final int? deviceCount;
+  final int? powerFeedCount;
 
   Rack({
     required this.id,
     required this.name,
     required this.url,
-    required this.locationID,
+    this.tenant,
+    this.deviceCount,
+    this.powerFeedCount,
   });
 
   factory Rack.fromJson(Map<String, dynamic> json) {
@@ -16,7 +22,9 @@ class Rack {
       id: json['id'],
       name: json['name'],
       url: json['url'],
-      locationID: json['location']['id'],
+      tenant: json['tenant'] != null ? Tenant.fromJson(json['tenant']) : null,
+      deviceCount: json['device_count'],
+      powerFeedCount: json['powerfeed_count'],
     );
   }
 }

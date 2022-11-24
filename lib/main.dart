@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
+import 'package:keeptrack/api/badcert_override.dart';
 import 'package:keeptrack/views/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +18,7 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
   ));
+  HttpOverrides.global = DevHttpOverrides();
   runApp(const KeepTrack());
 }
 

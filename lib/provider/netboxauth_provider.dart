@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:tuple/tuple.dart';
 
 class NetboxAuthProvider extends ChangeNotifier {
   FlutterSecureStorage? secureStorage;
+  final client = http.Client();
 
   initSecureStorage() async {
     secureStorage = const FlutterSecureStorage();
@@ -48,17 +49,19 @@ class NetboxAuthProvider extends ChangeNotifier {
   }
 
   Future<dynamic> login(String username, String password) async {
-    final url = Uri.parse(
-        '${dotenv.env['NETBOX_API_URL']!}/api/users/tokens/provision/');
+    await dotenv.load();
     final expiry =
         DateTime.now().add(const Duration(days: 3)).toIso8601String();
-    final response = await post(url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'expiry': expiry,
-        },
-        body: '{"username": "$username", "password": "$password"}');
+    final response = await client.post(
+      Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/users/tokens/provision/'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'expiry': expiry,
+      },
+      body: '{"username": "$username", "password": "$password"}',
+    );
+
     if (response.statusCode == 201) {
       final Map<String, dynamic> res = jsonDecode(response.body);
       await setToken(res['key']);
@@ -115,8 +118,7 @@ class NetboxAuthProvider extends ChangeNotifier {
       'Accept': 'application/json',
       'Authorization': 'Token $token',
     };
-    print(headers);
-    final response = await delete(url, headers: headers);
+    final response = await client.delete(url, headers: headers);
     if (response.statusCode == 204) {
       print('Token deleted');
       return true;

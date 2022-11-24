@@ -36,7 +36,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     //set theme to dark
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-    final sideAFormKey = GlobalKey<FormState>();
 
     return MaterialApp(
         theme: ThemeData(
@@ -45,7 +44,7 @@ class _HomePageState extends State<HomePage> {
         home: Scaffold(
             key: scaffoldKey,
             endDrawer: Drawer(
-              child: settingsDrawer(),
+              child: settingsDrawer(scaffoldKey),
             ),
             appBar: AppBar(title: const Text('KeepTrack'),
                 //show burger icon that opens drawer
@@ -55,16 +54,13 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () => scaffoldKey.currentState?.openEndDrawer(),
                   )
                 ]),
-            body: Center(
-                //form that has two dropbown buttons and a submit button
-                child: Form(
-                    key: sideAFormKey,
-                    child: const SingleChildScrollView(
-                      child: AddConnection(),
-                    )))));
+            body: const Center(
+              //form that has two dropbown buttons and a submit button
+              child: AddConnection(),
+            )));
   }
 
-  settingsDrawer() {
+  settingsDrawer(Key scaffoldKey) {
     return Column(
       children: [
         const Padding(
@@ -94,17 +90,23 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ),
+        const Padding(
+          padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+        ),
         ElevatedButton(
             onPressed: () async {
               if (await Provider.of<NetboxAuthProvider>(context, listen: false)
                   .logout()) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Logout successful')));
+                ScaffoldMessenger(
+                    key: scaffoldKey,
+                    child: const SnackBar(content: Text('Logout successful')));
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => const LoginPage()));
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('Unable to delete netbox token')));
+                ScaffoldMessenger(
+                    key: scaffoldKey,
+                    child: const SnackBar(
+                        content: Text('Unable to delete token')));
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => const LoginPage()));
               }
