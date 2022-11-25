@@ -18,7 +18,6 @@ class DevicesAPI {
           .map((e) => Device.fromJson(e))
           .toList();
     } else {
-      print('Failed to load devices');
       return [];
     }
   }

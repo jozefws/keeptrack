@@ -108,7 +108,6 @@ class NetboxAuthProvider extends ChangeNotifier {
   Future<bool> deleteToken() async {
     final tokenURL = await getTokenURL();
     if (tokenURL == null) {
-      print('No token URL found');
       return false;
     }
     final url = Uri.parse(tokenURL);
@@ -120,12 +119,8 @@ class NetboxAuthProvider extends ChangeNotifier {
     };
     final response = await client.delete(url, headers: headers);
     if (response.statusCode == 204) {
-      print('Token deleted');
       return true;
     } else {
-      print(response.statusCode);
-      print(response.body);
-      print('Token not deleted');
       return false;
     }
   }

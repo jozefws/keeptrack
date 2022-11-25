@@ -6,7 +6,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class RacksAPI {
   static Future<List<Rack>> getRacks(String? token) async {
     if (token == null) {
-      print("Token is null");
       return [];
     }
     final client = http.Client();
@@ -18,11 +17,16 @@ class RacksAPI {
     var responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
+      for (var i = 0; i < responseBody['results'].length; i++) {
+        if (responseBody['results'][i]['device_count'] == 0) {
+          responseBody['results'].removeAt(i);
+        }
+      }
+
       return (responseBody['results'] as List)
           .map((e) => Rack.fromJson(e))
           .toList();
     } else {
-      print('Failed to load racks ${response.statusCode}, ${response.body}');
       return [];
     }
   }
