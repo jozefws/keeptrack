@@ -24,7 +24,7 @@ class InterfacesAPI {
   }
 
   static Future<List<Interface>> getInterfacesByDevice(
-      String token, int deviceID) async {
+      String token, String deviceID) async {
     final client = http.Client();
     await dotenv.load();
 

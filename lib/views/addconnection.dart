@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:keeptrack/api/devices_api.dart';
 import 'package:keeptrack/api/interfaces_api.dart';
 import 'package:keeptrack/api/racks_api.dart';
-import 'package:keeptrack/models/devices.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 
 class AddConnection extends StatefulWidget {
@@ -19,13 +18,6 @@ class _AddConnectionState extends State<AddConnection>
   final _addConnectionKey = GlobalKey<FormState>();
   TabController? _tabController;
 
-  List<DropdownMenuItem<String>>? racksA,
-      racksB,
-      devicesA,
-      devicesB,
-      interfacesA,
-      interfacesB;
-
   String? rackA, rackB, deviceA, deviceB, interfaceA, interfaceB;
 
   // var _rackAController = TextEditingController();
@@ -37,52 +29,47 @@ class _AddConnectionState extends State<AddConnection>
 
   Future<List<DropdownMenuItem<String>>> _getRacks() async {
     var i = await RacksAPI.getRacks(await getToken());
-    var mapped = i
+    return i
         .map((e) => DropdownMenuItem(
               value: e.id.toString(),
               child: Text(e.name),
             ))
         .toList();
-    return mapped;
   }
 
   Future<List<DropdownMenuItem<String>>> _getDevicesByRack(
       String rackID) async {
-    final i = await DevicesAPI.getDevicesByRack(await getToken(), rackID);
-    if (i == []) {
-      const SnackBar(content: Text('Error: No devices found'));
+    if (rackID == "") {
+      return [];
     }
-    var mapped = i
+    final i = await DevicesAPI.getDevicesByRack(await getToken(), rackID);
+    if (i.isEmpty) {
+      genSnack("No devices found");
+    }
+    return i
         .map((e) => DropdownMenuItem(
               value: e.id.toString(),
               child: Text(e.name),
             ))
         .toList();
-    //list mapped to dropdown menu items
-
-    return mapped;
   }
 
   Future<List<DropdownMenuItem<String>>?> _getInterfacesByDevice(
-      int deviceID) async {
+      String deviceID) async {
+    if (deviceID == "") {
+      return [];
+    }
     final i =
         await InterfacesAPI.getInterfacesByDevice(await getToken(), deviceID);
-    if (i == []) {
-      const SnackBar(content: Text('Error: No interfaces found'));
+    if (i.isEmpty) {
+      genSnack("No interfaces found");
     }
-    var mapped = i
+    return i
         .map((e) => DropdownMenuItem(
               value: e.id.toString(),
               child: Text(e.name),
             ))
         .toList();
-    var prev = "";
-    for (var item in mapped) {
-      if (prev == item.value) {
-        print("FUCKFUCKFUCK int ${item.value}");
-      }
-    }
-    return mapped;
   }
 
   @override
@@ -96,6 +83,11 @@ class _AddConnectionState extends State<AddConnection>
     setState(() {
       items = temp;
     });
+  }
+
+  genSnack(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("Error: $message")));
   }
 
   getToken() async {
@@ -133,14 +125,16 @@ class _AddConnectionState extends State<AddConnection>
                               value: rackA,
                               items: data,
                               onChanged: (value) {
-                                setState(() {
-                                  rackA = value ?? "1";
-                                  devicesA = null;
-                                  deviceA = null;
-                                });
+                                if (value != rackA) {
+                                  setState(() {
+                                    rackA = value;
+                                    deviceA = null;
+                                    interfaceA = null;
+                                  });
+                                }
                               },
                               decoration: const InputDecoration(
-                                  labelText: 'Rack',
+                                  labelText: 'Rack A',
                                   hintText: 'Select a rack'));
                         } else {
                           return const CircularProgressIndicator();
@@ -157,13 +151,15 @@ class _AddConnectionState extends State<AddConnection>
                               value: deviceA,
                               items: data,
                               onChanged: (String? value) {
-                                setState(() {
-                                  deviceA = value;
-                                  interfaceA = "";
-                                });
+                                if (value != deviceA) {
+                                  setState(() {
+                                    deviceA = value;
+                                    interfaceA = null;
+                                  });
+                                }
                               },
                               decoration: const InputDecoration(
-                                  labelText: 'Device',
+                                  labelText: 'Device A',
                                   hintText: 'Select a device'));
                         } else {
                           return const CircularProgressIndicator();
@@ -172,21 +168,114 @@ class _AddConnectionState extends State<AddConnection>
                   const SizedBox(height: 20),
                   const Text('Choose Interface',
                       style: TextStyle(fontSize: 18)),
-                  DropdownButtonFormField(
-                    //if interfaces is empty, show default item
-                    items: interfacesA,
-                    onChanged: (value) {
-                      setState(() {
-                        interfaceA = value ?? "0";
-                      });
-                    },
-                  ),
+                  FutureBuilder(
+                      future: _getInterfacesByDevice(deviceA ?? ""),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          var data = snapshot.data!;
+                          return DropdownButtonFormField(
+                              value: interfaceA,
+                              items: data,
+                              onChanged: (String? value) {
+                                if (value != interfaceA) {
+                                  setState(() {
+                                    interfaceA = value;
+                                  });
+                                }
+                              },
+                              decoration: const InputDecoration(
+                                  labelText: 'Interface A',
+                                  hintText: 'Select a Interface'));
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      }),
                 ],
               ),
             ),
             Container(
-              child: Text('Device B'),
-            )
+              padding: const EdgeInsets.all(32.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  const Text('Choose Rack', style: TextStyle(fontSize: 18)),
+                  FutureBuilder(
+                      future: _getRacks(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          var data = snapshot.data!;
+                          return DropdownButtonFormField(
+                              value: rackB,
+                              items: data,
+                              onChanged: (value) {
+                                if (value != rackB) {
+                                  setState(() {
+                                    rackB = value;
+                                    deviceB = null;
+                                    interfaceB = null;
+                                  });
+                                }
+                              },
+                              decoration: const InputDecoration(
+                                  labelText: 'Rack B',
+                                  hintText: 'Select a rack'));
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      }),
+                  const SizedBox(height: 20),
+                  const Text('Choose Device', style: TextStyle(fontSize: 18)),
+                  FutureBuilder(
+                      future: _getDevicesByRack(rackB ?? ""),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          var data = snapshot.data!;
+                          return DropdownButtonFormField(
+                              value: deviceB,
+                              items: data,
+                              onChanged: (String? value) {
+                                if (value != deviceB) {
+                                  setState(() {
+                                    deviceB = value;
+                                    interfaceB = null;
+                                  });
+                                }
+                              },
+                              decoration: const InputDecoration(
+                                  labelText: 'Device B',
+                                  hintText: 'Select a device'));
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      }),
+                  const SizedBox(height: 20),
+                  const Text('Choose Interface',
+                      style: TextStyle(fontSize: 18)),
+                  FutureBuilder(
+                      future: _getInterfacesByDevice(deviceB ?? ""),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          var data = snapshot.data!;
+                          return DropdownButtonFormField(
+                              value: interfaceB,
+                              items: data,
+                              onChanged: (String? value) {
+                                if (value != interfaceB) {
+                                  setState(() {
+                                    interfaceB = value;
+                                  });
+                                }
+                              },
+                              decoration: const InputDecoration(
+                                  labelText: 'Interface B',
+                                  hintText: 'Select a Interface'));
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      }),
+                ],
+              ),
+            ),
           ]))
         ]));
   }

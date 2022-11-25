@@ -29,7 +29,6 @@ class DevicesAPI {
     await dotenv.load();
     var uri = Uri.parse(
         '${dotenv.env['NETBOX_API_URL']}/api/dcim/devices/?rack_id=$rackID');
-    print(uri);
     var response =
         await client.get(uri, headers: {'Authorization': 'Token $token'});
     var responseBody = jsonDecode(response.body);
