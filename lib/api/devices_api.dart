@@ -23,7 +23,8 @@ class DevicesAPI {
     }
   }
 
-  static Future<List<Device>> getDevicesByRack(String token, int rackID) async {
+  static Future<List<Device>> getDevicesByRack(
+      String token, String rackID) async {
     var client = http.Client();
     await dotenv.load();
     var uri = Uri.parse(
