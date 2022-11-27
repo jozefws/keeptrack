@@ -9,10 +9,11 @@ class DevicesAPI {
     await dotenv.load();
 
     var response = await client.get(
-        Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/devices/'),
+        Uri.parse(
+            '${dotenv.env['NETBOX_API_URL']}/api/dcim/devices/?limit=250'),
         headers: {'Authorization': 'Token $token'});
     var responseBody = jsonDecode(response.body);
-
+    var list = responseBody['results'] as List;
     if (response.statusCode == 200) {
       return (responseBody['results'] as List)
           .map((e) => Device.fromJson(e))

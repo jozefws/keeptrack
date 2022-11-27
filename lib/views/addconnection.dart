@@ -6,6 +6,7 @@ import 'package:keeptrack/api/racks_api.dart';
 import 'package:keeptrack/models/cables.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class AddConnection extends StatefulWidget {
   const AddConnection({super.key});
@@ -20,6 +21,8 @@ class _AddConnectionState extends State<AddConnection>
         SingleTickerProviderStateMixin<AddConnection> {
   final _addConnectionKey = GlobalKey<FormState>();
   TabController? _tabController;
+
+  List<String> devices = [];
 
   String? rackA,
       rackB,
@@ -43,20 +46,11 @@ class _AddConnectionState extends State<AddConnection>
         .toList();
   }
 
-  Future<List<DropdownMenuItem<String>>> _getDevicesByRack(
-      String rackID) async {
-    if (rackID == "") {
-      return [];
-    }
-    final i = await DevicesAPI.getDevicesByRack(await getToken(), rackID);
-    if (i.isEmpty) {
-      genSnack("No devices found");
-    }
+  Future<List<String>> _getDevices() async {
+    var i = await DevicesAPI.getDevices(await getToken());
     return i
-        .map((e) => DropdownMenuItem(
-              value: e.id.toString(),
-              child: Text(e.name),
-            ))
+        .map((e) =>
+            "${e.name} | ${(e.rack?.name)?.substring(4) ?? "Unracked"} | ID${e.id}")
         .toList();
   }
 
@@ -82,13 +76,11 @@ class _AddConnectionState extends State<AddConnection>
   initState() {
     _tabController = TabController(length: 2, vsync: this);
     super.initState();
+    setDevices();
   }
 
-  setDevices(List<DropdownMenuItem<String>>? items, String rackID) async {
-    var temp = await _getDevicesByRack(rackID);
-    setState(() {
-      items = temp;
-    });
+  setDevices() async {
+    devices = await _getDevices();
   }
 
   genSnack(String message) {
@@ -170,58 +162,38 @@ class _AddConnectionState extends State<AddConnection>
                     child: Column(
                       children: [
                         const SizedBox(height: 20),
-                        const Text('Choose Rack',
-                            style: TextStyle(fontSize: 18)),
-                        FutureBuilder(
-                            future: _getRacks(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                var data = snapshot.data!;
-                                return DropdownButtonFormField(
-                                    value: rackA,
-                                    items: data,
-                                    onChanged: (value) {
-                                      if (value != rackA) {
-                                        setState(() {
-                                          rackA = value;
-                                          deviceA = null;
-                                          interfaceA = null;
-                                        });
-                                      }
-                                    },
-                                    decoration: const InputDecoration(
-                                        labelText: 'Rack A',
-                                        hintText: 'Select a rack'));
-                              } else {
-                                return const CircularProgressIndicator();
-                              }
-                            }),
-                        const SizedBox(height: 20),
                         const Text('Choose Device',
                             style: TextStyle(fontSize: 18)),
-                        FutureBuilder(
-                            future: _getDevicesByRack(rackA ?? ""),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                var data = snapshot.data!;
-                                return DropdownButtonFormField(
-                                    value: deviceA,
-                                    items: data,
-                                    onChanged: (String? value) {
-                                      if (value != deviceA) {
-                                        setState(() {
-                                          deviceA = value;
-                                          interfaceA = null;
-                                        });
-                                      }
-                                    },
-                                    decoration: const InputDecoration(
-                                        labelText: 'Device A',
-                                        hintText: 'Select a device'));
-                              } else {
-                                return const CircularProgressIndicator();
-                              }
-                            }),
+                        const SizedBox(height: 20),
+                        DropdownSearch<String>(
+                          popupProps: const PopupProps.modalBottomSheet(
+                            showSearchBox: true,
+                            searchDelay: Duration(milliseconds: 5),
+                            searchFieldProps: TextFieldProps(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Search for device A',
+                              ),
+                            ),
+                            modalBottomSheetProps: ModalBottomSheetProps(
+                                isScrollControlled: true,
+                                backgroundColor: Color(0xFF737373),
+                                anchorPoint: Offset(0.5, 05)),
+                            constraints:
+                                BoxConstraints(maxHeight: 400, maxWidth: 1000),
+                          ),
+                          asyncItems: (String res) async {
+                            return await _getDevices();
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              deviceA =
+                                  value?.split("|")[2].trim().substring(2);
+                              print(deviceA);
+                              interfaceA = null;
+                            });
+                          },
+                        ),
                         const SizedBox(height: 20),
                         const Text('Choose Interface',
                             style: TextStyle(fontSize: 18)),
@@ -254,58 +226,36 @@ class _AddConnectionState extends State<AddConnection>
                     child: Column(
                       children: [
                         const SizedBox(height: 20),
-                        const Text('Choose Rack',
-                            style: TextStyle(fontSize: 18)),
-                        FutureBuilder(
-                            future: _getRacks(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                var data = snapshot.data!;
-                                return DropdownButtonFormField(
-                                    value: rackB,
-                                    items: data,
-                                    onChanged: (value) {
-                                      if (value != rackB) {
-                                        setState(() {
-                                          rackB = value;
-                                          deviceB = null;
-                                          interfaceB = null;
-                                        });
-                                      }
-                                    },
-                                    decoration: const InputDecoration(
-                                        labelText: 'Rack B',
-                                        hintText: 'Select a rack'));
-                              } else {
-                                return const CircularProgressIndicator();
-                              }
-                            }),
-                        const SizedBox(height: 20),
                         const Text('Choose Device',
                             style: TextStyle(fontSize: 18)),
-                        FutureBuilder(
-                            future: _getDevicesByRack(rackB ?? ""),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                var data = snapshot.data!;
-                                return DropdownButtonFormField(
-                                    value: deviceB,
-                                    items: data,
-                                    onChanged: (String? value) {
-                                      if (value != deviceB) {
-                                        setState(() {
-                                          deviceB = value;
-                                          interfaceB = null;
-                                        });
-                                      }
-                                    },
-                                    decoration: const InputDecoration(
-                                        labelText: 'Device B',
-                                        hintText: 'Select a device'));
-                              } else {
-                                return const CircularProgressIndicator();
-                              }
-                            }),
+                        const SizedBox(height: 20),
+                        DropdownSearch<String>(
+                          popupProps: const PopupProps.modalBottomSheet(
+                            showSearchBox: true,
+                            searchDelay: Duration(milliseconds: 5),
+                            searchFieldProps: TextFieldProps(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Search for device B',
+                              ),
+                            ),
+                            modalBottomSheetProps: ModalBottomSheetProps(
+                                isScrollControlled: true,
+                                backgroundColor: Color(0xFF737373),
+                                anchorPoint: Offset(0.5, 05)),
+                            constraints:
+                                BoxConstraints(maxHeight: 400, maxWidth: 1000),
+                          ),
+                          items: devices,
+                          onChanged: (value) {
+                            setState(() {
+                              deviceB =
+                                  value?.split("|")[2].trim().substring(2);
+                              print(deviceB);
+                              interfaceB = null;
+                            });
+                          },
+                        ),
                         const SizedBox(height: 20),
                         const Text('Choose Interface',
                             style: TextStyle(fontSize: 18)),

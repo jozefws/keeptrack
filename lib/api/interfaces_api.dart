@@ -58,7 +58,6 @@ class InterfacesAPI {
       String token, String deviceID) async {
     final client = http.Client();
     await dotenv.load();
-
     var response = await client.get(
         Uri.parse(
             '${dotenv.env['NETBOX_API_URL']}/api/dcim/interfaces/?device_id=$deviceID'),
