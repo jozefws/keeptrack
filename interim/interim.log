@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.10)  22 NOV 2022 14:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.10)  29 NOV 2022 17:54
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -64,27 +64,34 @@ Package: lscape 2020/05/28 v3.02 Landscape Pages (DPC)
 ) (c:/texlive/2022/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip16
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+) (c:/texlive/2022/texmf-dist/tex/latex/wrapfig/wrapfig.sty
+\wrapoverhang=\dimen151
+\WF@size=\dimen152
+\c@WF@wrappedlines=\count196
+\WF@box=\box51
+\WF@everypar=\toks18
+Package: wrapfig 2003/01/31  v 3.6
 ) (c:/texlive/2022/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2022-10-26 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count196
-\l__pdf_internal_box=\box51
+\l__color_backend_stack_int=\count197
+\l__pdf_internal_box=\box52
 ) (./interim.aux)
 \openout1 = `interim.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 7.
-LaTeX Font Info:    ... okay on input line 7.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 7.
-LaTeX Font Info:    ... okay on input line 7.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 7.
-LaTeX Font Info:    ... okay on input line 7.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 7.
-LaTeX Font Info:    ... okay on input line 7.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 7.
-LaTeX Font Info:    ... okay on input line 7.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 7.
-LaTeX Font Info:    ... okay on input line 7.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 7.
-LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -94,15 +101,15 @@ LaTeX Font Info:    ... okay on input line 7.
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
-* h-part:(L,W,R)=(108.405pt, 397.485pt, 108.405pt)
-* v-part:(T,H,B)=(108.405pt, 578.15999pt, 108.405pt)
+* h-part:(L,W,R)=(93.95122pt, 426.39256pt, 93.95122pt)
+* v-part:(T,H,B)=(93.95122pt, 607.06755pt, 93.95122pt)
 * \paperwidth=614.295pt
 * \paperheight=794.96999pt
-* \textwidth=397.485pt
-* \textheight=578.15999pt
-* \oddsidemargin=36.13501pt
-* \evensidemargin=36.13501pt
-* \topmargin=-0.86499pt
+* \textwidth=426.39256pt
+* \textheight=607.06755pt
+* \oddsidemargin=21.68123pt
+* \evensidemargin=21.68123pt
+* \topmargin=-15.31877pt
 * \headheight=12.0pt
 * \headsep=25.0pt
 * \topskip=12.0pt
@@ -122,17 +129,17 @@ LaTeX Font Info:    ... okay on input line 7.
 
 (c:/texlive/2022/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count197
-\scratchdimen=\dimen151
-\scratchbox=\box52
-\nofMPsegments=\count198
-\nofMParguments=\count199
-\everyMPshowfont=\toks18
-\MPscratchCnt=\count266
-\MPscratchDim=\dimen152
-\MPnumerator=\count267
-\makeMPintoPDFobject=\count268
-\everyMPtoPDFconversion=\toks19
+\scratchcounter=\count198
+\scratchdimen=\dimen153
+\scratchbox=\box53
+\nofMPsegments=\count199
+\nofMParguments=\count266
+\everyMPshowfont=\toks19
+\MPscratchCnt=\count267
+\MPscratchDim=\dimen154
+\MPnumerator=\count268
+\makeMPintoPDFobject=\count269
+\everyMPtoPDFconversion=\toks20
 ) (c:/texlive/2022/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -142,52 +149,56 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 <images/nottingham-logo.png, id=1, 191.94913pt x 70.8246pt>
 File: images/nottingham-logo.png Graphic file (type png)
 <use images/nottingham-logo.png>
-Package pdftex.def Info: images/nottingham-logo.png  used on input line 14.
-(pdftex.def)             Requested size: 119.2467pt x 43.99939pt.
+Package pdftex.def Info: images/nottingham-logo.png  used on input line 15.
+(pdftex.def)             Requested size: 127.91907pt x 47.19933pt.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 27.
+(Font)              <10.95> on input line 28.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 27.
+(Font)              <8> on input line 28.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 27.
+(Font)              <6> on input line 28.
  [1
 
-{c:/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./images/nottingham-logo.png>] (./interim.toc
+{c:/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./images/nottingham-logo.png>] [2] (./interim.toc
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <12> on input line 2.
 )
 \tf@toc=\write3
 \openout3 = `interim.toc'.
 
- [2] [3]
-<images/server_racks.jpg, id=20, 667.74469pt x 871.75688pt>
+ [3]
+<images/server_racks.jpg, id=21, 667.74469pt x 871.75688pt>
 File: images/server_racks.jpg Graphic file (type jpg)
 <use images/server_racks.jpg>
-Package pdftex.def Info: images/server_racks.jpg  used on input line 73.
-(pdftex.def)             Requested size: 190.79109pt x 249.07848pt.
-<images/server_racks_clean.jpg, id=21, 394.4456pt x 534.798pt>
+Package pdftex.def Info: images/server_racks.jpg  used on input line 64.
+(pdftex.def)             Requested size: 170.55441pt x 222.66086pt.
+ [4]
+<images/server_racks_clean.jpg, id=25, 394.4456pt x 534.798pt>
 File: images/server_racks_clean.jpg Graphic file (type jpg)
 <use images/server_racks_clean.jpg>
-Package pdftex.def Info: images/server_racks_clean.jpg  used on input line 79.
-(pdftex.def)             Requested size: 190.79109pt x 258.68309pt.
- [4] [5 <./images/server_racks.jpg> <./images/server_racks_clean.jpg>] [6] (./interim.bbl
+Package pdftex.def Info: images/server_racks_clean.jpg  used on input line 73.
+(pdftex.def)             Requested size: 170.55441pt x 231.23982pt.
+ [5 <./images/server_racks.jpg>]
+Overfull \vbox (32.78906pt too high) has occurred while \output is active []
+
+ [6 <./images/server_racks_clean.jpg>] [7] (./interim.bbl
 
 LaTeX Warning: Empty `thebibliography' environment on input line 3.
 
-) [7] (./interim.aux) ) 
+) [8] (./interim.aux) ) 
 Here is how much of TeX's memory you used:
- 2025 strings out of 476888
- 33130 string characters out of 5824620
- 379225 words of memory out of 5000000
- 23289 multiletter control sequences out of 15000+600000
- 474429 words of font info for 45 fonts, out of 8000000 for 9000
+ 2107 strings out of 476888
+ 34435 string characters out of 5824620
+ 382318 words of memory out of 5000000
+ 23366 multiletter control sequences out of 15000+600000
+ 474737 words of font info for 46 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 55i,8n,62p,736b,286s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on interim.pdf (7 pages, 750115 bytes).
+ 55i,6n,62p,865b,226s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on interim.pdf (8 pages, 767344 bytes).
 PDF statistics:
- 58 PDF objects out of 1000 (max. 8388607)
- 34 compressed objects within 1 object stream
+ 66 PDF objects out of 1000 (max. 8388607)
+ 39 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 
