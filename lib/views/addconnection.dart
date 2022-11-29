@@ -156,7 +156,7 @@ class _AddConnectionState extends State<AddConnection>
           padding: const EdgeInsets.all(32.0),
           child: Column(children: [
             Container(
-                height: (MediaQuery.of(context).size.height / 2.5),
+                height: (MediaQuery.of(context).size.height / 3.3),
                 child: TabBarView(controller: _tabController, children: [
                   Container(
                     child: Column(
@@ -166,6 +166,8 @@ class _AddConnectionState extends State<AddConnection>
                             style: TextStyle(fontSize: 18)),
                         const SizedBox(height: 20),
                         DropdownSearch<String>(
+                          dropdownButtonProps:
+                              const DropdownButtonProps(color: Colors.white),
                           popupProps: const PopupProps.modalBottomSheet(
                             showSearchBox: true,
                             searchDelay: Duration(milliseconds: 5),
@@ -177,14 +179,13 @@ class _AddConnectionState extends State<AddConnection>
                             ),
                             modalBottomSheetProps: ModalBottomSheetProps(
                                 isScrollControlled: true,
-                                backgroundColor: Color(0xFF737373),
+                                backgroundColor:
+                                    Color.fromARGB(255, 126, 126, 126),
                                 anchorPoint: Offset(0.5, 05)),
                             constraints:
                                 BoxConstraints(maxHeight: 400, maxWidth: 1000),
                           ),
-                          asyncItems: (String res) async {
-                            return await _getDevices();
-                          },
+                          asyncItems: (_) => _getDevices(),
                           onChanged: (value) {
                             setState(() {
                               deviceA =
@@ -246,12 +247,11 @@ class _AddConnectionState extends State<AddConnection>
                             constraints:
                                 BoxConstraints(maxHeight: 400, maxWidth: 1000),
                           ),
-                          items: devices,
+                          asyncItems: (_) => _getDevices(),
                           onChanged: (value) {
                             setState(() {
                               deviceB =
                                   value?.split("|")[2].trim().substring(2);
-                              print(deviceB);
                               interfaceB = null;
                             });
                           },
