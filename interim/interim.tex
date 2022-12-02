@@ -2,7 +2,7 @@
 \usepackage[margin=1.3in]{geometry}
 \usepackage{graphicx, lscape, url}
 \usepackage{wrapfig}
-
+\usepackage{float}
 \setlength\parindent{0pt}
 
 \begin{document}
@@ -28,20 +28,27 @@
     {\small 20296126 $|$ psyjs25@nottingham.ac.uk\par}
     \vspace{1cm}
 % Supervisor
-    {\normalsize Supervisor: Proff. Chris Greenhalgh\par}
+    {\normalsize Supervisor: Prof. Chris Greenhalgh\par}
     \vspace{3cm}
 % Date
-    {\Large September 2022}
+    {\Large December 2022}
 \end{center}
 
 \pagebreak
+\pagenumbering{roman}    
+
 \begin{abstract}
-For Small/Medium, and even some large, companies that own and maintain their own server spaces, a unique set of challenges are to be faced. Although these devices are typically business critical, they are typically squeezed into encumbered spaces, with lackluster lighting and limited access. Further, and critically, this makes the maintaining and documenting of these devices inherently more difficuly. Current alternative solutions fail to focus on insitu use, and are typically bloated with features for large data centers. This project investigates the needs and requirements that can solves these challenges, with a focus on Human-Computer Interaction. From these designs, this project then implements a cross-platform mobile application that satisfies these needs.
+    \noindent
+    For Small/Medium, and even some large companies that own and maintain their own server spaces, a unique set of challenges are to be faced. Although these devices are typically business critical, they are typically squeezed into encumbered spaces, with lackluster lighting and limited access. Further, and critically, this makes the maintaining and documenting of these devices inherently more difficuly. Current alternative solutions fail to focus on insitu use, and are typically bloated with features for large data centers. This project investigates the needs and requirements that can solves these challenges, with a focus on Human-Computer Interaction. From these designs, this project then implements a cross-platform mobile application that satisfies these needs.
+
 \end{abstract}
+
 % Table of contents
 \pagebreak
+
 \tableofcontents
 \pagebreak 
+\pagenumbering{arabic}    
 
 % Add spacing between paragraphs
 \setlength{\parskip}{2ex}
@@ -55,41 +62,103 @@ With a larger project in mind, where understanding the configuration of many ser
 
 Whilst alternatives exist, they are typically a segment of a far larger suite of tools, which are usually not necessary for small/medium sized server spaces. Naturally, cable configurations can be difficult to understand and work with even in these smaller spaces. This also brought forward the second aspect of the project, to also be an investigation into the user experience and interface design of the tool. To ensure that the tool is easy to use and can be understood by a wide range of users.
 
-Further, the project will be open source, and will be available for use by the wider community of server administrators. This will allow for the human Computer interaction findings that have been implemented to be used in similar applications. Additionally, the tool will be utilising and integrating with Netbox, an open-source tool for managing network infrastructure. This will act as the backing database for the tool and will allow for the tool to be used in a wider context of server management.
+Further, the project will be open source, and will be available for use by the wider community of server administrators. This will allow for the human Computer interaction findings that have been implemented to be used in similar applications. Additionally, the tool will be utilising and integrating with Netbox\cite{Netbox}, an open-source tool for managing network infrastructure. This will act as the backing database for the tool and will allow for the tool to be used in a wider context of server management.
 
 The Research Support Team will act as a prime example of the target audience. The project aims to discover the needs of a wider range of small and medium sized enterprises (SME) who run and maintain their own server spaces. As mentioned previously, there are not many similar alternatives to the project as these SME's usually pose a unique server environment. These spaces can be cramped, poorly lit and hard to navigate. Seen below is a picture of the server space in the School of Computer Science at Nottingham (fig. 1), which is an example of the type of environment that the project will be designed for.
-
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\linewidth]{images/server_racks.jpg}
+    \includegraphics[width=0.55\linewidth]{images/server_racks.jpg}
     \caption{Server Rack within the school of Computer Science}
+    \label{fig:server_rack}
 \end{figure}
 
-This is another reason that typical solutions cannot usually apply to these spaces, as they are often designed for large data centres, where laptops can be used easily to use software in situ. A tool that can be used on a mobile device in these less-than-ideal conditions is something worthy of investigation. As mentioned, a perfect example of this is the server space in the School of Computer Science seen a (fig. 1). Before upgrades, the space was poorly lit and is, still relatively cramped. It’s not particularly feasible to use a laptop in this space comfortably, which most solutions rely on due to cluttered UI. The current layout of servers and hardware makes tracking cables completely impracticable and a mobile application would be a perfect solution to this problem. 
+This is another reason that typical solutions cannot usually apply to these spaces, as they are often designed for large data centres, where laptops can be used easily to use software in situ. A tool that can be used on a mobile device in these less-than-ideal conditions is something worthy of investigation. As mentioned, a perfect example of this is the server space in the School of Computer Science seen a (Fig. \ref{fig:server_rack}). Before upgrades, the space was poorly lit and is, still relatively cramped. It’s not particularly feasible to use a laptop in this space comfortably, which most solutions rely on due to cluttered UI. The current layout of servers and hardware makes tracking cables completely impracticable and a mobile application would be a perfect solution to this problem. 
 
-
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\linewidth]{images/server_racks_clean.jpg}
+    \includegraphics[width=0.55\linewidth]{images/server_racks_clean.jpg}
     \caption{More ideal and realistic server space}
+    \label{fig:ideal_server_space}
 \end{figure}
 
-Comparatively, the server space dedicated to networking has been managed to a more ideal state (fig. 2). Whilst not perfect, comparing to that of data centers, it is far more manageable. This is the aim of the project, to create a tool that can be used in these less-than-ideal conditions to allow for scenarios like the one in fig. 1 to be managed more easily.
+\pagebreak
+Comparatively, the server space dedicated to networking has been managed to a more ideal state (fig. \ref{fig:ideal_server_space}). Whilst not perfect, comparing to that of data centers, it is far more manageable. This is the aim of the project, to create a tool that can be used in these less-than-ideal conditions to allow for scenarios like the one in fig. \ref{fig:server_rack} to be managed more easily.
 
+\subsection{Aims \& Objectives}
+\label{sec:objectives}
+The projects aims with their respective objectives.
+\begin{enumerate}
+    
 
+    \item[A1] To create a tool that will allow for cable configuration of server hardware to be
+    easily digitised, visualised, queried and updated.
+        
+        - In order to achieve this, the tool will intergrate with Netbox, an open-source tool for managing network infrastructure. This will act as the backing database for the tool and will allow for the tool to be used in a wider context of server management.
+        
+        - The tool will use Netbox's API to query and update the database whislt using intuitive UI to allow for easy use.
+        
+        - To achieve visualisations, the tool will illustrate the cable connections between devices, showing data in a clear and concise manner.
+
+    \item[A2] To create a in situ cross platform mobile app that can be utilised in restricted
+    spaces.    
+
+        - To achieve this, the tool will be cross platform, and will be able to be used on any mobile device supported by the Flutter framework.
+        
+        - The tool will be designed with a focus on Human-Computer Interaction, to ensure that the tool is easy to use and can be understood by a wide range of users.
+
+    \item[A3] To create an app that can interact with other open-source software easily
+    
+        - The tool will be open source, and so modifications can be made to the tool to allow for it to be used in other contexts.
+        
+        - The tool will be built around modifiable models that can be changed easily for other software or a custom build backend.
+
+\end{enumerate}
+\pagebreak
 \subsection{Background}
 \label{sec:background}
-\subsection{Aims}
-\label{sec:aims}
-\subsection{Objectives}
-\label{sec:objectives}
-\subsection{Scope}
-\label{sec:scope}
+
+There are currently no popular mobile tools for this use case. Whilst I can appreciate, in a large data centre application. It is likely that a mobile application might not have the same level of functionality as a desktop application. Further, it is likely to be useful in a larger enviroment. But with my experiences working for the Research Support Team - I have personally found that a tool of this nature would be extremely useful. Further, with the Open Source nature of Netbox, the accepted DCIM software for RST, a mobile application would be a perfect companion. With the addition that the tool could then be released to the wider community of server administrators to be used with their own instances of Netbox.
+
 \section{Related Work}
-\subsection{App Review}
+\subsection{Application and Product Reviews}
+\label{sec:app_reviews}
+
+Following research of open source and paid for cable management/DCIM software I have found that there are limited options that allow for trial version without a legimated business interest. This limited the selection of software that can be researched. There follows three different software packages that I have found that are relevant to the project. Including Sunbird DCIM\cite{Sunbird}, a paid for solution with a trial accessible publically. Pathfinder Mobile \cite{Pathfinder}, a mobile counterpart to the enterprise "Pathfinder" package, this was the only high quality mobile solution that was discovered. Finally, Netbox \cite{Netbox}, the open source DCIM software that the project will be built around. These three packages were shown to three individuals within the Research Support Team and their feedback was recorded. Each software was shown in mobile view. 
+
+\subsubsection{Sunbird DCIM}
+\label{sec:sunbird}
+Sunbird DCIM is a feature full Data Centre Infrastructure Management Package with a significant list of components. Their client list includes the Paddypower betfair, ebay and COMCAST \cite{Sunbird-we-know-data-centres}. When trialling dcTrack their DCIM software - The immediate impression is that it is feature-rich; including Enviornment, Security, Cooling as well as Asset and Connectivity. Whilst the server spaces within Computer science at UoN could benefit from a tool like this. 
+Its implementation and management would be strenuous. The tool is designed for large data centres and would be overkill for the server spaces within the school. But, some of its features could be useful in the implementation of the project. For example, the visualisation of data centers via a 3D model. This could be an interesting feature to implement in the project but might be out of scope. The searching of assets and connections, while thurough, is not as intuitive as the project aims to be. Futher, the intention of Sunbird is to serve clients that might have thousands of assets, not quite hundreds. So the requirements of searching and filtering are different. Though, filtering by an extensive set of categories is a useful feature and could be implemented in the project, but in a more intuitive manner. 
+
+\subsubsection{Pathfinder Mobile}
+\label{sec:pathfinder}
+Pathfinder Mobile is a mobile component to the complete Pathfinder package. The mobile application is designed to be used in conjunction with the full software and used as an "anytime and anywhere" tool. It allows eisting users of Pathfinder to access data remotely and in-situ. With a intriguing focus on, "work orers". Being creeated at a workstation, i.e. Laptop, then the mobile app synchronizes with these work order. Then the mobile app can be used to execute these work orders on site through using "graphical instructions support"\cite{Pathfinder}. Finally, then, all changes are uploaded to the pathfinder client. A similar environment interaciton would work well for this project. With more complex modifications being completed/generated on a desktop client on the Schools Netbox instance, i.e Templating. Then once completed, the data entry for these templates can be completed on the mobile app, in the server space. With the app synchronising with Netbox via its API. 
+
+The pathfinder app also allows for quick access to netowrking information, where users can complete tracing of connections.Whilst this already was a core intention of the project, Pathfinders method to visualise this is intuitive and similar to that which was discussed in the first Current State Analysis interview. These interviews are discussed more in detail in section \ref{sec:current_state_analysis}. But, notbly, an interviewee mentioned a good method to do a visualisation is to list devices in a scrollable view - with the connections between them being drawn on the screen, along with device and interface information displayed as well. This is similar to the method used by Pathfinder, with; device name, location, interface name, type and cable type being displayed. 
+
+One aspect of Pathfinder that could be improved upon is the searching of assets. Whilst they describe their searching as being "text-rich" - It seems to be less intuitive, and does a search based on every field, meaning that results for a simple search can be overwhelming. This is something that the project aims to improve upon, with a more intuitive search method. Further, their search by ID code only simply enters the ID code into the search bar. This is not a bad method, but it is not as intuitive as it could be. 
+
+Overall, I think pathfinders mobile app will be a good reference point for the project. It has a similar focus to the project, and has a similar method of visualising data. Though it is a companion of a larger software package that doesn't meet the requirements of the school, it has features that can be referred to and implemented in the project.
+
+\subsubsection{Netbox}
+\label{sec:netbox}
+Whilst searching for a DCIM solution for the School of Computer Science - Netbox was become a clear choice. It is feature rich, open source, self hosted and is able to help solve the problems that the school is facing. As discovered during the Current State Analysis and my own experiences, the server rooms within CS are poorly documented due to a lack of consistent historical data. Most of the information is stored in memory of long gone staff, or in out of date spreadsheets.  
+
+\subsection{Papers focused on Human-Computer Interaction and User Experience}
+\label{sec:HCI}
+There is a lack of significant research into areas of Human-Computer Interaction and User Experience in the context of server management. But there are a few papers that are relevant to the project. The first paper is a writeup by Yin et al. \cite{cloud3dview} regarding their demonstration of Cloud3DView at SIGCOMM '13. 
+
+
+
+\subsection{Papers focused on Technical aspects of the project}
+\label{sec:technical}
+
 \section{Description of the Work}
+\label{sec:work}
 
 \section{Methodology}
+\subsubsection{Current State Analysis}
+\label{sec:current_state_analysis}
 \section{Design and Implementation}
 All practicle stuff done
 \subsection{Technical Work Done To Date}
@@ -97,7 +166,7 @@ All practicle stuff done
 \section{Progress}
 \subsection{Projection Management}
 \subsection{Contributions and Reflections}
-
+\subsubsection{Computer laws, social, ethical and professional issues}
 % Bibliography
 \pagebreak
 \bibliographystyle{ieeetr}

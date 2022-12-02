@@ -1,3 +1,26 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{1}
+
+\bibitem{Netbox}
+Netbox, ``Netbox documentation.'' URL: \url{https://docs.netbox.dev/}.
+\newblock Accessed: 01-12-2022.
+
+\bibitem{Sunbird}
+S.~DCIM, ``Sunbird dcim homepage.'' URL: \url{https://www.sunbirddcim.com/}.
+\newblock Accessed: 02-12-2022.
+
+\bibitem{Pathfinder}
+P.~M. . P. S.~. tripunkt GmbH, ``Pathfinder mobile.'' URL:
+  \url{https://www.pathfinder.de/en/modules/app/}.
+\newblock Accessed: 02-12-2022.
+
+\bibitem{Sunbird-we-know-data-centres}
+S.~DCIM, ``We know data centers.'' URL:
+  \url{"https://www.sunbirddcim.com/we-know-data-centers}.
+\newblock Accessed: 02-12-2022.
+
+\bibitem{cloud3dview}
+J.~Yin, P.~Sun, Y.~Wen, H.~Gong, M.~Liu, X.~Li, H.~You, J.~Gao, and C.~Lin,
+  ``Cloud3dview: An interactive tool for cloud data center operations,'' {\em
+  SIGCOMM Comput. Commun. Rev.}, vol.~43, p.~499–500, aug 2013.
 
 \end{thebibliography}
