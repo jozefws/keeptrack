@@ -23,4 +23,15 @@ J.~Yin, P.~Sun, Y.~Wen, H.~Gong, M.~Liu, X.~Li, H.~You, J.~Gao, and C.~Lin,
   ``Cloud3dview: An interactive tool for cloud data center operations,'' {\em
   SIGCOMM Comput. Commun. Rev.}, vol.~43, p.~499–500, aug 2013.
 
+\bibitem{myka2019comparative}
+J.~Myka, A.~Indyka-Piasecka, Z.~Telec, B.~Trawi{\'n}ski, and H.~C. Dac,
+  ``Comparative analysis of usability of data entry design patterns for mobile
+  applications,'' in {\em Asian Conference on Intelligent Information and
+  Database Systems}, pp.~737--750, Springer, 2019.
+
+\bibitem{van2007gui}
+M.~Van~Kleek, M.~Bernstein, D.~R. Karger, and M.~Schraefel, ``Gui---phooey! the
+  case for text input,'' in {\em Proceedings of the 20th annual ACM symposium
+  on User interface software and technology}, pp.~193--202, 2007.
+
 \end{thebibliography}
