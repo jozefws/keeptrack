@@ -3,47 +3,44 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: interim.aux
 The style file: ieeetr.bst
 Database file #1: citation.bib
-Warning--entry type for "labmonitor" isn't style-file defined
---line 311 of file citation.bib
-You've used 15 entries,
+You've used 23 entries,
             1876 wiz_defined-function locations,
-            568 strings with 6023 characters,
-and the built_in function-call counts, 3394 in all, are:
-= -- 336
-> -- 133
+            609 strings with 6997 characters,
+and the built_in function-call counts, 4622 in all, are:
+= -- 460
+> -- 169
 < -- 0
-+ -- 52
-- -- 37
-* -- 192
-:= -- 470
-add.period$ -- 24
-call.type$ -- 15
-change.case$ -- 15
++ -- 69
+- -- 46
+* -- 248
+:= -- 646
+add.period$ -- 38
+call.type$ -- 23
+change.case$ -- 23
 chr.to.int$ -- 0
-cite$ -- 15
-duplicate$ -- 165
-empty$ -- 344
-format.name$ -- 37
-if$ -- 852
+cite$ -- 23
+duplicate$ -- 208
+empty$ -- 498
+format.name$ -- 46
+if$ -- 1167
 int.to.chr$ -- 0
-int.to.str$ -- 15
-missing$ -- 6
-newline$ -- 57
-num.names$ -- 15
-pop$ -- 81
+int.to.str$ -- 23
+missing$ -- 7
+newline$ -- 87
+num.names$ -- 23
+pop$ -- 126
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 138
+skip$ -- 172
 stack$ -- 0
-substring$ -- 130
-swap$ -- 70
+substring$ -- 153
+swap$ -- 77
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 27
-width$ -- 17
-write$ -- 150
-(There was 1 warning)
+while$ -- 37
+width$ -- 25
+write$ -- 227

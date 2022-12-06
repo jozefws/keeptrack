@@ -44,6 +44,11 @@ A.~Dagnall and J.~Sieniawski, ``Labmonitor.'' url:
   \url{https://precursor.cs.nott.ac.uk/labmonitor.html}, 2022.
 \newblock Accessed: 03-12-2022.
 
+\bibitem{barcodeScannerPlugin}
+J.~S. xbakker, ``mobile scanner.'' URL:
+  \url{https://pub.dev/packages/mobile_scanner}, 2022.
+\newblock Accessed: 04-12-2022.
+
 \bibitem{cpni}
 C.~for the Protection~of National~Infrastructure, ``Protecting your assets.''
   URL: \url{https://www.cpni.gov.uk/protecting-your-assets}, 07 2020.
@@ -73,5 +78,39 @@ C.~L.~. pub.dev, ``ar flutter plugin.'' URL:
 Netbox, ``Netbox rest api.'' URL:
   \url{https://docs.netbox.dev/en/stable/plugins/development/rest-api/}.
 \newblock Accessed: 03-12-2022.
+
+\bibitem{thematicAnal}
+V.~Braun and V.~Clarke, ``Using thematic analysis in psychology,'' {\em
+  Qualitative Research in Psychology}, vol.~3, no.~2, pp.~77--101, 2006.
+
+\bibitem{figma}
+Figma, ``Figma: the collaborative interface design tool.'' URL:
+  \url{https://www.figma.com/}.
+\newblock Accessed: 04-12-2022.
+
+\bibitem{figmaUX}
+U.~D. Institute, ``The 9 best prototyping tools for ui/ux designers in 2022.''
+  URL:
+  \url{https://www.uxdesigninstitute.com/blog/best-prototyping-tools-for-ux-designers/},
+  02 2022.
+
+\bibitem{materialDesign}
+M.~Design, ``Material design 3.'' URL: \url{https://m3.material.io/}, 2022.
+\newblock Accessed: 04-12-2022.
+
+\bibitem{dao}
+Oracle, ``Design patterns: Data access object.'' URL:
+  \url{https://www.oracle.com/java/technologies/data-access-object.html}.
+\newblock Accessed: 04-12-2022.
+
+\bibitem{keeptrackgithub}
+J.~Sieniawski, ``Keeptrack.'' URL: \url{https://github.com/jozefws/keeptrack},
+  2022.
+\newblock Accessed: 04-12-2022.
+
+\bibitem{securestorage}
+J.~Steenbakker, ``flutter secure storage.'' URL:
+  \url{https://pub.dev/packages/flutter_secure_storage/}, 2022.
+\newblock Accessed: 04-12-2022.
 
 \end{thebibliography}
