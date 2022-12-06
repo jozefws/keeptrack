@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.10)  4 DEC 2022 18:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.10)  6 DEC 2022 02:23
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -78,6 +78,8 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \float@box=\box52
 \@float@everytoks=\toks20
 \@floatcapt=\box53
+) (c:/texlive/2022/texmf-dist/tex/latex/gensymb/gensymb.sty
+Package: gensymb 2022/10/17 v1.0.2 (KJH)
 ) (c:/texlive/2022/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2022-10-26 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count198
@@ -85,20 +87,20 @@ File: l3backend-pdftex.def 2022-10-26 L3 backend support: PDF output (pdfTeX)
 ) (./interim.aux)
 \openout1 = `interim.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -153,18 +155,29 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
  (c:/texlive/2022/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
+LaTeX Info: Redefining \celsius on input line 9.
+Package gensymb Info: Faking symbols for \degree and \celsius on input line 9.
+
+
+Package gensymb Warning: Not defining \perthousand.
+
+LaTeX Info: Redefining \ohm on input line 9.
+Package gensymb Info: Using \Omega for \ohm on input line 9.
+
+Package gensymb Warning: Not defining \micro.
+
 <images/nottingham-logo.png, id=1, 191.94913pt x 70.8246pt>
 File: images/nottingham-logo.png Graphic file (type png)
 <use images/nottingham-logo.png>
-Package pdftex.def Info: images/nottingham-logo.png  used on input line 15.
+Package pdftex.def Info: images/nottingham-logo.png  used on input line 16.
 (pdftex.def)             Requested size: 127.91907pt x 47.19933pt.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 28.
+(Font)              <10.95> on input line 29.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 28.
+(Font)              <8> on input line 29.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 28.
- [1
+(Font)              <6> on input line 29.
+[1
 
 {c:/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./images/nottingham-logo.png>] [1] (./interim.toc
 LaTeX Font Info:    External font `cmex10' loaded for size
@@ -177,28 +190,33 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 <images/server_racks.jpg, id=21, 667.74469pt x 480.29437pt>
 File: images/server_racks.jpg Graphic file (type jpg)
 <use images/server_racks.jpg>
-Package pdftex.def Info: images/server_racks.jpg  used on input line 70.
+Package pdftex.def Info: images/server_racks.jpg  used on input line 71.
 (pdftex.def)             Requested size: 234.5172pt x 168.68451pt.
  [1]
 <images/server_racks_clean.jpg, id=25, 393.77019pt x 301.46915pt>
 File: images/server_racks_clean.jpg Graphic file (type jpg)
 <use images/server_racks_clean.jpg>
-Package pdftex.def Info: images/server_racks_clean.jpg  used on input line 79.
+Package pdftex.def Info: images/server_racks_clean.jpg  used on input line 80.
 (pdftex.def)             Requested size: 234.5172pt x 179.54427pt.
- [2 <./images/server_racks.jpg> <./images/server_racks_clean.jpg>] [3] [4] [5] [6] [7] [8] (./interim.bbl) [9] (./interim.aux) ) 
+ [2 <./images/server_racks.jpg> <./images/server_racks_clean.jpg>] [3] [4] [5] [6] [7] [8] [9] [10] (./interim.bbl
+Underfull \hbox (badness 10000) in paragraph at lines 38--41
+\OT1/cmtt/m/n/12 https : / / www . jetbrains . com / lp / devecosystem-[]2021 / miscellaneous/$\OT1/cmr/m/n/12 ,
+ []
+
+[11]) [12] (./interim.aux) ) 
 Here is how much of TeX's memory you used:
- 2200 strings out of 476888
- 35901 string characters out of 5824620
- 384808 words of memory out of 5000000
- 23453 multiletter control sequences out of 15000+600000
- 475253 words of font info for 48 fonts, out of 8000000 for 9000
+ 2274 strings out of 476888
+ 37190 string characters out of 5824620
+ 387349 words of memory out of 5000000
+ 23522 multiletter control sequences out of 15000+600000
+ 475590 words of font info for 49 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 55i,7n,62p,1413b,290s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on interim.pdf (12 pages, 527828 bytes).
+ 55i,7n,62p,1414b,288s stack positions out of 10000i,1000n,20000p,200000b,200000s
+{c:/texlive/2022/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}<c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
+Output written on interim.pdf (15 pages, 552550 bytes).
 PDF statistics:
- 88 PDF objects out of 1000 (max. 8388607)
- 53 compressed objects within 1 object stream
+ 109 PDF objects out of 1000 (max. 8388607)
+ 67 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

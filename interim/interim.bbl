@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{Netbox}
 Netbox, ``Netbox documentation.'' URL: \url{https://docs.netbox.dev/}.
@@ -33,5 +33,45 @@ J.~Myka, A.~Indyka-Piasecka, Z.~Telec, B.~Trawi{\'n}ski, and H.~C. Dac,
 M.~Van~Kleek, M.~Bernstein, D.~R. Karger, and M.~Schraefel, ``Gui---phooey! the
   case for text input,'' in {\em Proceedings of the 20th annual ACM symposium
   on User interface software and technology}, pp.~193--202, 2007.
+
+\bibitem{JetBrainsFlutter}
+jetbrains, ``Which cross-platform mobile frameworks do you use?.'' URL:
+  \url{https://www.jetbrains.com/lp/devecosystem-2021/miscellaneous/}, 2021.
+\newblock Accessed: 03-12-2022.
+
+\bibitem{labmonitor}
+A.~Dagnall and J.~Sieniawski, ``Labmonitor.'' url:
+  \url{https://precursor.cs.nott.ac.uk/labmonitor.html}, 2022.
+\newblock Accessed: 03-12-2022.
+
+\bibitem{cpni}
+C.~for the Protection~of National~Infrastructure, ``Protecting your assets.''
+  URL: \url{https://www.cpni.gov.uk/protecting-your-assets}, 07 2020.
+\newblock Accessed: 03-12-2022.
+
+\bibitem{lotlikar2013comparative}
+T.~Lotlikar, R.~Kankapurkar, A.~Parekar, and A.~Mohite, ``Comparative study of
+  barcode, qr-code and rfid system,'' {\em International Journal of Computer
+  Technology and Applications}, vol.~4, no.~5, p.~817, 2013.
+
+\bibitem{mishra2017review}
+A.~Mishra and M.~Mathuria, ``A review on qr code,'' {\em Int. J. Comput. Appl},
+  vol.~164, no.~9, pp.~17--19, 2017.
+
+\bibitem{applyingQR}
+T.-W. Kan, C.-H. Teng, and W.-S. Chou, ``Applying qr code in augmented reality
+  applications,'' in {\em Proceedings of the 8th International Conference on
+  Virtual Reality Continuum and Its Applications in Industry}, VRCAI '09, (New
+  York, NY, USA), p.~253–257, Association for Computing Machinery, 2009.
+
+\bibitem{ar_flutter}
+C.~L.~. pub.dev, ``ar flutter plugin.'' URL:
+  \url{https://pub.dev/packages/ar_flutter_plugin}, 11 2022.
+\newblock Accessed: 03-12-2022.
+
+\bibitem{NetboxAPI}
+Netbox, ``Netbox rest api.'' URL:
+  \url{https://docs.netbox.dev/en/stable/plugins/development/rest-api/}.
+\newblock Accessed: 03-12-2022.
 
 \end{thebibliography}
