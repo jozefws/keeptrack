@@ -1,9 +1,11 @@
-\documentclass [11pt,letterpaper]{article}
+\documentclass [11pt,a4paper]{article}
 \usepackage[margin=1.2in]{geometry}
 \usepackage{graphicx, lscape, url}
 \usepackage{wrapfig}
 \usepackage{float}
-\usepackage{gensymb}
+\usepackage{textcomp, gensymb}
+\usepackage{subfig}
+
 \setlength
 \parindent{0pt}
 
@@ -232,21 +234,81 @@ Further, there is a separation between views, API calls and providers. This give
 
 \subsection{Technical Work Done To Date}
 \label{sec:technical_work}
-The current technical work has focused on the development on the core logical structure of the app and the creation of a foundation for the UI to test functionality. The current progress allows a user to sign into the app using their Netbox credentials. This information is then stored securely using the Flutter Secure Storage plugin \cite{securestorage}. The current UI allows the user to add a connection between two devices. More specifically, it allows to search for devices via a searchable dropdown, which then dynamically loads its interfaces, with a tab view that allows the user to select the interface on each device. Further, the current implementation has a working integration of the barcode/QR code scanner plugin \cite{barcodeScannerPlugin}. See below for screenshots of the current UI. 
+The current technical work has focused on the development on the core logical structure of the app and the creation of a foundation for the UI to test functionality. The current progress allows a user to sign into the app using their Netbox credentials. This information is then stored securely using the Flutter Secure Storage plugin \cite{securestorage}. The current UI allows the user to add a connection between two devices. More specifically, it allows to search for devices via a searchable dropdown, which then dynamically loads its interfaces, with a tab view that allows the user to select the interface on each device. Further, the current implementation has a working integration of the barcode/QR code scanner plugin \cite{barcodeScannerPlugin}. See below for screenshots of the current UI, fig. \ref{fig:currentUIScreenshots}. 
 
+\begin{figure}%
+    \centering
+    \subfloat[\centering Login Page]{{\includegraphics[width=2.5cm]{images/login.png} }}%
+    \qquad
+    \subfloat[\centering Add Connection Page]{{\includegraphics[width=2.5cm]{images/addcon.png} }}%
+    \qquad
+    \subfloat[\centering Device Search]{{\includegraphics[width=2.5cm]
+    {images/search.png} }}%
+    \caption{Screenshots of the current Keeptrack UI}%
+    \label{fig:currentUIScreenshots}%
+\end{figure}
 
 
 \section{Progress}
 \label{sec:progress}
 \subsection{Projection Management}
 \label{sec:project_management}
+Whilst the project is still in its early stages, there has been some good progress made, though less so than initially planned. This is due to a number of factors. Firstly, I hadn't assigned enough time weekly to work on the project, which has led to a slower progress overall. Secondly, I hadn't accounted for the availability of the interviewees, which has led to a delay in the interviews and therefore the creation of the high fidelity prototypes. However, I have been able to make progress on the technical side of the project, which has allowed me to create a foundation for the UI and the core logic of the app. I am satisfied with said technical progress made and I believe that with the core foundations now in place, technical progress can be completed quicker.
+
+I also didn't expect that the literature review would take as long as it did, or more specifically for this project - Finding similar applications along with technical and HCI based papers. Finding applications that had easily accessible trials posed a harder challenge than I had anticipated. But I believe that the similar work I have found has given me a better insight into a mixture of HCI and technical aspects of the project. Though, I struggled to find HCI focused papers that were related to the scenario posed, e.g. encumbered use of a mobile device. 
+
+On a positive note, the interviews brought up some interesting points that I hadn't considered before. For example, an inbuilt SSH terminal, Augmented Reality features, but also increasing the scope of the project to include other rooms. Whilst some of the ideas risen can be achieved easily, others will require more time and research. However, I believe that the interviews have been a success and have given me a better understanding of the stakeholders and their needs.
+
+With the delay to the overall work completed, and a change in some aspects of the project - I have had to re-evaluate aspects of my new work plan. Shifting milestones along and re-assigning tasks to more/less work. I believe I hadn't accounted for a large enough research period, i.e. finding similar work, in the original work plan but now that this has been completed I can focus on getting on with the technical work.
+
+Comparing the initial Gantt chart, fig. \ref{fig:initialworkplan}, to the updated Gantt chart, fig. \ref{fig:updatedworkplan}, it has become apparent that I have had to shift the milestones along. But this mainly filled most of the run over time I had assigned in the initial plan. But even with these delays I am confident that I can complete the project within the time frame given.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/keeptrack-gantt-initial.png}
+    \caption{Initial Work Plan/Gantt Chart}
+    \label{fig:initialworkplan}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/keeptrack-gantt-interim.png}
+    \caption{Updated Work Plan/Gantt Chart}
+    \label{fig:updatedworkplan}
+\end{figure}
+
+During weekly meetings with my supervisor, we have discussed the progress made and the work that needs to be completed. To keep track of the discussions we had I maintained a document. Each meeting I would write up a summary of topics I wanted to discuss, and then during the meeting add notes to each section. Then following the meeting, I would review a Trello board (\ref{sec:trello_board}) to see what tasks I had completed and what tasks I needed to complete. Though initially I didn't assign dates to each task, after falling behind I assigned dates to each task, as well as color coding them based on work type. 
+
 \subsection{Contributions and Reflections}
 \label{sec:contributions}
-\subsubsection{Computer laws, social, ethical and professional issues}
+The primary contributions I have made to the project so far is the literature review, interviews and technical work done to date. From this work, I will be able to create a set of high fidelity prototypes and start creating a Minimal Viable Product (MVP) soon after. Though, I am aware that I have somewhat fallen behind on the project. I estimate this to only be a week or two behind, but with the reshuffling of the work plan, and the time set aside for run over, I am confident that I can complete the project within the time frame given.
+
+Overall I am happy with the progress made so far. Initially, whilst I had a good idea of what the app needed to be, following the work done I have a better understanding of what will make the app useful. I have also learnt that there is a significant lacking in the market for a product like this.  I think it to be important that I reach out to external stakeholders, outside of the university, to get a better understanding of the market and what is needed. It is possible that that more ideas will arise from this and that the project will not be limited to what RST needs. 
+
+I think that with the next steps of the project it is important that I establish a more constant workflow, rather than bursts of work I have carried out so far. I think that this will create a more iterative progress and can prompt for more user feedback. Notably, I think that there is a bigger risk of feature creep than I expected and I think I will need to pay more attention to this moving forward.
+
+\subsubsection{Laws, Social, Ethical and Professional Issues}
 \label{sec:computer_laws}
+As this project intends to be open source under the Mozilla Public License Version 2.0 I foresee no implications of intellectual property. It is currently and will be publicly available via Github \cite{keeptrackgithub}. Though, it is possible the work may be exploited for commercial gain but is dependant on the success of the project and the possibility to be implemented externally.
+
+
+On the topic of ethics, due to the project involving human participants, I have had to complete the full ethics form, "CS REC 1", and have received approval from relevant parties. Further as set out by the Research ethics guidelines \cite{ethicsguidelines}, I have completed the Data Management Plan (DMP) form. This form outlines how I will store and manage the data collected during the interviews. Each of the interviewees has been given a consent form to sign, which outlines the purpose of the interview and the data collection. The interviewees have also been given the option to opt out of the interview at any point. Additionally, there are notices regarding the Data Protection Act 2018. The data collected will be stored on a password protected computer and will be deleted after the project has been completed.
+
+I believe that on a broader perspective, this project will not have a significant implications on society. Though, I do believe that it will have a positive impact on the RST team and the wider system administrator community. I believe with with the project being open source and with a focus on HCI it will be accessible to a wide range of people. Further by giving DCIM software another platform to be accessed, I believe that this will be a positive step towards the future of DCIM software and data center management.
+
 % Bibliography
 \pagebreak
 \bibliographystyle{ieeetr}
 \bibliography{citation} 
+
+% Appendix
+\appendix
+\section{Appendix}
+\label{sec:appendix}
+\subsection{Trello Board}
+\label{sec:trello_board}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{images/trello-board.png}
+\end{figure}
 % Document End
 \end{document} 
