@@ -156,72 +156,87 @@ class _AddConnectionState extends State<AddConnection>
           padding: const EdgeInsets.all(32.0),
           child: Column(children: [
             Container(
-                height: (MediaQuery.of(context).size.height / 3.3),
+                height: (MediaQuery.of(context).size.height / 3.4),
                 child: TabBarView(controller: _tabController, children: [
-                  Container(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 20),
-                        const Text('Choose Device',
-                            style: TextStyle(fontSize: 18)),
-                        const SizedBox(height: 20),
-                        DropdownSearch<String>(
-                          dropdownButtonProps:
-                              const DropdownButtonProps(color: Colors.white),
-                          popupProps: const PopupProps.modalBottomSheet(
-                            showSearchBox: true,
-                            searchDelay: Duration(milliseconds: 5),
-                            searchFieldProps: TextFieldProps(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Search for device A',
-                              ),
+                  Column(
+                    children: [
+                      const Text(
+                          "Add a new connection",
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)
+                      ),
+                      const SizedBox(height: 30),
+                      TabBar(
+                          labelColor: Theme.of(context).textTheme.bodyLarge!.color,
+                          controller: _tabController,
+                          tabs: const [
+                            Tab(
+                              text: "Device A",
                             ),
-                            modalBottomSheetProps: ModalBottomSheetProps(
-                                isScrollControlled: true,
-                                backgroundColor:
-                                    Color.fromARGB(255, 126, 126, 126),
-                                anchorPoint: Offset(0.5, 05)),
-                            constraints:
-                                BoxConstraints(maxHeight: 400, maxWidth: 1000),
+                            Tab(
+                              text: 'Device B',
+                            ),
+                          ]),
+                      const Text('Choose Device',
+                          style: TextStyle(fontSize: 18)),
+                      const SizedBox(height: 20),
+                      DropdownSearch<String>(
+                        dropdownButtonProps:
+                            const DropdownButtonProps(color: Colors.white),
+                        popupProps: const PopupProps.modalBottomSheet(
+                          showSearchBox: true,
+                          searchDelay: Duration(milliseconds: 5),
+                          searchFieldProps: TextFieldProps(
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Search for device A',
+                            ),
                           ),
-                          asyncItems: (_) => _getDevices(),
-                          onChanged: (value) {
-                            setState(() {
-                              deviceA =
-                                  value?.split("|")[2].trim().substring(2);
-                              print(deviceA);
-                              interfaceA = null;
-                            });
-                          },
+                          modalBottomSheetProps: ModalBottomSheetProps(
+                              isScrollControlled: true,
+                              backgroundColor:
+                                  Color.fromARGB(255, 126, 126, 126),
+                              anchorPoint: Offset(0.5, 05)),
+                          constraints:
+                              BoxConstraints(maxHeight: 400, maxWidth: 1000),
                         ),
-                        const SizedBox(height: 20),
-                        const Text('Choose Interface',
-                            style: TextStyle(fontSize: 18)),
-                        FutureBuilder(
-                            future: _getInterfacesByDevice(deviceA ?? ""),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                var data = snapshot.data!;
-                                return DropdownButtonFormField(
-                                    value: interfaceA,
-                                    items: data,
-                                    onChanged: (String? value) {
-                                      if (value != interfaceA) {
-                                        setState(() {
-                                          interfaceA = value;
-                                        });
-                                      }
-                                    },
-                                    decoration: const InputDecoration(
-                                        labelText: 'Interface A',
-                                        hintText: 'Select a Interface'));
-                              } else {
-                                return const CircularProgressIndicator();
-                              }
-                            }),
-                      ],
-                    ),
+                        asyncItems: (_) => _getDevices(),
+                        onChanged: (value) {
+                          setState(() {
+                            deviceA =
+                                value?.split("|")[2].trim().substring(2);
+                            interfaceA = null;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      const Text('Choose Interface',
+                          style: TextStyle(fontSize: 18)),
+                      FutureBuilder(
+                          future: _getInterfacesByDevice(deviceA ?? ""),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              var data = snapshot.data!;
+                              return DropdownButtonFormField(
+                                  value: interfaceA,
+                                  items: data,
+                                  onChanged: (String? value) {
+                                    if (value != interfaceA) {
+                                      setState(() {
+                                        interfaceA = value;
+                                      });
+                                    }
+                                  },
+                                  decoration: const InputDecoration(
+                                      labelText: 'Interface A',
+                                      hintText: 'Select a Interface'));
+                            } else {
+                              return const CircularProgressIndicator();
+                            }
+                          }),
+                    ],
                   ),
                   Container(
                     child: Column(
@@ -285,17 +300,7 @@ class _AddConnectionState extends State<AddConnection>
                     ),
                   ),
                 ])),
-            TabBar(
-                labelColor: Theme.of(context).textTheme.bodyLarge!.color,
-                controller: _tabController,
-                tabs: const [
-                  Tab(
-                    text: "Device A",
-                  ),
-                  Tab(
-                    text: 'Device B',
-                  ),
-                ]),
+
             const SizedBox(height: 50),
             //scan cable
             ElevatedButton(

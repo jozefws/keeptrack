@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
-import 'package:keeptrack/views/addconnection.dart';
+import 'package:keeptrack/views/addconnectionNew.dart';
+import 'package:keeptrack/views/deviceinterfaces.dart';
 import 'package:keeptrack/views/loginpage.dart';
+import 'package:keeptrack/views/searchconnection.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'modifyconnection.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.authProvider});
@@ -32,6 +36,21 @@ class _HomePageState extends State<HomePage> {
     _isDark = prefs.getBool('settings/dark-mode') ?? false;
   }
 
+  static int selectedIndex = 2;
+
+  static const List<Widget> navPages = <Widget>[
+    ModifyConnection(),
+    AddConnection(),
+    SearchConnection(),
+    DeviceInterfaces()
+  ];
+
+  void onItemTapped(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     //set theme to dark
@@ -54,10 +73,34 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () => scaffoldKey.currentState?.openEndDrawer(),
                   )
                 ]),
-            body: const Center(
-              //form that has two dropbown buttons and a submit button
-              child: AddConnection(),
-            )));
+            body: Center(
+              child: navPages.elementAt(selectedIndex),
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.auto_fix_high),
+                  label: 'Modify',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.add_link),
+                  label: 'Add',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.screen_search_desktop_outlined),
+                  label: 'Search',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings_ethernet),
+                  label: 'Interfaces',
+                ),
+              ],
+              currentIndex: selectedIndex,
+              selectedItemColor: Theme.of(context).colorScheme.secondary,
+              onTap: onItemTapped,
+            ),
+        )
+    );
   }
 
   settingsDrawer(Key scaffoldKey) {

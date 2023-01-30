@@ -69,7 +69,7 @@ class KeepTrack extends StatelessWidget {
           }
           return MaterialApp(
             theme: themeDark,
-            title: 'KeepTrack',
+            title: 'Keeptrack',
             home: Builder(builder: (context) {
               return const Scaffold(
                 body: Center(
