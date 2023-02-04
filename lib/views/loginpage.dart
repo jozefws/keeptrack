@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:keeptrack/main.dart';
 import 'package:provider/provider.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 import 'package:keeptrack/views/homepage.dart';
@@ -26,9 +27,7 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => HomePage(
-                  authProvider: NetboxAuthProvider(),
-                )));
+            builder: (context) => const KeepTrack()));
   }
 
   void showLoginError(message) {
