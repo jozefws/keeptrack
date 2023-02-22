@@ -5,7 +5,9 @@ class Cable {
   final String label;
   final String? url;
   final String? terminationAId;
+  final String? terminationADeviceID;
   final String? terminationBId;
+  final String? terminationBDeviceID;
   final String status;
   final String type;
   final String? color;
@@ -15,7 +17,9 @@ class Cable {
     required this.label,
     this.url,
     this.terminationAId,
+    this.terminationADeviceID,
     this.terminationBId,
+    this.terminationBDeviceID,
     required this.status,
     required this.type,
     this.color,
@@ -26,8 +30,9 @@ class Cable {
       id: json['id'],
       label: json['label'],
       url: json['url'],
-      terminationAId: json['termination_a']['id'],
-      terminationBId: json['termination_b']['id'],
+      terminationAId: json['a_terminations'][0]['object_id'],
+      terminationBId: json['b_terminations'][0]['object_id'],
+      terminationADeviceID: json['a_terminations'][0]['device']['id'],
       status: json['status']['label'],
       type: json['type']['label'],
       color: json['color'],

@@ -24,14 +24,9 @@ class _AddConnectionState extends State<AddConnection>
 
   List<String> devices = [];
 
-  String? rackA,
-      rackB,
-      deviceA,
-      deviceB,
-      interfaceA,
-      interfaceB,
-      cableBarcodeScan,
-      cableType;
+  String deviceAName = "Select Device A", deviceBName = "Select Device B";
+
+  String? deviceA, deviceB, interfaceA, interfaceB, cableBarcodeScan, cableType;
 
   final TextEditingController _cableBarcodeScanController =
       TextEditingController();
@@ -94,6 +89,7 @@ class _AddConnectionState extends State<AddConnection>
 
   _addNewConnection() async {
     String? barcode, type, intA, intB;
+
     if (cableBarcodeScan == null) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please scan cable barcode')));
@@ -152,210 +148,286 @@ class _AddConnectionState extends State<AddConnection>
     super.build(context);
     return Form(
         key: _addConnectionKey,
-        child: Container(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(children: [
+        child: Column(
+          children: [
             Container(
-                height: (MediaQuery.of(context).size.height / 3.4),
-                child: TabBarView(controller: _tabController, children: [
-                  Column(
-                    children: [
-                      const Text(
-                          "Add a new connection",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white)
-                      ),
-                      const SizedBox(height: 30),
-                      TabBar(
-                          labelColor: Theme.of(context).textTheme.bodyLarge!.color,
-                          controller: _tabController,
-                          tabs: const [
-                            Tab(
-                              text: "Device A",
-                            ),
-                            Tab(
-                              text: 'Device B',
-                            ),
-                          ]),
-                      const Text('Choose Device',
-                          style: TextStyle(fontSize: 18)),
-                      const SizedBox(height: 20),
-                      DropdownSearch<String>(
-                        dropdownButtonProps:
-                            const DropdownButtonProps(color: Colors.white),
-                        popupProps: const PopupProps.modalBottomSheet(
-                          showSearchBox: true,
-                          searchDelay: Duration(milliseconds: 5),
-                          searchFieldProps: TextFieldProps(
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Search for device A',
-                            ),
-                          ),
-                          modalBottomSheetProps: ModalBottomSheetProps(
-                              isScrollControlled: true,
-                              backgroundColor:
-                                  Color.fromARGB(255, 126, 126, 126),
-                              anchorPoint: Offset(0.5, 05)),
-                          constraints:
-                              BoxConstraints(maxHeight: 400, maxWidth: 1000),
+              padding: const EdgeInsets.all(20),
+              child: Text(
+                "Add Connection",
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.all(20),
+              color: Theme.of(context).colorScheme.onInverseSurface,
+              child: Column(
+                children: [
+                  TabBar(
+                      indicatorColor: Theme.of(context).colorScheme.primary,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      indicatorWeight: 3,
+                      labelColor: Theme.of(context).colorScheme.primary,
+                      labelPadding: const EdgeInsets.all(8),
+                      unselectedLabelColor:
+                          Theme.of(context).textTheme.bodyLarge!.color,
+                      controller: _tabController,
+                      tabs: const [
+                        Tab(
+                          text: "Device A",
                         ),
-                        asyncItems: (_) => _getDevices(),
-                        onChanged: (value) {
-                          setState(() {
-                            deviceA =
-                                value?.split("|")[2].trim().substring(2);
-                            interfaceA = null;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      const Text('Choose Interface',
-                          style: TextStyle(fontSize: 18)),
-                      FutureBuilder(
-                          future: _getInterfacesByDevice(deviceA ?? ""),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              var data = snapshot.data!;
-                              return DropdownButtonFormField(
-                                  value: interfaceA,
-                                  items: data,
-                                  onChanged: (String? value) {
-                                    if (value != interfaceA) {
-                                      setState(() {
-                                        interfaceA = value;
-                                      });
-                                    }
-                                  },
-                                  decoration: const InputDecoration(
-                                      labelText: 'Interface A',
-                                      hintText: 'Select a Interface'));
-                            } else {
-                              return const CircularProgressIndicator();
-                            }
-                          }),
-                    ],
-                  ),
-                  Container(
-                    child: Column(
+                        Tab(
+                          text: 'Device B',
+                        ),
+                      ]),
+                  SizedBox(
+                    height: 215,
+                    width: double.infinity,
+                    child: TabBarView(
+                      controller: _tabController,
                       children: [
-                        const SizedBox(height: 20),
-                        const Text('Choose Device',
-                            style: TextStyle(fontSize: 18)),
-                        const SizedBox(height: 20),
-                        DropdownSearch<String>(
-                          popupProps: const PopupProps.modalBottomSheet(
-                            showSearchBox: true,
-                            searchDelay: Duration(milliseconds: 5),
-                            searchFieldProps: TextFieldProps(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Search for device B',
+                        Column(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.all(24),
+                              child: DropdownSearch<String>(
+                                dropdownBuilder: (context, item) {
+                                  return Container(
+                                    padding: const EdgeInsets.all(8),
+                                    margin: const EdgeInsets.all(10),
+                                    child: Text(
+                                      item ?? deviceAName,
+                                    ),
+                                  );
+                                },
+                                popupProps: PopupProps.modalBottomSheet(
+                                  showSearchBox: true,
+                                  searchDelay:
+                                      const Duration(milliseconds: 100),
+                                  searchFieldProps: TextFieldProps(
+                                    decoration: InputDecoration(
+                                      border: const OutlineInputBorder(),
+                                      labelText: deviceAName,
+                                    ),
+                                  ),
+                                  modalBottomSheetProps: ModalBottomSheetProps(
+                                      isScrollControlled: true,
+                                      backgroundColor:
+                                          Theme.of(context).primaryColor,
+                                      anchorPoint: const Offset(0.5, 5)),
+                                  constraints: const BoxConstraints(
+                                      maxHeight: 400,
+                                      maxWidth: double.infinity),
+                                ),
+                                asyncItems: (_) => _getDevices(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    deviceAName =
+                                        value?.split("|")[0].trim() ?? "";
+                                    deviceA = value
+                                        ?.split("|")[2]
+                                        .trim()
+                                        .substring(2);
+                                    interfaceA = null;
+                                  });
+                                },
                               ),
                             ),
-                            modalBottomSheetProps: ModalBottomSheetProps(
-                                isScrollControlled: true,
-                                backgroundColor: Color(0xFF737373),
-                                anchorPoint: Offset(0.5, 05)),
-                            constraints:
-                                BoxConstraints(maxHeight: 400, maxWidth: 1000),
-                          ),
-                          asyncItems: (_) => _getDevices(),
-                          onChanged: (value) {
-                            setState(() {
-                              deviceB =
-                                  value?.split("|")[2].trim().substring(2);
-                              interfaceB = null;
-                            });
-                          },
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                              child: FutureBuilder(
+                                  future: _getInterfacesByDevice(deviceA ?? ""),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      var data = snapshot.data!;
+                                      return DropdownButtonFormField(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge,
+                                          value: interfaceA,
+                                          items: data,
+                                          onChanged: (String? value) {
+                                            if (value != interfaceA) {
+                                              setState(() {
+                                                interfaceA = value;
+                                              });
+                                            }
+                                          },
+                                          decoration: const InputDecoration(
+                                              labelText: 'Interface A',
+                                              hintText: 'Select an Interface'));
+                                    } else {
+                                      return const CircularProgressIndicator();
+                                    }
+                                  }),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 20),
-                        const Text('Choose Interface',
-                            style: TextStyle(fontSize: 18)),
-                        FutureBuilder(
-                            future: _getInterfacesByDevice(deviceB ?? ""),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                var data = snapshot.data!;
-                                return DropdownButtonFormField(
-                                    value: interfaceB,
-                                    items: data,
-                                    onChanged: (String? value) {
-                                      if (value != interfaceB) {
-                                        setState(() {
-                                          interfaceB = value;
-                                        });
-                                      }
-                                    },
-                                    decoration: const InputDecoration(
-                                        labelText: 'Interface B',
-                                        hintText: 'Select a Interface'));
-                              } else {
-                                return const CircularProgressIndicator();
-                              }
-                            }),
+                        /////////////////////////
+                        // SIDE B
+                        /////////////////////////
+
+                        Column(children: [
+                          Container(
+                            margin: const EdgeInsets.all(24),
+                            child: DropdownSearch<String>(
+                              dropdownBuilder: (context, item) {
+                                return Container(
+                                  padding: const EdgeInsets.all(8),
+                                  margin: const EdgeInsets.all(10),
+                                  child: Text(
+                                    item ?? deviceBName,
+                                  ),
+                                );
+                              },
+                              popupProps: PopupProps.modalBottomSheet(
+                                showSearchBox: true,
+                                searchDelay: const Duration(milliseconds: 100),
+                                searchFieldProps: TextFieldProps(
+                                  decoration: InputDecoration(
+                                    border: const OutlineInputBorder(),
+                                    labelText: deviceBName,
+                                  ),
+                                ),
+                                modalBottomSheetProps: ModalBottomSheetProps(
+                                    isScrollControlled: true,
+                                    backgroundColor:
+                                        Theme.of(context).primaryColor,
+                                    anchorPoint: const Offset(0.5, 5)),
+                                constraints: const BoxConstraints(
+                                    maxHeight: 400, maxWidth: double.infinity),
+                              ),
+                              asyncItems: (_) => _getDevices(),
+                              onChanged: (value) {
+                                setState(() {
+                                  deviceBName =
+                                      value?.split("|")[0].trim() ?? "";
+                                  deviceB =
+                                      value?.split("|")[2].trim().substring(2);
+                                  interfaceB = null;
+                                });
+                              },
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                            child: FutureBuilder(
+                                future: _getInterfacesByDevice(deviceB ?? ""),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    var data = snapshot.data!;
+                                    return DropdownButtonFormField(
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge,
+                                        value: interfaceB,
+                                        items: data,
+                                        onChanged: (String? value) {
+                                          if (value != interfaceB) {
+                                            setState(() {
+                                              interfaceB = value;
+                                            });
+                                          }
+                                        },
+                                        decoration: const InputDecoration(
+                                            labelText: 'Interface B',
+                                            hintText: 'Select an Interface'));
+                                  } else {
+                                    return const CircularProgressIndicator();
+                                  }
+                                }),
+                          ),
+                        ])
                       ],
                     ),
                   ),
+                ],
+              ),
+            ),
+            Container(
+                width: double.infinity,
+                margin: const EdgeInsets.all(20),
+                color: Theme.of(context).colorScheme.onInverseSurface,
+                child: Column(children: [
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
+                    child: Text(
+                      "Scan cable QR and select Cable Type",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    width: double.infinity,
+                    child: FloatingActionButton.extended(
+                      heroTag: "cableScan",
+                      onPressed: () async => _cableBarcodeScanController.text =
+                          (await openScanner(context))!,
+                      //set size to fill the parent
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                      ),
+                      label: const Text("Scan Cable QR"),
+                      icon: const Icon(Icons.qr_code_scanner),
+                    ),
+                  ),
+                  Text(
+                    "Cable ID: $cableBarcodeScan",
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 6, 20, 20),
+                    child: DropdownButtonFormField<String>(
+                        style: Theme.of(context).textTheme.bodyLarge,
+                        value: cableType,
+                        items: const [
+                          DropdownMenuItem(
+                            value: "mmf",
+                            child: Text("Fiber (MMF)"),
+                          ),
+                          DropdownMenuItem(
+                            value: "smf",
+                            child: Text("Fiber (SMF)"),
+                          ),
+                          DropdownMenuItem(
+                            value: "cat5e",
+                            child: Text("cat5e"),
+                          ),
+                          DropdownMenuItem(
+                            value: "cat6",
+                            child: Text("cat6"),
+                          ),
+                          DropdownMenuItem(
+                            value: "power",
+                            child: Text("Power"),
+                          ),
+                        ],
+                        onChanged: (String? value) {
+                          if (value != cableType) {
+                            setState(() {
+                              cableType = value;
+                            });
+                          }
+                        },
+                        decoration: const InputDecoration(
+                            labelText: 'Select a Cable Type')),
+                  ),
                 ])),
-
-            const SizedBox(height: 50),
-            //scan cable
-            ElevatedButton(
-              onPressed: () async => _cableBarcodeScanController.text =
-                  (await openScanner(context))!,
-              style: ElevatedButton.styleFrom(
-                elevation: 4,
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                //material theme
-                foregroundColor:
-                    Theme.of(context).buttonTheme.colorScheme!.onPrimary,
-                backgroundColor: Theme.of(context).backgroundColor,
-              ),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: Text("Open Barcode Scanner"),
-              ),
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.all(20),
+              child: FloatingActionButton.extended(
+                  heroTag: "addConnection",
+                  onPressed: () {
+                    if (_addConnectionKey.currentState!.validate()) {
+                      _addConnectionKey.currentState!.save();
+                      _addNewConnection();
+                    }
+                  },
+                  label: const Text("Add Connection"),
+                  icon: const Icon(Icons.add)),
             ),
-            const SizedBox(height: 20),
-            // selected cable
-            Text(
-              cableBarcodeScan ?? "",
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            const SizedBox(height: 10),
-            DropdownButtonFormField(
-                items: CableType.networkRJ45,
-                onChanged: (value) {
-                  setState(() {
-                    cableType = value;
-                  });
-                },
-                decoration: const InputDecoration(
-                    labelText: 'Cable Type', hintText: 'Select Cable Type')),
-            const SizedBox(height: 30),
-
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  elevation: 4,
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  //material theme
-                  foregroundColor:
-                      Theme.of(context).buttonTheme.colorScheme!.onPrimary,
-                  backgroundColor: Theme.of(context).backgroundColor,
-                ),
-                onPressed: () {
-                  if (_addConnectionKey.currentState!.validate()) {
-                    _addConnectionKey.currentState!.save();
-                    _addNewConnection();
-                  }
-                },
-                child: const Text('Add Connection'))
-          ]),
+          ],
         ));
   }
 

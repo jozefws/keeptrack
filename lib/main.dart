@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 import 'package:keeptrack/api/badcert_override.dart';
-import 'package:keeptrack/views/addconnectionNew.dart';
+import 'package:keeptrack/views/addconnection.dart';
 import 'package:keeptrack/views/deviceinterfaces.dart';
 import 'package:keeptrack/views/modifyconnection.dart';
 import 'package:keeptrack/views/searchconnection.dart';
@@ -56,12 +56,11 @@ class KeepTrack extends StatelessWidget {
                               : ThemeMode.light)),
                   ChangeNotifierProvider(create: (_) => NetboxAuthProvider())
                 ],
-                child: Consumer<ThemeConfigProvider>(
-                    child: Consumer<NetboxAuthProvider>(
+                child: Consumer<ThemeConfigProvider>(child:
+                    Consumer<NetboxAuthProvider>(
                         builder: ((context, themeProvider, child) {
                   return KeepTrackHome(authProvider: themeProvider);
                 })), builder: (c, themeProvider, child) {
-
                   return MaterialApp(
                       debugShowCheckedModeBanner: false,
                       title: 'Keeptrack',
@@ -106,7 +105,6 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
     const DeviceInterfaces()
   ];
 
-
   void onItemTapped(int index) {
     setState(() {
       selectedIndex = index;
@@ -120,7 +118,6 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
     getPrefs();
   }
 
-
   Future<String> getUsername() async {
     final provider = Provider.of<NetboxAuthProvider>(context, listen: false);
     return (await provider.getUsername() ?? "loading username...");
@@ -130,8 +127,6 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
     prefs = await SharedPreferences.getInstance();
     _isDark = prefs.getBool('settings/dark-mode') ?? false;
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +147,8 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
                       actions: <Widget>[
                         IconButton(
                           icon: const Icon(Icons.menu_open_outlined),
-                          onPressed: () => scaffoldKey.currentState?.openEndDrawer(),
+                          onPressed: () =>
+                              scaffoldKey.currentState?.openEndDrawer(),
                         )
                       ]),
                   body: SafeArea(
@@ -161,12 +157,19 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
                   bottomNavigationBar: BottomNavigationBar(
                     backgroundColor: Theme.of(context).colorScheme.onBackground,
                     selectedItemColor: Theme.of(context).colorScheme.primary,
-                    unselectedItemColor: Theme.of(context).colorScheme.onBackground,
+                    unselectedItemColor:
+                        Theme.of(context).colorScheme.onBackground,
                     items: const [
-                      BottomNavigationBarItem(icon: Icon(Icons.auto_fix_high), label: 'Modify'),
-                      BottomNavigationBarItem(icon: Icon(Icons.add_link), label: 'Add'),
-                      BottomNavigationBarItem(icon: Icon(Icons.screen_search_desktop_outlined), label: 'Search'),
-                      BottomNavigationBarItem(icon: Icon(Icons.settings_ethernet), label: 'Interfaces'),
+                      BottomNavigationBarItem(
+                          icon: Icon(Icons.auto_fix_high), label: 'Modify'),
+                      BottomNavigationBarItem(
+                          icon: Icon(Icons.add_link), label: 'Add'),
+                      BottomNavigationBarItem(
+                          icon: Icon(Icons.screen_search_desktop_outlined),
+                          label: 'Search'),
+                      BottomNavigationBarItem(
+                          icon: Icon(Icons.settings_ethernet),
+                          label: 'Interfaces'),
                     ],
                     currentIndex: selectedIndex,
                     onTap: onItemTapped,
@@ -180,6 +183,7 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
           });
     });
   }
+
   settingsDrawer(Key scaffoldKey) {
     return Column(
       children: [
@@ -199,14 +203,14 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
           padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
         ),
         ListTile(
-          title: const Text('Dark Mode'),
-        trailing:  Consumer<ThemeConfigProvider>(builder: (c, themeProvider, child) {
-            return Switch(
-                value: themeProvider.themeMode == ThemeMode.dark,
-                onChanged: (value) => themeProvider
-                    .setSharedPreferencesTheme(value ? ThemeMode.dark : ThemeMode.light));
-          })
-        ),
+            title: const Text('Dark Mode'),
+            trailing: Consumer<ThemeConfigProvider>(
+                builder: (c, themeProvider, child) {
+              return Switch(
+                  value: themeProvider.themeMode == ThemeMode.dark,
+                  onChanged: (value) => themeProvider.setSharedPreferencesTheme(
+                      value ? ThemeMode.dark : ThemeMode.light));
+            })),
         const Padding(
           padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
         ),

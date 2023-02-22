@@ -23,6 +23,24 @@ class DevicesAPI {
     }
   }
 
+  static Future<List<Device>> getDeviceByID(String token, String ID) async {
+    final client = http.Client();
+    await dotenv.load();
+
+    var response = await client.get(
+        Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/devices/$ID'),
+        headers: {'Authorization': 'Token $token'});
+    var responseBody = jsonDecode(response.body);
+    var list = responseBody['results'] as List;
+    if (response.statusCode == 200) {
+      return (responseBody['results'] as List)
+          .map((e) => Device.fromJson(e))
+          .toList();
+    } else {
+      return [];
+    }
+  }
+
   static Future<List<Device>> getDevicesByRack(
       String token, String rackID) async {
     var client = http.Client();

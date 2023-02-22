@@ -27,7 +27,7 @@ class CablesAPI {
     }
   }
 
-  static Future<List<Device>> getCableByID(String token, String cableID) async {
+  static Future<List<Cable>> getCableByID(String token, String cableID) async {
     var client = http.Client();
     await dotenv.load();
     var uri = Uri.parse(
@@ -40,7 +40,7 @@ class CablesAPI {
     }
     if (response.statusCode == 200) {
       return (responseBody['results'] as List)
-          .map((e) => Device.fromJson(e))
+          .map((e) => Cable.fromJson(e))
           .toList();
     } else {
       return [];
@@ -91,10 +91,18 @@ class CablesAPI {
         'Content-Type': 'application/json'
       },
       body: jsonEncode({
-        'termination_a_type': 'dcim.interface',
-        'termination_a_id': cable.terminationAId,
-        'termination_b_type': 'dcim.interface',
-        'termination_b_id': cable.terminationBId,
+        'a_terminations': [
+          {
+            'object_type': 'dcim.interface',
+            'object_id': cable.terminationAId,
+          }
+        ],
+        'b_terminations': [
+          {
+            'object_type': 'dcim.interface',
+            'object_id': cable.terminationBId,
+          }
+        ],
         'type': cable.type,
         'status': cable.status,
         'label': cable.label,
