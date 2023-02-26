@@ -1,14 +1,11 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:keeptrack/models/cables.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../api/cables_api.dart';
 import '../api/devices_api.dart';
 import '../api/interfaces_api.dart';
-import '../api/racks_api.dart';
-import '../models/devices.dart';
 import '../provider/netboxauth_provider.dart';
 
 class ModifyConnection extends StatefulWidget {
@@ -27,28 +24,42 @@ class _ModifyConnectionState extends State<ModifyConnection>
 
   List<String> devices = [];
 
-  String deviceAName = "Select Device A", deviceBName = "Select Device B";
+  String deviceAName = "Scan Cable QR",
+      deviceBName = "Scan Cable QR",
+      interfaceAName = "Scan Cable QR",
+      interfaceBName = "Scan Cable QR";
 
-  String? deviceA, deviceB, interfaceA, interfaceB, cableBarcodeScan, cableType;
+  String? deviceA,
+      deviceB,
+      interfaceA,
+      interfaceB,
+      cableBarcodeScan,
+      cableType,
+      cableStatus;
+
+  CablesAPI cablesAPI = CablesAPI();
+  DevicesAPI devicesAPI = DevicesAPI();
+  InterfacesAPI interfacesAPI = InterfacesAPI();
 
   final TextEditingController _cableBarcodeScanController =
       TextEditingController();
 
-  Future<List<DropdownMenuItem<String>>> _getRacks() async {
-    var i = await RacksAPI.getRacks(await getToken());
-    return i
-        .map((e) => DropdownMenuItem(
-              value: e.id.toString(),
-              child: Text(e.name),
-            ))
-        .toList();
+  @override
+  initState() {
+    _tabController = TabController(length: 2, vsync: this);
+    super.initState();
+  }
+
+  genSnack(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("Error: $message")));
   }
 
   Future<List<String>> _getDevices() async {
-    var i = await DevicesAPI.getDevices(await getToken());
+    var i = await devicesAPI.getDevices(await getToken());
     return i
         .map((e) =>
-            "${e.name} | ${(e.rack?.name)?.substring(4) ?? "Unracked"} | ID${e.id}")
+            "${e.name} | Rack: ${(e.rack?.name)?.substring(4) ?? "Unracked"} | ID${e.id}")
         .toList();
   }
 
@@ -58,7 +69,7 @@ class _ModifyConnectionState extends State<ModifyConnection>
       return [];
     }
     final i =
-        await InterfacesAPI.getInterfacesByDevice(await getToken(), deviceID);
+        await interfacesAPI.getInterfacesByDevice(await getToken(), deviceID);
     if (i.isEmpty) {
       genSnack("No interfaces found");
     }
@@ -70,47 +81,139 @@ class _ModifyConnectionState extends State<ModifyConnection>
         .toList();
   }
 
-  void setCurrentInformation(String code) async {
-    print("Cable ID: $code");
+  Cable currentCable = Cable(
+    terminationADeviceID: "",
+    terminationBDeviceID: "",
+    terminationAId: "",
+    terminationBId: "",
+    type: "",
+    status: "",
+    display: "",
+  );
+
+  void _setCurrentInformation(String code) async {
     Future<List<Cable>> cableDevices =
-        CablesAPI.getCableByID(await getToken(), code);
-    var tempDeviceA =
-        (await cableDevices).first.terminationADeviceID.toString();
-    var tempDeviceB =
-        (await cableDevices).first.terminationADeviceID.toString();
+        cablesAPI.getCableByID(await getToken(), code);
+    cableDevices.then((value) {
+      if (value.isEmpty) {
+        genSnack("No cable found");
+      } else {
+        setState(() {
+          currentCable = value[0];
+          cableBarcodeScan = code;
+          deviceA = currentCable.terminationADeviceID;
 
-    var tempCableType = (await cableDevices).first.type;
-
-    var tempInterfaceA = (await cableDevices).first.terminationAId;
-    var tempInterfaceB = (await cableDevices).first.terminationBId;
-
-    setState(() {
-      deviceA = tempDeviceA;
-      deviceB = tempDeviceB;
-
-      cableType = tempCableType;
-
-      interfaceA = tempInterfaceA;
-      interfaceB = tempInterfaceB;
+          deviceAName = currentCable.terminationADeviceName ?? "Name not found";
+          deviceB = currentCable.terminationBDeviceID;
+          deviceBName = currentCable.terminationBDeviceName ?? "Name not found";
+          interfaceA = currentCable.terminationAId;
+          interfaceB = currentCable.terminationBId;
+          cableType = currentCable.type;
+        });
+      }
     });
-    print(
-        "Device A: $deviceA, Device B: $deviceB, Interface A: $interfaceA, Interface B: $interfaceB, Cable Type: $cableType");
   }
 
-  @override
-  initState() {
-    _tabController = TabController(length: 2, vsync: this);
-    super.initState();
-    setDevices();
+  verifyModifications() {
+    if (deviceAName != currentCable.terminationADeviceName ||
+        deviceBName != currentCable.terminationBDeviceName ||
+        interfaceA != currentCable.terminationAId ||
+        interfaceB != currentCable.terminationBId ||
+        cableType != currentCable.type) {
+      if (deviceAName == "Scan Cable QR" || deviceBName == "Scan Cable QR") {
+        return;
+      } else {
+        modifyCable();
+      }
+    } else {
+      genSnack("No changes made");
+    }
   }
 
-  setDevices() async {
-    devices = await _getDevices();
+  void modifyCable() async {
+    if (await showAlert()) {
+      currentCable.terminationADeviceID = deviceA;
+      currentCable.terminationBDeviceID = deviceB;
+      currentCable.terminationAId = interfaceA;
+      currentCable.terminationBId = interfaceB;
+      currentCable.type = cableType;
+
+      if (await cablesAPI.updateConnection(await getToken(), currentCable)) {
+        genSnack("Cable modified successfully");
+      } else {
+        genSnack("Cable modification failed");
+      }
+      genSnack("Cable modified successfully");
+    } else {
+      genSnack("Modification cancelled");
+    }
   }
 
-  genSnack(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text("Error: $message")));
+  Future showAlert() {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+                title: const Text("Confirm Cable Modification"),
+                content: Column(
+                  children: [
+                    const Text("Are you sure you want to modify this cable?"),
+                    Container(
+                        padding: const EdgeInsets.all(10),
+                        margin: EdgeInsets.only(top: 20),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text("Device A: ",
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge),
+                                Text(
+                                    "${currentCable.terminationADeviceName} -> $deviceAName"),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Text("Device B: "),
+                                Text(
+                                    "${currentCable.terminationBDeviceName} -> $deviceBName"),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Text("Interface A: "),
+                                Text(
+                                    "${currentCable.terminationADeviceName} -> $interfaceA"),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Text("Interface B: "),
+                                Text(
+                                    "${currentCable.terminationBDeviceName} -> $interfaceB"),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Text("Cable Type: "),
+                                Text("${currentCable.type} -> $cableType"),
+                              ],
+                            ),
+                          ],
+                        ))
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: const Text("Cancel")),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: const Text("Confirm"))
+                ]));
   }
 
   getToken() async {
@@ -122,283 +225,337 @@ class _ModifyConnectionState extends State<ModifyConnection>
     super.build(context);
     return Form(
         key: _modifyConnectionKey,
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Text(
-                "Modify Connection",
-                style: Theme.of(context).textTheme.headline6,
-              ),
-            ),
-            Container(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.all(20),
+                  color: Theme.of(context).colorScheme.onInverseSurface,
+                  child: Column(children: [
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
+                      child: Text(
+                        "Scan cable QR and select Cable Type",
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      width: double.infinity,
+                      child: FloatingActionButton.extended(
+                        heroTag: "cableScan",
+                        onPressed: () async {
+                          _cableBarcodeScanController.text =
+                              (await openScanner(context))!;
+                        },
+                        //set size to fill the parent
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        ),
+                        label: const Text("Scan Cable QR"),
+                        icon: const Icon(Icons.qr_code_scanner),
+                      ),
+                    ),
+                    Text(
+                      "Cable ID: $cableBarcodeScan",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(20, 6, 20, 20),
+                      child: DropdownButtonFormField<String>(
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          value: cableType,
+                          items: const [
+                            DropdownMenuItem(
+                              value: "mmf",
+                              child: Text("Fiber (MMF)"),
+                            ),
+                            DropdownMenuItem(
+                              value: "smf",
+                              child: Text("Fiber (SMF)"),
+                            ),
+                            DropdownMenuItem(
+                              value: "cat3",
+                              child: Text("cat3"),
+                            ),
+                            DropdownMenuItem(
+                              value: "cat5e",
+                              child: Text("cat5e"),
+                            ),
+                            DropdownMenuItem(
+                              value: "cat6",
+                              child: Text("cat6"),
+                            ),
+                            DropdownMenuItem(
+                              value: "power",
+                              child: Text("Power"),
+                            ),
+                          ],
+                          onChanged: (String? value) {
+                            if (value != cableType) {
+                              setState(() {
+                                cableType = value;
+                              });
+                            }
+                          },
+                          decoration: const InputDecoration(
+                              labelText: 'Select a Cable Type')),
+                    ),
+                  ])),
+              Container(
                 width: double.infinity,
                 margin: const EdgeInsets.all(20),
                 color: Theme.of(context).colorScheme.onInverseSurface,
-                child: Column(children: [
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
-                    child: Text(
-                      "Scan cable QR and select Cable Type",
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    width: double.infinity,
-                    child: FloatingActionButton.extended(
-                      heroTag: "cableScan",
-                      onPressed: () async {
-                        _cableBarcodeScanController.text =
-                            (await openScanner(context))!;
-                      },
-                      //set size to fill the parent
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                      ),
-                      label: const Text("Scan Cable QR"),
-                      icon: const Icon(Icons.qr_code_scanner),
-                    ),
-                  ),
-                  Text(
-                    "Cable ID: $cableBarcodeScan",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(20, 6, 20, 20),
-                    child: DropdownButtonFormField<String>(
-                        style: Theme.of(context).textTheme.bodyLarge,
-                        value: cableType,
-                        items: const [
-                          DropdownMenuItem(
-                            value: "mmf",
-                            child: Text("Fiber (MMF)"),
+                child: Column(
+                  children: [
+                    TabBar(
+                        indicatorColor: Theme.of(context).colorScheme.primary,
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        indicatorWeight: 3,
+                        labelColor: Theme.of(context).colorScheme.primary,
+                        labelPadding: const EdgeInsets.all(8),
+                        unselectedLabelColor:
+                            Theme.of(context).textTheme.bodyLarge!.color,
+                        controller: _tabController,
+                        tabs: const [
+                          Tab(
+                            text: "Device A",
                           ),
-                          DropdownMenuItem(
-                            value: "smf",
-                            child: Text("Fiber (SMF)"),
+                          Tab(
+                            text: 'Device B',
                           ),
-                          DropdownMenuItem(
-                            value: "cat5e",
-                            child: Text("cat5e"),
-                          ),
-                          DropdownMenuItem(
-                            value: "cat6",
-                            child: Text("cat6"),
-                          ),
-                          DropdownMenuItem(
-                            value: "power",
-                            child: Text("Power"),
-                          ),
-                        ],
-                        onChanged: (String? value) {
-                          if (value != cableType) {
-                            setState(() {
-                              cableType = value;
-                            });
-                          }
-                        },
-                        decoration: const InputDecoration(
-                            labelText: 'Select a Cable Type')),
-                  ),
-                ])),
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.all(20),
-              color: Theme.of(context).colorScheme.onInverseSurface,
-              child: Column(
-                children: [
-                  TabBar(
-                      indicatorColor: Theme.of(context).colorScheme.primary,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      indicatorWeight: 3,
-                      labelColor: Theme.of(context).colorScheme.primary,
-                      labelPadding: const EdgeInsets.all(8),
-                      unselectedLabelColor:
-                          Theme.of(context).textTheme.bodyLarge!.color,
-                      controller: _tabController,
-                      tabs: const [
-                        Tab(
-                          text: "Device A",
-                        ),
-                        Tab(
-                          text: 'Device B',
-                        ),
-                      ]),
-                  SizedBox(
-                    height: 215,
-                    width: double.infinity,
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        Column(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.all(24),
-                              child: DropdownSearch<String>(
-                                dropdownBuilder: (context, item) {
-                                  return Container(
-                                    padding: const EdgeInsets.all(8),
-                                    margin: const EdgeInsets.all(10),
-                                    child: Text(
-                                      item ?? deviceAName,
-                                    ),
-                                  );
-                                },
-                                popupProps: PopupProps.modalBottomSheet(
-                                  showSearchBox: true,
-                                  searchDelay:
-                                      const Duration(milliseconds: 100),
-                                  searchFieldProps: TextFieldProps(
-                                    decoration: InputDecoration(
-                                      border: const OutlineInputBorder(),
-                                      labelText: deviceAName,
-                                    ),
-                                  ),
-                                  modalBottomSheetProps: ModalBottomSheetProps(
-                                      isScrollControlled: true,
-                                      backgroundColor:
-                                          Theme.of(context).primaryColor,
-                                      anchorPoint: const Offset(0.5, 5)),
-                                  constraints: const BoxConstraints(
-                                      maxHeight: 400,
-                                      maxWidth: double.infinity),
-                                ),
-                                asyncItems: (_) => _getDevices(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    deviceAName =
-                                        value?.split("|")[0].trim() ?? "";
-                                    deviceA = value
-                                        ?.split("|")[2]
-                                        .trim()
-                                        .substring(2);
-                                    interfaceA = null;
-                                  });
-                                },
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-                              child: FutureBuilder(
-                                  future: _getInterfacesByDevice(deviceA ?? ""),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      var data = snapshot.data!;
-                                      return DropdownButtonFormField(
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge,
-                                          value: interfaceA,
-                                          items: data,
-                                          onChanged: (String? value) {
-                                            if (value != interfaceA) {
-                                              setState(() {
-                                                interfaceA = value;
-                                              });
-                                            }
-                                          },
-                                          decoration: const InputDecoration(
-                                              labelText: 'Interface A',
-                                              hintText: 'Select an Interface'));
-                                    } else {
-                                      return const CircularProgressIndicator();
-                                    }
-                                  }),
-                            ),
-                          ],
-                        ),
-                        /////////////////////////
-                        // SIDE B
-                        /////////////////////////
-
-                        Column(children: [
-                          Container(
-                            margin: const EdgeInsets.all(24),
-                            child: DropdownSearch<String>(
-                              dropdownBuilder: (context, item) {
-                                return Container(
-                                  padding: const EdgeInsets.all(8),
-                                  margin: const EdgeInsets.all(10),
-                                  child: Text(
-                                    item ?? deviceBName,
-                                  ),
-                                );
-                              },
-                              popupProps: PopupProps.modalBottomSheet(
-                                showSearchBox: true,
-                                searchDelay: const Duration(milliseconds: 100),
-                                searchFieldProps: TextFieldProps(
-                                  decoration: InputDecoration(
-                                    border: const OutlineInputBorder(),
-                                    labelText: deviceBName,
-                                  ),
-                                ),
-                                modalBottomSheetProps: ModalBottomSheetProps(
-                                    isScrollControlled: true,
-                                    backgroundColor:
-                                        Theme.of(context).primaryColor,
-                                    anchorPoint: const Offset(0.5, 5)),
-                                constraints: const BoxConstraints(
-                                    maxHeight: 400, maxWidth: double.infinity),
-                              ),
-                              asyncItems: (_) => _getDevices(),
-                              onChanged: (value) {
-                                setState(() {
-                                  deviceBName =
-                                      value?.split("|")[0].trim() ?? "";
-                                  deviceB =
-                                      value?.split("|")[2].trim().substring(2);
-                                  interfaceB = null;
-                                });
-                              },
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-                            child: FutureBuilder(
-                                future: _getInterfacesByDevice(deviceB ?? ""),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    var data = snapshot.data!;
-                                    return DropdownButtonFormField(
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        value: interfaceB,
-                                        items: data,
-                                        onChanged: (String? value) {
-                                          if (value != interfaceB) {
-                                            setState(() {
-                                              interfaceB = value;
-                                            });
-                                          }
+                        ]),
+                    SizedBox(
+                      height: 215,
+                      width: double.infinity,
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.all(24),
+                                child: FutureBuilder(
+                                    future: _getDevices(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        devices = snapshot.data as List<String>;
+                                      } else {
+                                        return const Center(
+                                            child: CircularProgressIndicator(
+                                          semanticsLabel: "Loading",
+                                        ));
+                                      }
+                                      return DropdownSearch<String>(
+                                        enabled: cableBarcodeScan != null,
+                                        dropdownBuilder: (context, item) {
+                                          return Container(
+                                            padding: const EdgeInsets.all(8),
+                                            margin: const EdgeInsets.all(10),
+                                            child: Text(
+                                              item ?? deviceAName,
+                                            ),
+                                          );
                                         },
-                                        decoration: const InputDecoration(
-                                            labelText: 'Interface B',
-                                            hintText: 'Select an Interface'));
-                                  } else {
-                                    return const CircularProgressIndicator();
-                                  }
-                                }),
+                                        popupProps: PopupProps.modalBottomSheet(
+                                          showSearchBox: true,
+                                          searchDelay:
+                                              const Duration(milliseconds: 100),
+                                          searchFieldProps: TextFieldProps(
+                                            decoration: InputDecoration(
+                                              border:
+                                                  const OutlineInputBorder(),
+                                              labelText: deviceAName,
+                                            ),
+                                          ),
+                                          modalBottomSheetProps:
+                                              ModalBottomSheetProps(
+                                                  isScrollControlled: true,
+                                                  backgroundColor:
+                                                      Theme.of(context)
+                                                          .primaryColor,
+                                                  anchorPoint:
+                                                      const Offset(0.5, 5)),
+                                          constraints: const BoxConstraints(
+                                              maxHeight: 400,
+                                              maxWidth: double.infinity),
+                                        ),
+                                        items: [
+                                          for (var device in devices)
+                                            "${device.split("|")[0].trim()} | ${device.split("|")[1].trim()} | ${device.split("|")[2].trim()}"
+                                        ],
+                                        onChanged: (value) {
+                                          setState(() {
+                                            deviceAName =
+                                                value?.split("|")[0].trim() ??
+                                                    "";
+                                            deviceA = value
+                                                ?.split("|")[2]
+                                                .trim()
+                                                .substring(2);
+                                            interfaceA = null;
+                                          });
+                                        },
+                                      );
+                                    }),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                                child: FutureBuilder(
+                                    future:
+                                        _getInterfacesByDevice(deviceA ?? ""),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        var data = snapshot.data!;
+                                        return DropdownButtonFormField(
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge,
+                                            value: interfaceA,
+                                            items: data,
+                                            onChanged: (String? value) {
+                                              if (value != interfaceA) {
+                                                setState(() {
+                                                  interfaceA = value;
+                                                });
+                                              }
+                                            },
+                                            decoration: const InputDecoration(
+                                                labelText: 'Interface A',
+                                                hintText:
+                                                    'Select an Interface'));
+                                      } else {
+                                        return const CircularProgressIndicator();
+                                      }
+                                    }),
+                              ),
+                            ],
                           ),
-                        ])
-                      ],
+                          /////////////////////////
+                          // SIDE B
+                          /////////////////////////
+
+                          Column(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.all(24),
+                                child: FutureBuilder(
+                                    future: _getDevices(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        devices = snapshot.data as List<String>;
+                                      } else {
+                                        return const Center(
+                                            child: CircularProgressIndicator(
+                                          semanticsLabel: "Loading",
+                                        ));
+                                      }
+                                      return DropdownSearch<String>(
+                                        enabled: cableBarcodeScan != null,
+                                        dropdownBuilder: (context, item) {
+                                          return Container(
+                                            padding: const EdgeInsets.all(8),
+                                            margin: const EdgeInsets.all(10),
+                                            child: Text(
+                                              item ?? deviceBName,
+                                            ),
+                                          );
+                                        },
+                                        popupProps: PopupProps.modalBottomSheet(
+                                          showSearchBox: true,
+                                          searchDelay:
+                                              const Duration(milliseconds: 100),
+                                          searchFieldProps: TextFieldProps(
+                                            decoration: InputDecoration(
+                                              border:
+                                                  const OutlineInputBorder(),
+                                              labelText: deviceBName,
+                                            ),
+                                          ),
+                                          modalBottomSheetProps:
+                                              ModalBottomSheetProps(
+                                                  isScrollControlled: true,
+                                                  backgroundColor:
+                                                      Theme.of(context)
+                                                          .primaryColor,
+                                                  anchorPoint:
+                                                      const Offset(0.5, 5)),
+                                          constraints: const BoxConstraints(
+                                              maxHeight: 400,
+                                              maxWidth: double.infinity),
+                                        ),
+                                        items: [
+                                          for (var device in devices)
+                                            "${device.split("|")[0].trim()} | ${device.split("|")[1].trim()} | ${device.split("|")[2].trim()}"
+                                        ],
+                                        onChanged: (value) {
+                                          setState(() {
+                                            deviceBName =
+                                                value?.split("|")[0].trim() ??
+                                                    "";
+                                            deviceB = value
+                                                ?.split("|")[2]
+                                                .trim()
+                                                .substring(2);
+                                            interfaceB = null;
+                                          });
+                                        },
+                                      );
+                                    }),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                                child: FutureBuilder(
+                                    future:
+                                        _getInterfacesByDevice(deviceB ?? ""),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        var data = snapshot.data!;
+                                        return DropdownButtonFormField(
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge,
+                                            value: interfaceB,
+                                            items: data,
+                                            onChanged: (String? value) {
+                                              if (value != interfaceB) {
+                                                setState(() {
+                                                  interfaceB = value;
+                                                });
+                                              }
+                                            },
+                                            decoration: const InputDecoration(
+                                                labelText: 'Interface B',
+                                                hintText:
+                                                    'Select an Interface'));
+                                      } else {
+                                        return const CircularProgressIndicator();
+                                      }
+                                    }),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.all(20),
-              child: FloatingActionButton.extended(
-                  heroTag: "modifyConnection",
-                  onPressed: null,
-                  label: const Text("Modify Connection"),
-                  icon: const Icon(Icons.add)),
-            ),
-          ],
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.all(20),
+                child: FloatingActionButton.extended(
+                    heroTag: "modifyConnection",
+                    // if (cableBarcodeScan == null) then disable button
+                    onPressed: () => cableBarcodeScan == null
+                        ? genSnack("Scan a cable first")
+                        : verifyModifications(),
+                    label: const Text("Modify Connection"),
+                    icon: const Icon(Icons.add)),
+              ),
+            ],
+          ),
         ));
   }
 
@@ -406,7 +563,7 @@ class _ModifyConnectionState extends State<ModifyConnection>
     setState(() {
       cableBarcodeScan = null;
     });
-    final String? code = await Navigator.push(
+    String? code = await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (ctx) => Scaffold(
@@ -422,12 +579,16 @@ class _ModifyConnectionState extends State<ModifyConnection>
                     });
                   },
                 ))));
-    if (code == null) {
-      genSnack("No barcode detected");
-      return "";
-    }
-    if (await CablesAPI.checkExistenceById(await getToken(), code)) {
-      setCurrentInformation(code);
+    // if (code == null) {
+
+    //   genSnack("No barcode detected");
+    //   return "";
+    // }
+
+    code = "CS00500";
+
+    if (await cablesAPI.checkExistenceById(await getToken(), code)) {
+      _setCurrentInformation(code);
       return code;
     } else {
       genSnack("Cable $code, doesn't exist or couldn't be found.");

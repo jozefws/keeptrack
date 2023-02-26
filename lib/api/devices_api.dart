@@ -4,14 +4,18 @@ import 'package:keeptrack/models/devices.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DevicesAPI {
-  static Future<List<Device>> getDevices(String token) async {
-    final client = http.Client();
+  final client = http.Client();
+  Future<List<Device>> getDevices(String token) async {
     await dotenv.load();
 
     var response = await client.get(
         Uri.parse(
             '${dotenv.env['NETBOX_API_URL']}/api/dcim/devices/?limit=250'),
-        headers: {'Authorization': 'Token $token'});
+        headers: {
+          'Authorization': 'Token $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
     var responseBody = jsonDecode(response.body);
     var list = responseBody['results'] as List;
     if (response.statusCode == 200) {
@@ -23,13 +27,16 @@ class DevicesAPI {
     }
   }
 
-  static Future<List<Device>> getDeviceByID(String token, String ID) async {
-    final client = http.Client();
+  Future<List<Device>> getDeviceByID(String token, String ID) async {
     await dotenv.load();
 
     var response = await client.get(
         Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/devices/$ID'),
-        headers: {'Authorization': 'Token $token'});
+        headers: {
+          'Authorization': 'Token $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
     var responseBody = jsonDecode(response.body);
     var list = responseBody['results'] as List;
     if (response.statusCode == 200) {
@@ -41,14 +48,15 @@ class DevicesAPI {
     }
   }
 
-  static Future<List<Device>> getDevicesByRack(
-      String token, String rackID) async {
-    var client = http.Client();
+  Future<List<Device>> getDevicesByRack(String token, String rackID) async {
     await dotenv.load();
     var uri = Uri.parse(
         '${dotenv.env['NETBOX_API_URL']}/api/dcim/devices/?rack_id=$rackID');
-    var response =
-        await client.get(uri, headers: {'Authorization': 'Token $token'});
+    var response = await client.get(uri, headers: {
+      'Authorization': 'Token $token',
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
     var responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {

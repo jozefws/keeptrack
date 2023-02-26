@@ -7,13 +7,18 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/cables.dart';
 
 class CablesAPI {
-  static Future<List<Device>> getDevices(String token) async {
-    final client = http.Client();
+  final client = http.Client();
+
+  Future<List<Device>> getDevices(String token) async {
     await dotenv.load();
 
     var response = await client.get(
         Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/devices/'),
-        headers: {'Authorization': 'Token $token'});
+        headers: {
+          'Authorization': 'Token $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
     var responseBody = jsonDecode(response.body);
     if (response.statusCode == 403) {
       throw Exception('Invalid token');
@@ -27,13 +32,15 @@ class CablesAPI {
     }
   }
 
-  static Future<List<Cable>> getCableByID(String token, String cableID) async {
-    var client = http.Client();
+  Future<List<Cable>> getCableByID(String token, String cableID) async {
     await dotenv.load();
     var uri = Uri.parse(
-        '${dotenv.env['NETBOX_API_URL']}/api/dcim/devices/?rack_id=$cableID');
-    var response =
-        await client.get(uri, headers: {'Authorization': 'Token $token'});
+        '${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/?label=$cableID');
+    var response = await client.get(uri, headers: {
+      'Authorization': 'Token $token',
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
     var responseBody = jsonDecode(response.body);
     if (response.statusCode == 403) {
       throw Exception('Invalid token');
@@ -47,14 +54,16 @@ class CablesAPI {
     }
   }
 
-  static Future<bool> checkExistenceById(String token, String cableID) async {
-    var client = http.Client();
+  Future<bool> checkExistenceById(String token, String cableID) async {
     await dotenv.load();
     var uri = Uri.parse(
         '${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/?label=$cableID');
     print(uri);
-    var response =
-        await client.get(uri, headers: {'Authorization': 'Token $token'});
+    var response = await client.get(uri, headers: {
+      'Authorization': 'Token $token',
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
     var responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 403) {
@@ -80,15 +89,15 @@ class CablesAPI {
   }
 
   // add cable
-  static Future<bool> addConnection(String token, Cable cable) async {
-    var client = http.Client();
+  Future<bool> addConnection(String token, Cable cable) async {
     await dotenv.load();
     var uri = Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/');
     var response = await client.post(
       uri,
       headers: {
         'Authorization': 'Token $token',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
       body: jsonEncode({
         'a_terminations': [
@@ -105,7 +114,7 @@ class CablesAPI {
         ],
         'type': cable.type,
         'status': cable.status,
-        'label': cable.label,
+        'display': cable.display,
       }),
     );
     var responseBody = jsonDecode(response.body);
@@ -113,6 +122,59 @@ class CablesAPI {
       throw Exception('Invalid token');
     }
     if (response.statusCode == 201) {
+      return true;
+    } else {
+      print("API: Error");
+      print(response.statusCode);
+      print(response.body);
+      return false;
+    }
+  }
+
+  //update cable
+  Future<bool> updateConnection(String token, Cable cable) async {
+    var body = jsonEncode({
+      'a_terminations': [
+        {
+          'object_type': 'dcim.interface',
+          'object_id': cable.terminationAId,
+        }
+      ],
+      'b_terminations': [
+        {
+          'object_type': 'dcim.interface',
+          'object_id': cable.terminationBId,
+        }
+      ],
+      'type': cable.type,
+      'status': "connected",
+      'display': cable.display,
+    });
+
+    print(body);
+
+    await dotenv.load();
+    var uri = Uri.parse(
+        '${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/${cable.id}/');
+
+    var response = await client.put(
+      uri,
+      headers: {
+        'Authorization': 'Token $token',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: body,
+    );
+    try {
+      var responseBody = jsonDecode(response.body);
+    } catch (e) {
+      print(e);
+    }
+    if (response.statusCode == 403) {
+      throw Exception('Invalid token');
+    }
+    if (response.statusCode == 200) {
       return true;
     } else {
       print("API: Error");

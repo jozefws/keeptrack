@@ -6,6 +6,8 @@ import 'package:keeptrack/models/interfaces.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class InterfacesAPI {
+  final client = http.Client();
+
   final List typeRJ45 = [
     "100base-tx",
     "1000base-t",
@@ -36,13 +38,16 @@ class InterfacesAPI {
     "400gbase-x-osfp"
   ];
 
-  static Future<List<Interface>> getInterfaces(String token) async {
-    final client = http.Client();
+  Future<List<Interface>> getInterfaces(String token) async {
     await dotenv.load();
 
     var response = await client.get(
         Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/interfaces/'),
-        headers: {'Authorization': 'Token $token'});
+        headers: {
+          'Authorization': 'Token $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
     var responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
@@ -54,14 +59,17 @@ class InterfacesAPI {
     }
   }
 
-  static Future<List<Interface>> getInterfacesByDevice(
+  Future<List<Interface>> getInterfacesByDevice(
       String token, String deviceID) async {
-    final client = http.Client();
     await dotenv.load();
     var response = await client.get(
         Uri.parse(
             '${dotenv.env['NETBOX_API_URL']}/api/dcim/interfaces/?device_id=$deviceID'),
-        headers: {'Authorization': 'Token $token'});
+        headers: {
+          'Authorization': 'Token $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
     var responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
@@ -75,12 +83,15 @@ class InterfacesAPI {
 
   Future<List<DropdownMenuItem<String>>> getCableTypeByInterfaceID(
       String token, String interfaceID) async {
-    final client = http.Client();
     await dotenv.load();
     var response = await client.get(
         Uri.parse(
             '${dotenv.env['NETBOX_API_URL']}/api/dcim/interfaces/$interfaceID/'),
-        headers: {'Authorization': 'Token $token'});
+        headers: {
+          'Authorization': 'Token $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
     var responseBody = jsonDecode(response.body);
     if (response.statusCode == 403) {
       throw Exception('Invalid token');

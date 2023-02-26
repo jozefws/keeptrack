@@ -96,7 +96,8 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   late final SharedPreferences prefs;
   bool _isDark = false;
-  static int selectedIndex = 2;
+  static int selectedIndex = 0;
+  static String selectedTitle = "Welcome to KeepTrack";
 
   static List<Widget> navPages = <Widget>[
     const ModifyConnection(),
@@ -108,6 +109,15 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
   void onItemTapped(int index) {
     setState(() {
       selectedIndex = index;
+      if (index == 0) {
+        selectedTitle = "Modify Connection";
+      } else if (index == 1) {
+        selectedTitle = "Add Connection";
+      } else if (index == 2) {
+        selectedTitle = "Search Connection";
+      } else if (index == 3) {
+        selectedTitle = "Device Interfaces";
+      }
     });
   }
 
@@ -142,7 +152,8 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
                   endDrawer: Drawer(
                     child: settingsDrawer(scaffoldKey),
                   ),
-                  appBar: AppBar(title: const Text('KeepTrack'),
+                  appBar: AppBar(
+                      title: Text(selectedTitle),
                       //show burger icon that opens drawer
                       actions: <Widget>[
                         IconButton(

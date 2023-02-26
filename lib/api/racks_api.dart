@@ -4,16 +4,20 @@ import 'package:keeptrack/models/racks.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class RacksAPI {
-  static Future<List<Rack>> getRacks(String? token) async {
+  final client = http.Client();
+  Future<List<Rack>> getRacks(String? token) async {
     if (token == null) {
       return [];
     }
-    final client = http.Client();
     await dotenv.load();
 
     var response = await client.get(
         Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/racks/'),
-        headers: {'Authorization': 'Token $token'});
+        headers: {
+          'Authorization': 'Token $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
     var responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
