@@ -88,7 +88,7 @@ class _ModifyConnectionState extends State<ModifyConnection>
     terminationBId: "",
     type: "",
     status: "",
-    display: "",
+    label: "",
   );
 
   void _setCurrentInformation(String code) async {
@@ -158,8 +158,9 @@ class _ModifyConnectionState extends State<ModifyConnection>
                   children: [
                     const Text("Are you sure you want to modify this cable?"),
                     Container(
+                        color: Theme.of(context).colorScheme.primaryContainer,
                         padding: const EdgeInsets.all(10),
-                        margin: EdgeInsets.only(top: 20),
+                        margin: const EdgeInsets.only(top: 20),
                         child: Column(
                           children: [
                             Row(
@@ -167,35 +168,59 @@ class _ModifyConnectionState extends State<ModifyConnection>
                                 Text("Device A: ",
                                     style:
                                         Theme.of(context).textTheme.bodyLarge),
-                                Text(
-                                    "${currentCable.terminationADeviceName} -> $deviceAName"),
+                                Text(currentCable.terminationADeviceName !=
+                                        deviceAName
+                                    ? "${currentCable.terminationADeviceName} -> $deviceAName"
+                                    : "No changes"),
                               ],
                             ),
+                            SizedBox(height: 10),
                             Row(
                               children: [
-                                const Text("Device B: "),
                                 Text(
-                                    "${currentCable.terminationBDeviceName} -> $deviceBName"),
+                                  "Device B: ",
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                                Text(currentCable.terminationBDeviceName !=
+                                        deviceBName
+                                    ? "${currentCable.terminationBDeviceName} -> $deviceBName"
+                                    : "No changes"),
                               ],
                             ),
+                            SizedBox(height: 10),
                             Row(
                               children: [
-                                const Text("Interface A: "),
                                 Text(
-                                    "${currentCable.terminationADeviceName} -> $interfaceA"),
+                                  "Interface A: ",
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                                Text(currentCable.terminationAId != interfaceA
+                                    ? "${currentCable.terminationAId} -> $interfaceA"
+                                    : "No changes"),
                               ],
                             ),
+                            SizedBox(height: 10),
                             Row(
                               children: [
-                                const Text("Interface B: "),
                                 Text(
-                                    "${currentCable.terminationBDeviceName} -> $interfaceB"),
+                                  "Interface B: ",
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                                Text(currentCable.terminationBId != interfaceB
+                                    ? "${currentCable.terminationBId} -> $interfaceB"
+                                    : "No changes"),
                               ],
                             ),
+                            SizedBox(height: 10),
                             Row(
                               children: [
-                                const Text("Cable Type: "),
-                                Text("${currentCable.type} -> $cableType"),
+                                Text(
+                                  "Cable Type: ",
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                                Text(currentCable.type != cableType
+                                    ? "${currentCable.type} -> $cableType"
+                                    : "No changes"),
                               ],
                             ),
                           ],
@@ -579,13 +604,10 @@ class _ModifyConnectionState extends State<ModifyConnection>
                     });
                   },
                 ))));
-    // if (code == null) {
-
-    //   genSnack("No barcode detected");
-    //   return "";
-    // }
-
-    code = "CS00500";
+    if (code == null) {
+      genSnack("No barcode detected");
+      return "";
+    }
 
     if (await cablesAPI.checkExistenceById(await getToken(), code)) {
       _setCurrentInformation(code);

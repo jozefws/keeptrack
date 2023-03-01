@@ -3,6 +3,7 @@ import 'package:keeptrack/main.dart';
 import 'package:provider/provider.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 import 'package:keeptrack/views/homepage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,11 +24,14 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  Future<String> getNetboxUrl() async {
+    await dotenv.load();
+    return dotenv.env['NETBOX_API_URL'] ?? '';
+  }
+
   void moveToHome() {
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const KeepTrack()));
+        context, MaterialPageRoute(builder: (context) => const KeepTrack()));
   }
 
   void showLoginError(message) {
@@ -53,6 +57,16 @@ class _LoginPageState extends State<LoginPage> {
                 "Login to Netbox",
                 style: TextStyle(fontSize: 30),
               ),
+              //future builder to get env url
+              FutureBuilder<String>(
+                  future: getNetboxUrl(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Text(snapshot.data!);
+                    }
+                    return const Text("No URL found");
+                  }),
+
               const SizedBox(height: 60),
               Form(
                 key: _loginForm,

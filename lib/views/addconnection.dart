@@ -24,7 +24,7 @@ class _AddConnectionState extends State<AddConnection>
 
   List<String> devices = [];
 
-  String deviceAName = "Scan QR", deviceBName = "Scan Cable";
+  String deviceAName = "Device A", deviceBName = "Device B";
 
   String? deviceA, deviceB, interfaceA, interfaceB, cableBarcodeScan, cableType;
 
@@ -124,7 +124,7 @@ class _AddConnectionState extends State<AddConnection>
 
     if (barcode != null && type != null && intA != null && intB != null) {
       Cable newCable = Cable(
-        display: barcode,
+        label: barcode,
         type: type,
         terminationAId: intA,
         terminationBId: intB,

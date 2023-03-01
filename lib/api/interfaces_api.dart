@@ -62,21 +62,25 @@ class InterfacesAPI {
   Future<List<Interface>> getInterfacesByDevice(
       String token, String deviceID) async {
     await dotenv.load();
-    var response = await client.get(
-        Uri.parse(
-            '${dotenv.env['NETBOX_API_URL']}/api/dcim/interfaces/?device_id=$deviceID'),
-        headers: {
-          'Authorization': 'Token $token',
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        });
-    var responseBody = jsonDecode(response.body);
+    try {
+      var response = await client.get(
+          Uri.parse(
+              '${dotenv.env['NETBOX_API_URL']}/api/dcim/interfaces/?device_id=$deviceID'),
+          headers: {
+            'Authorization': 'Token $token',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          });
+      var responseBody = jsonDecode(response.body);
 
-    if (response.statusCode == 200) {
-      return (responseBody['results'] as List)
-          .map((e) => Interface.fromJson(e))
-          .toList();
-    } else {
+      if (response.statusCode == 200) {
+        return (responseBody['results'] as List)
+            .map((e) => Interface.fromJson(e))
+            .toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
       return [];
     }
   }

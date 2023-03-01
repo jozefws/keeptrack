@@ -114,7 +114,7 @@ class CablesAPI {
         ],
         'type': cable.type,
         'status': cable.status,
-        'display': cable.display,
+        'label': cable.label,
       }),
     );
     var responseBody = jsonDecode(response.body);
@@ -148,7 +148,7 @@ class CablesAPI {
       ],
       'type': cable.type,
       'status': "connected",
-      'display': cable.display,
+      'label': cable.label,
     });
 
     print(body);
