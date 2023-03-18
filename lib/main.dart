@@ -133,6 +133,11 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
     return (await provider.getUsername() ?? "loading username...");
   }
 
+  Future<String> getDomain() async {
+    await dotenv.load();
+    return dotenv.env['NETBOX_API_URL'] ?? '';
+  }
+
   void getPrefs() async {
     prefs = await SharedPreferences.getInstance();
     _isDark = prefs.getBool('settings/dark-mode') ?? false;
@@ -197,6 +202,7 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
 
   settingsDrawer(Key scaffoldKey) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const Padding(
           padding: EdgeInsets.only(top: 60.0, left: 20.0, right: 20.0),
@@ -225,25 +231,58 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
         const Padding(
           padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
         ),
-        ElevatedButton(
-            onPressed: () async {
-              if (await Provider.of<NetboxAuthProvider>(context, listen: false)
-                  .logout()) {
-                ScaffoldMessenger(
-                    key: scaffoldKey,
-                    child: const SnackBar(content: Text('Logout successful')));
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()));
-              } else {
-                ScaffoldMessenger(
-                    key: scaffoldKey,
-                    child: const SnackBar(
-                        content: Text('Unable to delete token')));
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()));
-              }
-            },
-            child: const Text('Logout'))
+        Column(
+          children: [
+            Text(
+              "Currently logged into:",
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ],
+        ),
+        Container(
+          child: FutureBuilder<String>(
+              future: getDomain(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text("${snapshot.data!}");
+                }
+                return CircularProgressIndicator();
+              }),
+        ),
+        Expanded(
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.all(20),
+              child: FloatingActionButton.extended(
+                  onPressed: () async {
+                    if (await Provider.of<NetboxAuthProvider>(context,
+                            listen: false)
+                        .logout()) {
+                      ScaffoldMessenger(
+                          key: scaffoldKey,
+                          child: const SnackBar(
+                              content: Text('Logout successful')));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()));
+                    } else {
+                      ScaffoldMessenger(
+                          key: scaffoldKey,
+                          child: const SnackBar(
+                              content: Text('Unable to delete token')));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()));
+                    }
+                  },
+                  label: const Text('Logout')),
+            ),
+          ),
+        ),
       ],
     );
   }

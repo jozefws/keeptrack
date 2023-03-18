@@ -4,6 +4,7 @@ import 'package:keeptrack/api/cables_api.dart';
 import 'package:keeptrack/api/devices_api.dart';
 import 'package:keeptrack/api/organisation_api.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
+import 'package:keeptrack/views/hierarchysearch.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class SearchConnection extends StatefulWidget {
@@ -22,18 +23,13 @@ class _SearchConnectionState extends State<SearchConnection>
   DevicesAPI devicesAPI = DevicesAPI();
   OrganisationAPI organisationAPI = OrganisationAPI();
   String location = "Select Location";
-
+  int locationID = 1;
   final TextEditingController _cableBarcodeScanController =
       TextEditingController();
 
   String? cableBarcodeScan;
 
   CablesAPI cablesAPI = CablesAPI();
-
-  @override
-  initState() {
-    super.initState();
-  }
 
   Future<List<String>> _getDevices() async {
     var i = await devicesAPI.getDevices(await getToken());
@@ -48,7 +44,7 @@ class _SearchConnectionState extends State<SearchConnection>
 
     return i
         .map((e) =>
-            "${e.display} ${e.parent != null ? " < ${e.parent?.display}" : ""}")
+            "${e.display} ${e.parent != null ? " < ${e.parent?.display}" : "" "${e.parent != null ? " < ${e.parent?.display}" : ""}"}")
         .toList();
   }
 
@@ -127,7 +123,12 @@ class _SearchConnectionState extends State<SearchConnection>
                           heroTag: "searchByHierarchy",
                           onPressed: () {
                             //open material route to search by hierarchy
-                            Navigator.pushNamed(context, "/heiarchysearch");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HierarchySearch(
+                                      location, locationID, "LOCATION")),
+                            );
                           },
                           label: const Text("Start Search"),
                           icon: const Icon(Icons.search)),

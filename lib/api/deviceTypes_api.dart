@@ -1,59 +1,48 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:keeptrack/models/racks.dart';
+import 'package:keeptrack/models/device_types.dart';
+import 'package:keeptrack/models/devices.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class RacksAPI {
+class DeviceTypesAPI {
   final client = http.Client();
-  Future<List<Rack>> getRacks(String? token) async {
-    if (token == null) {
-      return [];
-    }
+  Future<List<DeviceType>> getDeviceTypes(String token) async {
     await dotenv.load();
 
     var response = await client.get(
-        Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/racks/'),
+        Uri.parse(
+            '${dotenv.env['NETBOX_API_URL']}/api/dcim/device=types/?limit=250'),
         headers: {
           'Authorization': 'Token $token',
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         });
     var responseBody = jsonDecode(response.body);
-
+    var list = responseBody['results'] as List;
     if (response.statusCode == 200) {
       return (responseBody['results'] as List)
-          .map((e) => Rack.fromJson(e))
+          .map((e) => DeviceType.fromJson(e))
           .toList();
     } else {
       return [];
     }
   }
 
-  Future<List<Rack>> getRacksByLocation(String? token, String location) async {
-    if (token == null) {
-      return [];
-    }
+  Future<DeviceType> getDeviceTypeById(String token, String ID) async {
     await dotenv.load();
 
-    location = location.split(' ').first;
-
     var response = await client.get(
-        Uri.parse(
-            '${dotenv.env['NETBOX_API_URL']}/api/dcim/racks/?location=$location'),
+        Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/device-types/$ID'),
         headers: {
           'Authorization': 'Token $token',
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         });
     var responseBody = jsonDecode(response.body);
-    print(response.request!.url.toString());
-
     if (response.statusCode == 200) {
-      return (responseBody['results'] as List)
-          .map((e) => Rack.fromJson(e))
-          .toList();
+      return DeviceType.fromJson(responseBody);
     } else {
-      return [];
+      return DeviceType(id: -1, name: 'Error', url: 'error');
     }
   }
 }

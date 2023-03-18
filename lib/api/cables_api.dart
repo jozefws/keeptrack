@@ -9,28 +9,28 @@ import '../models/cables.dart';
 class CablesAPI {
   final client = http.Client();
 
-  Future<List<Device>> getDevices(String token) async {
-    await dotenv.load();
+  // Future<List<Device>> getDevices(String token) async {
+  //   await dotenv.load();
 
-    var response = await client.get(
-        Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/devices/'),
-        headers: {
-          'Authorization': 'Token $token',
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        });
-    var responseBody = jsonDecode(response.body);
-    if (response.statusCode == 403) {
-      throw Exception('Invalid token');
-    }
-    if (response.statusCode == 200) {
-      return (responseBody['results'] as List)
-          .map((e) => Device.fromJson(e))
-          .toList();
-    } else {
-      return [];
-    }
-  }
+  //   var response = await client.get(
+  //       Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/devices/'),
+  //       headers: {
+  //         'Authorization': 'Token $token',
+  //         'Content-Type': 'application/json',
+  //         'Accept': 'application/json',
+  //       });
+  //   var responseBody = jsonDecode(response.body);
+  //   if (response.statusCode == 403) {
+  //     throw Exception('Invalid token');
+  //   }
+  //   if (response.statusCode == 200) {
+  //     return (responseBody['results'] as List)
+  //         .map((e) => Device.fromJson(e))
+  //         .toList();
+  //   } else {
+  //     return [];
+  //   }
+  // }
 
   Future<List<Cable>> getCableByID(String token, String cableID) async {
     await dotenv.load();
@@ -157,7 +157,7 @@ class CablesAPI {
     var uri = Uri.parse(
         '${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/${cable.id}/');
 
-    var response = await client.put(
+    var response = await client.patch(
       uri,
       headers: {
         'Authorization': 'Token $token',
