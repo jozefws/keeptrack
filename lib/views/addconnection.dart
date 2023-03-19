@@ -124,6 +124,7 @@ class _AddConnectionState extends State<AddConnection>
 
     if (barcode != null && type != null && intA != null && intB != null) {
       Cable newCable = Cable(
+        id: -1,
         label: barcode,
         type: type,
         terminationAId: intA,

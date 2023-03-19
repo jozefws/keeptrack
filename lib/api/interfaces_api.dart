@@ -62,27 +62,32 @@ class InterfacesAPI {
   Future<List<Interface>> getInterfacesByDevice(
       String token, String deviceID) async {
     await dotenv.load();
-    try {
-      var response = await client.get(
-          Uri.parse(
-              '${dotenv.env['NETBOX_API_URL']}/api/dcim/interfaces/?device_id=$deviceID'),
-          headers: {
-            'Authorization': 'Token $token',
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          });
-      var responseBody = jsonDecode(response.body);
-
-      if (response.statusCode == 200) {
-        return (responseBody['results'] as List)
-            .map((e) => Interface.fromJson(e))
-            .toList();
-      } else {
-        return [];
-      }
-    } catch (e) {
+    // try {
+    var response = await client.get(
+        Uri.parse(
+            '${dotenv.env['NETBOX_API_URL']}/api/dcim/interfaces/?device_id=$deviceID'),
+        headers: {
+          'Authorization': 'Token $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
+    print(response.request?.url);
+    var responseBody = jsonDecode(response.body);
+    if (response.statusCode == 403) {
+      throw Exception('Invalid token');
+    }
+    if (response.statusCode == 200) {
+      return (responseBody['results'] as List)
+          .map((e) => Interface.fromJson(e))
+          .toList();
+    } else {
       return [];
     }
+    // }
+    // } catch (e) {
+    //   print("${e}here");
+    //   return [];
+    // }
   }
 
   Future<List<DropdownMenuItem<String>>> getCableTypeByInterfaceID(
@@ -112,5 +117,26 @@ class InterfacesAPI {
       return [];
     }
     return [];
+  }
+
+  Future<Interface?> getInterfaceByID(String token, String interfaceID) async {
+    await dotenv.load();
+
+    var response = await client.get(
+        Uri.parse(
+            '${dotenv.env['NETBOX_API_URL']}/api/dcim/interfaces/$interfaceID'),
+        headers: {
+          'Authorization': 'Token $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
+
+    if (response.statusCode == 200) {
+      var responseBody = jsonDecode(response.body);
+      return (Interface.fromJson(responseBody));
+    } else {
+      print("API: Error, response code: ${response.statusCode}");
+      return null;
+    }
   }
 }

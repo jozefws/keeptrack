@@ -9,33 +9,41 @@ import '../models/cables.dart';
 class CablesAPI {
   final client = http.Client();
 
-  // Future<List<Device>> getDevices(String token) async {
-  //   await dotenv.load();
+  Future<Cable> getCableByID(String token, String cableID) async {
+    await dotenv.load();
+    var uri =
+        Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/$cableID');
+    print(uri);
+    var response = await client.get(uri, headers: {
+      'Authorization': 'Token $token',
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+    print(response.body);
+    var responseBody = jsonDecode(response.body);
+    if (response.statusCode == 403) {
+      print("Invalid token");
+      throw Exception('Invalid token');
+    }
+    if (response.statusCode == 200) {
+      return Cable.fromJson(responseBody);
+    } else {
+      print("API: Error");
+      return Cable(
+        id: -1,
+        url: '',
+        label: '',
+        type: '',
+        status: '',
+      );
+    }
+  }
 
-  //   var response = await client.get(
-  //       Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/devices/'),
-  //       headers: {
-  //         'Authorization': 'Token $token',
-  //         'Content-Type': 'application/json',
-  //         'Accept': 'application/json',
-  //       });
-  //   var responseBody = jsonDecode(response.body);
-  //   if (response.statusCode == 403) {
-  //     throw Exception('Invalid token');
-  //   }
-  //   if (response.statusCode == 200) {
-  //     return (responseBody['results'] as List)
-  //         .map((e) => Device.fromJson(e))
-  //         .toList();
-  //   } else {
-  //     return [];
-  //   }
-  // }
-
-  Future<List<Cable>> getCableByID(String token, String cableID) async {
+  Future<Cable?> getCableByLabel(String token, String cableLabel) async {
     await dotenv.load();
     var uri = Uri.parse(
-        '${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/?label=$cableID');
+        '${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/?label=$cableLabel');
+    print(uri);
     var response = await client.get(uri, headers: {
       'Authorization': 'Token $token',
       'Content-Type': 'application/json',
@@ -43,14 +51,18 @@ class CablesAPI {
     });
     var responseBody = jsonDecode(response.body);
     if (response.statusCode == 403) {
+      print("Invalid token");
       throw Exception('Invalid token');
     }
     if (response.statusCode == 200) {
-      return (responseBody['results'] as List)
-          .map((e) => Cable.fromJson(e))
-          .toList();
+      if (responseBody['count'] == 0) {
+        print("API: Cable does not exit");
+        return null;
+      }
+      return Cable.fromResultRootJson(responseBody);
     } else {
-      return [];
+      print("API: Error. ${response.statusCode}, ${response.body}");
+      return null;
     }
   }
 
@@ -81,9 +93,6 @@ class CablesAPI {
       }
     } else {
       print("API: Error");
-      print(response.statusCode);
-      print(response.body);
-
       return false;
     }
   }

@@ -17,6 +17,7 @@ class DevicesAPI {
           'Accept': 'application/json',
         });
     var responseBody = jsonDecode(response.body);
+    print(responseBody);
     var list = responseBody['results'] as List;
     if (response.statusCode == 200) {
       return (responseBody['results'] as List)
@@ -27,7 +28,7 @@ class DevicesAPI {
     }
   }
 
-  Future<List<Device>> getDeviceByID(String token, String ID) async {
+  Future<Device> getDeviceByID(String token, String ID) async {
     await dotenv.load();
 
     var response = await client.get(
@@ -38,13 +39,11 @@ class DevicesAPI {
           'Accept': 'application/json',
         });
     var responseBody = jsonDecode(response.body);
-    var list = responseBody['results'] as List;
     if (response.statusCode == 200) {
-      return (responseBody['results'] as List)
-          .map((e) => Device.fromJson(e))
-          .toList();
+      return (Device.fromJson(responseBody));
     } else {
-      return [];
+      print("API: Error, response code: ${response.statusCode}");
+      return Device(id: -1, name: "err", url: "err");
     }
   }
 

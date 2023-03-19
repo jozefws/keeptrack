@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Cable {
-  final int? id;
+  final int id;
   String label;
   final String? url;
   String? terminationAId;
@@ -17,7 +17,7 @@ class Cable {
   String? color;
 
   Cable({
-    this.id,
+    required this.id,
     required this.label,
     this.url,
     this.terminationAId,
@@ -34,6 +34,7 @@ class Cable {
   });
 
   factory Cable.fromJson(Map<String, dynamic> json) {
+    print(json);
     return Cable(
       id: json['id'],
       label: json['label'],
@@ -53,6 +54,10 @@ class Cable {
       type: json['type'],
       color: json['color'],
     );
+  }
+
+  factory Cable.fromResultRootJson(Map<String, dynamic> json) {
+    return Cable.fromJson(json['results'][0]);
   }
 }
 

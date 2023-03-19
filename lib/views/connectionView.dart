@@ -5,16 +5,16 @@ import 'package:keeptrack/models/device_types.dart';
 import 'package:keeptrack/models/devices.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 
-class DeviceView extends StatefulWidget {
-  const DeviceView(this.location, this.deviceID, {super.key});
+class ConnectionView extends StatefulWidget {
+  const ConnectionView(this.location, this.deviceID, {super.key});
   final String location;
   final int deviceID;
 
   @override
-  State<DeviceView> createState() => _DeviceViewState();
+  State<ConnectionView> createState() => _ConnectionViewState();
 }
 
-class _DeviceViewState extends State<DeviceView> {
+class _ConnectionViewState extends State<ConnectionView> {
   DevicesAPI devicesAPI = DevicesAPI();
   DeviceTypesAPI deviceTypesAPI = DeviceTypesAPI();
 

@@ -89,20 +89,19 @@ class _ModifyConnectionState extends State<ModifyConnection>
     type: "",
     status: "",
     label: "",
+    id: -1,
   );
 
   void _setCurrentInformation(String code) async {
-    Future<List<Cable>> cableDevices =
-        cablesAPI.getCableByID(await getToken(), code);
+    Future<Cable> cableDevices = cablesAPI.getCableByID(await getToken(), code);
     cableDevices.then((value) {
-      if (value.isEmpty) {
+      if (value.id == -1) {
         genSnack("No cable found");
       } else {
         setState(() {
-          currentCable = value[0];
+          currentCable = value;
           cableBarcodeScan = code;
           deviceA = currentCable.terminationADeviceID;
-
           deviceAName = currentCable.terminationADeviceName ?? "Name not found";
           deviceB = currentCable.terminationBDeviceID;
           deviceBName = currentCable.terminationBDeviceName ?? "Name not found";

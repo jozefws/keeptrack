@@ -103,7 +103,7 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
     const ModifyConnection(),
     const AddConnection(),
     const SearchConnection(),
-    const DeviceInterfaces()
+    const DeviceInterfaces(),
   ];
 
   void onItemTapped(int index) {

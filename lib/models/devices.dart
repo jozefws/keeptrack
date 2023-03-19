@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:keeptrack/models/device_types.dart';
 import 'package:keeptrack/models/ip_addresses.dart';
+import 'package:keeptrack/models/locations.dart';
 import 'package:keeptrack/models/manufacturer.dart';
 import 'package:keeptrack/models/racks.dart';
 import 'package:keeptrack/models/tenant.dart';
@@ -15,13 +18,14 @@ class Device {
   final Manufacturer? manufacturer;
   final Rack? rack;
   final Tenant? tenant;
-  final String? position;
+  final int? position;
   final String? facingPosition;
   final IPAddress? primaryIP;
   final String? comments;
   final String? description;
   final String? status;
   final List<Tag>? tags;
+  final Location? location;
 
   Device(
       {required this.id,
@@ -39,7 +43,8 @@ class Device {
       this.comments,
       this.description,
       this.status,
-      this.tags});
+      this.tags,
+      this.location});
 
   factory Device.fromJson(Map<String, dynamic> json) {
     return Device(
@@ -56,14 +61,17 @@ class Device {
             : null,
         rack: json['rack'] != null ? Rack.fromJson(json['rack']) : null,
         tenant: json['tenant'] != null ? Tenant.fromJson(json['tenant']) : null,
-        position: json['position'].toString(),
-        facingPosition: json['face']['label'],
+        position: json['position']?.round() ?? 0,
+        facingPosition: json['face']?['label'],
         primaryIP: json['primary_ip']?['address'] != null
             ? IPAddress.fromJson(json['primary_ip'])
             : null,
         comments: json['comments'],
         description: json['description'],
-        status: json['status']['label'],
+        status: json['status']?['label'],
+        location: json['location'] != null
+            ? Location.fromJson(json['location'])
+            : null,
         tags: json['tags'] != null
             ? List<Tag>.from(json['tags'].map((x) => Tag.fromJson(x)))
             : null);
