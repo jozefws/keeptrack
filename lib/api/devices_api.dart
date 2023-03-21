@@ -28,7 +28,7 @@ class DevicesAPI {
     }
   }
 
-  Future<Device> getDeviceByID(String token, String ID) async {
+  Future<Device?> getDeviceByID(String token, String ID) async {
     await dotenv.load();
 
     var response = await client.get(
@@ -43,7 +43,7 @@ class DevicesAPI {
       return (Device.fromJson(responseBody));
     } else {
       print("API: Error, response code: ${response.statusCode}");
-      return Device(id: -1, name: "err", url: "err");
+      return null;
     }
   }
 

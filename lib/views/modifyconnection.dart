@@ -93,9 +93,10 @@ class _ModifyConnectionState extends State<ModifyConnection>
   );
 
   void _setCurrentInformation(String code) async {
-    Future<Cable> cableDevices = cablesAPI.getCableByID(await getToken(), code);
+    Future<Cable?> cableDevices =
+        cablesAPI.getCableByID(await getToken(), code);
     cableDevices.then((value) {
-      if (value.id == -1) {
+      if (value == null) {
         genSnack("No cable found");
       } else {
         setState(() {

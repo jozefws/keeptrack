@@ -5,7 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 import 'package:keeptrack/api/badcert_override.dart';
 import 'package:keeptrack/views/addconnection.dart';
-import 'package:keeptrack/views/deviceinterfaces.dart';
+import 'package:keeptrack/views/devicesearch.dart';
 import 'package:keeptrack/views/modifyconnection.dart';
 import 'package:keeptrack/views/searchconnection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -103,7 +103,7 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
     const ModifyConnection(),
     const AddConnection(),
     const SearchConnection(),
-    const DeviceInterfaces(),
+    const DeviceSearch(),
   ];
 
   void onItemTapped(int index) {
@@ -116,7 +116,7 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
       } else if (index == 2) {
         selectedTitle = "Search Connection";
       } else if (index == 3) {
-        selectedTitle = "Device Interfaces";
+        selectedTitle = "Device Information";
       }
     });
   }

@@ -28,21 +28,17 @@ class _InterfaceViewState extends State<InterfaceView> {
 
   Future<Cable?> _getCableByID(String cableID) async {
     var i = await cablesAPI.getCableByID(await getToken(), cableID);
-    if (i.id == -1) {
-      return null;
-    } else {
-      return i;
-    }
-  }
-
-  Future<Device?> _getDeviceByID(String deviceID) async {
-    var i = await DevicesAPI().getDeviceByID(await getToken(), deviceID);
-    if (i.id != -1) {
+    if (i != null) {
       return i;
     } else {
       print("API: Error");
       return null;
     }
+  }
+
+  Future<Device?> _getDeviceByID(String deviceID) async {
+    var i = await DevicesAPI().getDeviceByID(await getToken(), deviceID);
+    return i;
   }
 
   Future<Interface?> _getInterfaceByID(String interfaceID) async {

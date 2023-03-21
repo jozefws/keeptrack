@@ -9,7 +9,7 @@ import '../models/cables.dart';
 class CablesAPI {
   final client = http.Client();
 
-  Future<Cable> getCableByID(String token, String cableID) async {
+  Future<Cable?> getCableByID(String token, String cableID) async {
     await dotenv.load();
     var uri =
         Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/$cableID');
@@ -29,13 +29,7 @@ class CablesAPI {
       return Cable.fromJson(responseBody);
     } else {
       print("API: Error");
-      return Cable(
-        id: -1,
-        url: '',
-        label: '',
-        type: '',
-        status: '',
-      );
+      return null;
     }
   }
 
