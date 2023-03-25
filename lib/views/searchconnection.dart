@@ -5,9 +5,14 @@ import 'package:keeptrack/api/cables_api.dart';
 import 'package:keeptrack/api/devices_api.dart';
 import 'package:keeptrack/api/interfaces_api.dart';
 import 'package:keeptrack/api/organisation_api.dart';
+import 'package:keeptrack/api/poweroutlets_api.dart';
+import 'package:keeptrack/api/powerport_api.dart';
 import 'package:keeptrack/models/cables.dart';
+import 'package:keeptrack/models/interfaceComboModel.dart';
 import 'package:keeptrack/models/interfaces.dart';
 import 'package:keeptrack/models/locations.dart';
+import 'package:keeptrack/models/poweroutlet.dart';
+import 'package:keeptrack/models/powerport.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 import 'package:keeptrack/views/hierarchysearch.dart';
 import 'package:keeptrack/views/interfaceView.dart';
@@ -31,6 +36,8 @@ class _SearchConnectionState extends State<SearchConnection>
   OrganisationAPI organisationAPI = OrganisationAPI();
   InterfacesAPI interfacesAPI = InterfacesAPI();
   CablesAPI cablesAPI = CablesAPI();
+  PowerPortsAPI powerPortsAPI = PowerPortsAPI();
+  PowerOutletsAPI powerOutletsAPI = PowerOutletsAPI();
 
   late Location location;
   String locationName = "Select a location";
@@ -60,6 +67,45 @@ class _SearchConnectionState extends State<SearchConnection>
 
   getToken() async {
     return await NetboxAuthProvider().getToken();
+  }
+
+  Future<ComboModel?> _getMixedPortByID(String portID) async {
+    if (portID == "") {
+      return null;
+    }
+    Interface? interface =
+        await interfacesAPI.getInterfaceByID(await getToken(), portID);
+    PowerPort? powerPort =
+        await powerPortsAPI.getPowerPortByID(await getToken(), portID);
+    PowerOutlet? powerOutlet =
+        await powerOutletsAPI.getPowerOutletByID(await getToken(), portID);
+    if (interface != null) {
+      return ComboModel(
+          id: interface.id,
+          name: interface.name,
+          url: interface.url,
+          objectType: "interface",
+          interface: interface,
+          occupied: interface.occupied);
+    } else if (powerPort != null) {
+      return ComboModel(
+          id: powerPort.id,
+          name: powerPort.name,
+          url: powerPort.url,
+          objectType: "powerport",
+          powerPort: powerPort,
+          occupied: powerPort.occupied);
+    } else if (powerOutlet != null) {
+      return ComboModel(
+          id: powerOutlet.id,
+          name: powerOutlet.name,
+          url: powerOutlet.url,
+          objectType: "poweroutlet",
+          powerOutlet: powerOutlet,
+          occupied: powerOutlet.occupied);
+    } else {
+      return null;
+    }
   }
 
   @override
@@ -209,16 +255,17 @@ class _SearchConnectionState extends State<SearchConnection>
                                   genSnack("Cable not found");
                                   return;
                                 }
-                                Interface? interface =
-                                    await interfacesAPI.getInterfaceByID(
-                                        await getToken(),
-                                        cable.terminationAId!);
+                                ComboModel? combo = await _getMixedPortByID(
+                                    cable.terminationAId!);
+                                // await interfacesAPI.getInterfaceByID(
+                                //     await getToken(),
+                                //     cable.terminationAId!);
                                 //get the device that the interface is connected to
-                                if (interface == null) {
+                                if (combo == null) {
                                   genSnack("Cable not found");
                                   return;
                                 }
-                                moveToInterface(interface);
+                                moveToInterface(combo);
                               }
                             },
                             label: const Text("Scan Cable QR"),
@@ -253,22 +300,21 @@ class _SearchConnectionState extends State<SearchConnection>
                           onPressed: () async {
                             if (_searchByLabelKey.currentState!.validate()) {
                               genSnack("Searching for cable...");
-                              Cable? cable = await cablesAPI.getCableByLabel(
+                              Cable? cable = await cablesAPI.getCableByID(
                                   await getToken(),
                                   _cableBarcodeScanController.text);
                               if (cable == null) {
                                 genSnack("Cable not found");
                                 return;
                               }
-                              Interface? interface =
-                                  await interfacesAPI.getInterfaceByID(
-                                      await getToken(), cable.terminationAId!);
+                              ComboModel? combo = await _getMixedPortByID(
+                                  cable.terminationAId!);
                               //get the device that the interface is connected to
-                              if (interface == null) {
+                              if (combo == null) {
                                 genSnack("Cable not found");
                                 return;
                               }
-                              moveToInterface(interface);
+                              moveToInterface(combo);
                             }
                           },
                           label: const Text("Start Search"),
@@ -301,16 +347,12 @@ class _SearchConnectionState extends State<SearchConnection>
                   },
                 ))));
     if (code == null) {
-      return "032042";
-
       genSnack("No barcode detected");
       return "";
     }
-    if (await cablesAPI.checkExistenceById(await getToken(), code)) {
-      return "032042";
-      // return code;
+    if (await cablesAPI.checkExistenceByLabel(await getToken(), code)) {
+      return code;
     } else {
-      print("Cable $code, does not exist");
       return code;
     }
   }
@@ -318,11 +360,10 @@ class _SearchConnectionState extends State<SearchConnection>
   @override
   bool get wantKeepAlive => true;
 
-  moveToInterface(Interface interface) {
-    print("Moving to interface ${interface.id}");
+  moveToInterface(ComboModel combo) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => InterfaceView(interface)),
+      MaterialPageRoute(builder: (context) => ComboView(combo)),
     );
   }
 }

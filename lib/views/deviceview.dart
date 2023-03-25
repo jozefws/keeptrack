@@ -31,7 +31,7 @@ class _DeviceViewState extends State<DeviceView> {
   Future<DeviceType?> getDeviceTypeById(int id) async {
     var i =
         await deviceTypesAPI.getDeviceTypeById(await getToken(), id.toString());
-    if (i.id != -1) {
+    if (i != null) {
       return i;
     }
     return null;

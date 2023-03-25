@@ -55,6 +55,8 @@ class InterfacesAPI {
           .map((e) => Interface.fromJson(e))
           .toList();
     } else {
+      print(
+          "Interface getInterfaces API: Error, response code: ${response.statusCode}");
       return [];
     }
   }
@@ -71,7 +73,6 @@ class InterfacesAPI {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         });
-    print(response.request?.url);
     var responseBody = jsonDecode(response.body);
     if (response.statusCode == 403) {
       throw Exception('Invalid token');
@@ -81,13 +82,10 @@ class InterfacesAPI {
           .map((e) => Interface.fromJson(e))
           .toList();
     } else {
+      print(
+          "Interface getInterfacesByDevice API: Error, response code: ${response.statusCode}");
       return [];
     }
-    // }
-    // } catch (e) {
-    //   print("${e}here");
-    //   return [];
-    // }
   }
 
   Future<List<DropdownMenuItem<String>>> getCableTypeByInterfaceID(
@@ -121,7 +119,6 @@ class InterfacesAPI {
 
   Future<Interface?> getInterfaceByID(String token, String interfaceID) async {
     await dotenv.load();
-
     var response = await client.get(
         Uri.parse(
             '${dotenv.env['NETBOX_API_URL']}/api/dcim/interfaces/$interfaceID'),
@@ -135,7 +132,8 @@ class InterfacesAPI {
       var responseBody = jsonDecode(response.body);
       return (Interface.fromJson(responseBody));
     } else {
-      print("API: Error, response code: ${response.statusCode}");
+      print(
+          "Interface getInterfaceByID API: Error, response code: ${response.statusCode}");
       return null;
     }
   }

@@ -4,49 +4,106 @@ import 'package:flutter/material.dart';
 import 'package:keeptrack/api/cables_api.dart';
 import 'package:keeptrack/api/devices_api.dart';
 import 'package:keeptrack/api/interfaces_api.dart';
+import 'package:keeptrack/api/powerfeeds_api.dart';
+import 'package:keeptrack/api/poweroutlets_api.dart';
+import 'package:keeptrack/api/powerport_api.dart';
 import 'package:keeptrack/models/cables.dart';
 import 'package:keeptrack/models/devices.dart';
+import 'package:keeptrack/models/interfaceComboModel.dart';
 import 'package:keeptrack/models/interfaces.dart';
+import 'package:keeptrack/models/powerfeed.dart';
+import 'package:keeptrack/models/poweroutlet.dart';
+import 'package:keeptrack/models/powerport.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 
-class InterfaceView extends StatefulWidget {
-  const InterfaceView(this.interface, {super.key});
-  final Interface interface;
+class ComboView extends StatefulWidget {
+  const ComboView(this.combo, {super.key});
+  final ComboModel combo;
 
   @override
-  State<InterfaceView> createState() => _InterfaceViewState();
+  State<ComboView> createState() => _ComboViewState();
 }
 
-class _InterfaceViewState extends State<InterfaceView> {
+class _ComboViewState extends State<ComboView> {
   CablesAPI cablesAPI = CablesAPI();
   DevicesAPI devicesAPI = DevicesAPI();
   InterfacesAPI interfacesAPI = InterfacesAPI();
+  PowerOutletsAPI poweroutletAPI = PowerOutletsAPI();
+  PowerPortsAPI powerportAPI = PowerPortsAPI();
+  PowerFeedsAPI powerfeedsAPI = PowerFeedsAPI();
 
   getToken() async {
     return await NetboxAuthProvider().getToken();
   }
 
   Future<Cable?> _getCableByID(String cableID) async {
+    if (cableID == '') {
+      return null;
+    }
+
     var i = await cablesAPI.getCableByID(await getToken(), cableID);
     if (i != null) {
       return i;
     } else {
-      print("API: Error");
       return null;
     }
   }
 
   Future<Device?> _getDeviceByID(String deviceID) async {
+    if (deviceID == '') {
+      return null;
+    }
     var i = await DevicesAPI().getDeviceByID(await getToken(), deviceID);
     return i;
   }
 
   Future<Interface?> _getInterfaceByID(String interfaceID) async {
+    if (interfaceID == '') {
+      return null;
+    }
     var i = await interfacesAPI.getInterfaceByID(await getToken(), interfaceID);
     if (i != null) {
       return i;
     } else {
-      print("API: Error");
+      return null;
+    }
+  }
+
+  Future<PowerOutlet?> _getPowerOutletByID(String powerOutletID) async {
+    if (powerOutletID == '') {
+      return null;
+    }
+    PowerOutlet? powerOutlet = await poweroutletAPI.getPowerOutletByID(
+        await getToken(), powerOutletID);
+    if (powerOutlet != null) {
+      return powerOutlet;
+    } else {
+      return null;
+    }
+  }
+
+  Future<PowerPort?> _getPowerPortByID(String powerPortID) async {
+    if (powerPortID == '') {
+      return null;
+    }
+    PowerPort? powerPort =
+        await powerportAPI.getPowerPortByID(await getToken(), powerPortID);
+    if (powerPort != null) {
+      return powerPort;
+    } else {
+      return null;
+    }
+  }
+
+  Future<PowerFeed?> _getPowerFeedByID(String powerFeedID) async {
+    if (powerFeedID == '') {
+      return null;
+    }
+    PowerFeed? powerFeed =
+        await powerfeedsAPI.getPowerFeedByID(await getToken(), powerFeedID);
+    if (powerFeed != null) {
+      return powerFeed;
+    } else {
       return null;
     }
   }
@@ -56,7 +113,7 @@ class _InterfaceViewState extends State<InterfaceView> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          title: Text(widget.interface.name),
+          title: Text(widget.combo.name),
           titleTextStyle: const TextStyle(fontSize: 16),
           actions: [
             IconButton(
@@ -67,10 +124,19 @@ class _InterfaceViewState extends State<InterfaceView> {
             ),
           ],
         ),
-        body: displayInterface(widget.interface.cableID.toString()));
+        body: displayCombo(widget.combo));
   }
 
-  displayInterface(cableID) {
+  displayCombo(ComboModel combo) {
+    String cableID = combo.interface?.cableID.toString() ??
+        combo.powerOutlet?.cable?.id.toString() ??
+        combo.powerPort?.cable?.id.toString() ??
+        "";
+
+    if (cableID == "") {
+      return const Center(child: Text("Error, no cable found"));
+    }
+
     return FutureBuilder(
         future: _getCableByID(cableID),
         builder: (context, snapshot) {
@@ -90,15 +156,24 @@ class _InterfaceViewState extends State<InterfaceView> {
                   const Text("Device A",
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                  displayDeviceCard(
-                      cable,
-                      cable.terminationADeviceID,
-                      cable.terminationAId,
-                      Theme.of(context).colorScheme.secondaryContainer),
+                  cable.terminationAType != "dcim.powerfeed"
+                      ? displayDeviceCard(
+                          cable,
+                          cable.terminationADeviceID,
+                          cable.terminationAId,
+                          Theme.of(context).colorScheme.tertiaryContainer)
+                      : displayRootFeedCard(
+                              cable.terminationAId,
+                              Theme.of(context)
+                                  .colorScheme
+                                  .tertiaryContainer) ??
+                          const SizedBox(height: 0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      displayInterfaceCard(cable.terminationAId.toString(),
+                      filterPortType(
+                          cable.terminationAType ?? "",
+                          cable.terminationAId.toString(),
                           Theme.of(context).colorScheme.primaryContainer),
                     ],
                   ),
@@ -119,7 +194,9 @@ class _InterfaceViewState extends State<InterfaceView> {
                       width: 20,
                       height: 200,
                       child: VerticalDivider(
-                        color: Color(int.parse("0xFF${cable.color}")),
+                        color: cable.color == ""
+                            ? Colors.white
+                            : Color(int.parse("0xFF${cable.color}")),
                         thickness: 8,
                       ),
                     )
@@ -131,16 +208,24 @@ class _InterfaceViewState extends State<InterfaceView> {
                       const Text("Device B",
                           style: TextStyle(
                               fontSize: 14, fontWeight: FontWeight.bold)),
-                      displayInterfaceCard(cable.terminationBId.toString(),
+                      filterPortType(
+                          cable.terminationBType ?? "",
+                          cable.terminationBId.toString(),
                           Theme.of(context).colorScheme.primaryContainer),
                     ],
                   ),
-
-                  displayDeviceCard(
-                      cable,
-                      cable.terminationBDeviceID,
-                      cable.terminationBId,
-                      Theme.of(context).colorScheme.tertiaryContainer),
+                  cable.terminationBType != "dcim.powerfeed"
+                      ? displayDeviceCard(
+                          cable,
+                          cable.terminationBDeviceID,
+                          cable.terminationBId,
+                          Theme.of(context).colorScheme.tertiaryContainer)
+                      : displayRootFeedCard(
+                              cable.terminationBId,
+                              Theme.of(context)
+                                  .colorScheme
+                                  .tertiaryContainer) ??
+                          const SizedBox(height: 0),
                 ]));
           } else {
             return const Center(
@@ -166,7 +251,8 @@ class _InterfaceViewState extends State<InterfaceView> {
                     children: [
                       //device A name
                       Text(device.name,
-                          style: Theme.of(context).textTheme.headlineMedium),
+                          style: Theme.of(context).textTheme.headlineSmall,
+                          overflow: TextOverflow.ellipsis),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -214,8 +300,7 @@ class _InterfaceViewState extends State<InterfaceView> {
                             ],
                           );
                         } else {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                          return SizedBox();
                         }
                       })
                 ],
@@ -236,9 +321,9 @@ class _InterfaceViewState extends State<InterfaceView> {
     );
   }
 
-  displayInterfaceCard(String interface, Color primaryContainer) {
+  displayInterfaceCard(String interfaceID, Color primaryContainer) {
     return FutureBuilder(
-        future: _getInterfaceByID(interface),
+        future: _getInterfaceByID(interfaceID),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var interface = snapshot.data as Interface;
@@ -250,7 +335,7 @@ class _InterfaceViewState extends State<InterfaceView> {
                   children: [
                     //device A name
                     Text(interface.name,
-                        style: Theme.of(context).textTheme.bodyMedium),
+                        style: Theme.of(context).textTheme.titleSmall),
                     const Text(" | "),
                     //show the text after the first (
                     Text(interface.typeLabel,
@@ -270,5 +355,189 @@ class _InterfaceViewState extends State<InterfaceView> {
             ));
           }
         });
+  }
+
+  displayPowerCard(String powerportID, Color primaryContainer) {
+    return FutureBuilder(
+        future: _getPowerPortByID(powerportID),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var powerport = snapshot.data as PowerPort;
+            return Card(
+              color: primaryContainer,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    //device A name
+                    Text(powerport.name,
+                        style: Theme.of(context).textTheme.titleSmall),
+                    const Text(" | "),
+                    //show the text after the first (
+                    Text(
+                        "${powerport.allocatedDraw}W/${powerport.maximumDraw}W",
+                        style: Theme.of(context).textTheme.bodyMedium),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return Center(
+                child: Column(
+              children: const [
+                Text("Trying to load power port..."),
+                SizedBox(height: 10),
+                CircularProgressIndicator(),
+              ],
+            ));
+          }
+        });
+  }
+
+  displayOutletCard(String outletID, Color primaryContainer) {
+    return FutureBuilder(
+        future: _getPowerOutletByID(outletID),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var poweroutlet = snapshot.data as PowerOutlet;
+            return Card(
+              color: primaryContainer,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    //device A name
+                    Text(poweroutlet.name,
+                        style: Theme.of(context).textTheme.titleSmall),
+                    const Text(" | "),
+                    //show the text after the first (
+                    Text(poweroutlet.typeLabel,
+                        style: Theme.of(context).textTheme.bodyMedium),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return Center(
+                child: Column(
+              children: const [
+                Text("Trying to load power outlet..."),
+                SizedBox(height: 10),
+                CircularProgressIndicator(),
+              ],
+            ));
+          }
+        });
+  }
+
+  displayRootFeedCard(feedID, color) {
+    return FutureBuilder(
+      future: _getPowerFeedByID(feedID),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          var feed = snapshot.data as PowerFeed;
+          return Card(
+            color: color,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      //device A name
+                      Text(feed.name,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                          overflow: TextOverflow.ellipsis),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      //device A type
+                      Text(feed.powerPanel.display,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      //device A type
+                      Text(feed.phaseLabel ?? "",
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(" | "),
+                      Text("${feed.voltage ?? ""} V",
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(" | "),
+                      Text("${feed.amperage ?? ""} A",
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else {
+          return Center(
+              child: Column(
+            children: const [
+              Text("Trying to load circuit feed..."),
+              SizedBox(height: 10),
+              CircularProgressIndicator(),
+            ],
+          ));
+        }
+      },
+    );
+  }
+
+  displayFeedCard(String feedID, Color primaryContainer) {
+    return FutureBuilder(
+        future: _getPowerFeedByID(feedID),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var powerfeed = snapshot.data as PowerFeed;
+            return Card(
+              color: primaryContainer,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    //device A name
+                    Text(powerfeed.name,
+                        style: Theme.of(context).textTheme.titleSmall),
+                    const Text(" | "),
+                    //show the text after the first (
+                    Text("${powerfeed.amperage}A",
+                        style: Theme.of(context).textTheme.bodyMedium),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return Center(
+                child: Column(
+              children: const [
+                Text("Trying to load powerfeed..."),
+                SizedBox(height: 10),
+                CircularProgressIndicator(),
+              ],
+            ));
+          }
+        });
+  }
+
+  filterPortType(String type, String string, Color primaryContainer) {
+    print(type);
+    if (type == "dcim.interface") {
+      return displayInterfaceCard(string, primaryContainer);
+    } else if (type == "dcim.powerport") {
+      return displayPowerCard(string, primaryContainer);
+    } else if (type == "dcim.poweroutlet") {
+      return displayOutletCard(string, primaryContainer);
+    } else if (type == "dcim.powerfeed") {
+      return displayFeedCard(string, primaryContainer);
+    } else {
+      print(type);
+      return const Text("Error");
+    }
   }
 }

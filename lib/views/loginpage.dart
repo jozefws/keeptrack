@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:keeptrack/main.dart';
 import 'package:provider/provider.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
-import 'package:keeptrack/views/homepage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoginPage extends StatefulWidget {

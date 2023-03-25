@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:keeptrack/api/cables_api.dart';
 import 'package:keeptrack/api/devices_api.dart';
 import 'package:keeptrack/api/interfaces_api.dart';
-import 'package:keeptrack/api/racks_api.dart';
+import 'package:keeptrack/api/poweroutlets_api.dart';
+import 'package:keeptrack/api/powerport_api.dart';
+import 'package:keeptrack/models/VLANColor.dart';
 import 'package:keeptrack/models/cables.dart';
+import 'package:keeptrack/models/devices.dart';
+import 'package:keeptrack/models/interfaceComboModel.dart';
+import 'package:keeptrack/models/interfaces.dart';
+import 'package:keeptrack/models/poweroutlet.dart';
+import 'package:keeptrack/models/powerport.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
 class AddConnection extends StatefulWidget {
@@ -22,54 +28,113 @@ class _AddConnectionState extends State<AddConnection>
   final _addConnectionKey = GlobalKey<FormState>();
   TabController? _tabController;
 
-  List<String> devices = [];
+  List<Device> devices = [];
 
   String deviceAName = "Device A", deviceBName = "Device B";
 
-  String? deviceA, deviceB, interfaceA, interfaceB, cableBarcodeScan, cableType;
+  Device? deviceA, deviceB;
+  // Interface? interfaceA, interfaceB;
+  // PowerPort? powerPortA, powerPortB;
+  // PowerOutlet? powerOutletA, powerOutletB;
+  ComboModel? comboA, comboB;
+
+  ConnectionColour? connectionColours;
+  // String? cableBarcodeScan, cableType;
+  String? cableType;
 
   CablesAPI cablesAPI = CablesAPI();
   DevicesAPI devicesAPI = DevicesAPI();
   InterfacesAPI interfacesAPI = InterfacesAPI();
-  RacksAPI racksAPI = RacksAPI();
+  PowerPortsAPI powerPortsAPI = PowerPortsAPI();
+  PowerOutletsAPI powerOutletsAPI = PowerOutletsAPI();
 
   final TextEditingController _cableBarcodeScanController =
       TextEditingController();
 
-  Future<List<DropdownMenuItem<String>>> _getRacks() async {
-    var i = await racksAPI.getRacks(await getToken());
-    return i
-        .map((e) => DropdownMenuItem(
-              value: e.id.toString(),
-              child: Text(e.name),
-            ))
-        .toList();
-  }
-
-  Future<List<String>> _getDevices() async {
+  Future<List<Device>> _getDevices() async {
     var i = await devicesAPI.getDevices(await getToken());
-    return i
-        .map((e) =>
-            "${e.name} | ${(e.rack?.name)?.substring(4) ?? "Unracked"} | ID${e.id}")
-        .toList();
+    return i;
   }
 
-  Future<List<DropdownMenuItem<String>>?> _getInterfacesByDevice(
-      String deviceID) async {
+  Future<List<Interface>?> _getInterfacesByDevice(String deviceID) async {
     if (deviceID == "") {
       return [];
     }
     final i =
         await interfacesAPI.getInterfacesByDevice(await getToken(), deviceID);
-    if (i.isEmpty) {
-      genSnack("No interfaces found");
+    return i;
+  }
+
+  Future<List<PowerPort>?> _getPowerPortsByDevice(String deviceID) async {
+    if (deviceID == "") {
+      return [];
     }
-    return i
-        .map((e) => DropdownMenuItem(
-              value: e.id.toString(),
-              child: Text(e.name),
-            ))
-        .toList();
+    final i =
+        await powerPortsAPI.getPowerPortsByDevice(await getToken(), deviceID);
+    return i;
+  }
+
+  Future<List<PowerOutlet>?> _getPowerOutletsByDevice(String deviceID) async {
+    if (deviceID == "") {
+      return [];
+    }
+    final i = await powerOutletsAPI.getPowerOutletsByDevice(
+        await getToken(), deviceID);
+    return i;
+  }
+
+  Future<List<ComboModel>?> _getMixedPortsByDeviceID(String deviceID) async {
+    if (deviceID == "") {
+      return [];
+    }
+    final interfaces =
+        interfacesAPI.getInterfacesByDevice(await getToken(), deviceID);
+    final powerPorts =
+        powerPortsAPI.getPowerPortsByDevice(await getToken(), deviceID);
+    final powerOutlets =
+        powerOutletsAPI.getPowerOutletsByDevice(await getToken(), deviceID);
+
+    List<ComboModel> comboList = [];
+
+    // map all interfaces, powerports and poweroutlets to a single list
+    await Future.wait([interfaces, powerPorts, powerOutlets]).then((value) {
+      value.forEach((element) {
+        if (element != null) {
+          element.forEach((e) {
+            if (e is Interface) {
+              comboList.add(ComboModel(
+                  id: e.id,
+                  name: e.name,
+                  url: e.url,
+                  objectType: "interface",
+                  occupied: e.occupied,
+                  interface: e));
+            } else if (e is PowerPort) {
+              comboList.add(ComboModel(
+                  id: e.id,
+                  name: e.name,
+                  url: e.url,
+                  objectType: "powerport",
+                  occupied: e.occupied,
+                  powerPort: e));
+            } else if (e is PowerOutlet) {
+              comboList.add(ComboModel(
+                  id: e.id,
+                  name: e.name,
+                  url: e.url,
+                  objectType: "poweroutlet",
+                  occupied: e.occupied,
+                  powerOutlet: e));
+            }
+          });
+        }
+      });
+    });
+    if (comboList.isEmpty) {
+      genSnack("No ports found on device");
+      return [];
+    }
+    return comboList;
   }
 
   @override
@@ -93,14 +158,18 @@ class _AddConnectionState extends State<AddConnection>
   }
 
   _addNewConnection() async {
-    String? barcode, type, intA, intB;
+    // String? barcode, type;
+    String? type;
+    Interface? intA, intB;
+    PowerPort? ppA, ppB;
+    PowerOutlet? poA, poB;
 
-    if (cableBarcodeScan == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please scan cable barcode')));
-    } else {
-      barcode = cableBarcodeScan ?? "";
-    }
+    // if (cableBarcodeScan == null) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //       const SnackBar(content: Text('Please scan cable barcode')));
+    // } else {
+    //   barcode = cableBarcodeScan ?? "";
+    // }
 
     if (cableType == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -109,43 +178,65 @@ class _AddConnectionState extends State<AddConnection>
       type = cableType ?? "";
     }
 
-    if (interfaceA == null) {
+    if (comboA == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Please pick an interface for device A')));
     } else {
-      intA = interfaceA ?? "";
+      intA = comboA?.interface;
+      ppA = comboA?.powerPort;
+      poA = comboA?.powerOutlet;
     }
-    if (interfaceB == null) {
+    if (comboB == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Please pick an interface for device B')));
     } else {
-      intB = interfaceB ?? "";
+      intB = comboB?.interface;
+      ppB = comboB?.powerPort;
+      poB = comboB?.powerOutlet;
     }
 
-    if (barcode != null && type != null && intA != null && intB != null) {
+    // if (barcode != null &&
+    if (type != null &&
+        comboA != null &&
+        comboB != null &&
+        connectionColours != null) {
+      String description =
+          "$deviceAName:${comboA?.name} > $deviceBName:${comboB?.name}";
+      String label = "${comboA?.name} > ${comboB?.name}";
       Cable newCable = Cable(
-        id: -1,
-        label: barcode,
-        type: type,
-        terminationAId: intA,
-        terminationBId: intB,
-        status: "connected",
-      );
+          id: -1,
+          // label: barcode,
+          label: label,
+          type: type,
+          color: connectionColours?.hexColor.toLowerCase(),
+          terminationAType: comboA?.objectType,
+          terminationAId: comboA?.id.toString(),
+          terminationBType: comboB?.objectType,
+          terminationBId: comboB?.id.toString(),
+          status: "connected",
+          description: description);
 
-      if (await cablesAPI.addConnection(await getToken(), newCable)) {
+      print(newCable.color);
+
+      String result = await cablesAPI.addConnection(await getToken(), newCable);
+
+      if (result != "Error") {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Connection added successfully')));
         setState(() {
-          interfaceA = null;
-          interfaceB = null;
-          cableBarcodeScan = null;
-          cableType = null;
+          comboA = null;
+          comboB = null;
+          // cableBarcodeScan = null;
           _cableBarcodeScanController.clear();
         });
+        showSuccessDialog(result, label);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Error adding connection')));
       }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Error adding connection, there was a null value')));
     }
   }
 
@@ -190,17 +281,37 @@ class _AddConnectionState extends State<AddConnection>
                             children: [
                               Container(
                                 margin: const EdgeInsets.all(24),
-                                child: DropdownSearch<String>(
+                                child: DropdownSearch<Device>(
+                                  filterFn: (item, filter) => item.name
+                                      .toLowerCase()
+                                      .contains(filter.toLowerCase()),
                                   dropdownBuilder: (context, item) {
                                     return Container(
                                       padding: const EdgeInsets.all(8),
                                       margin: const EdgeInsets.all(10),
                                       child: Text(
-                                        item ?? deviceAName,
+                                        item?.name ?? deviceAName,
                                       ),
                                     );
                                   },
                                   popupProps: PopupProps.modalBottomSheet(
+                                    itemBuilder: (context, item, isSelected) =>
+                                        Container(
+                                      padding: const EdgeInsets.all(8),
+                                      margin: const EdgeInsets.all(10),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            item.name,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium,
+                                          ),
+                                          Text(
+                                              " | ${item.location?.display} | ${item.rack?.name} | U${item.position}"),
+                                        ],
+                                      ),
+                                    ),
                                     showSearchBox: true,
                                     searchDelay:
                                         const Duration(milliseconds: 100),
@@ -220,16 +331,13 @@ class _AddConnectionState extends State<AddConnection>
                                         maxHeight: 400,
                                         maxWidth: double.infinity),
                                   ),
-                                  asyncItems: (_) => _getDevices(),
+                                  asyncItems: (device) => _getDevices(),
                                   onChanged: (value) {
                                     setState(() {
                                       deviceAName =
-                                          value?.split("|")[0].trim() ?? "";
-                                      deviceA = value
-                                          ?.split("|")[2]
-                                          .trim()
-                                          .substring(2);
-                                      interfaceA = null;
+                                          value?.name ?? "Select a device";
+                                      deviceA = value;
+                                      comboA = null;
                                     });
                                   },
                                 ),
@@ -237,28 +345,41 @@ class _AddConnectionState extends State<AddConnection>
                               Container(
                                 margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
                                 child: FutureBuilder(
-                                    future:
-                                        _getInterfacesByDevice(deviceA ?? ""),
+                                    future: _getMixedPortsByDeviceID(
+                                        deviceA?.id.toString() ?? ""),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
+                                        if (snapshot.data == null) {
+                                          return const Text("");
+                                        }
                                         var data = snapshot.data!;
-                                        return DropdownButtonFormField(
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge,
-                                            value: interfaceA,
-                                            items: data,
-                                            onChanged: (String? value) {
-                                              if (value != interfaceA) {
+                                        return Column(
+                                          children: [
+                                            DropdownSearch<ComboModel>(
+                                              enabled: deviceA != null &&
+                                                  data.isNotEmpty,
+                                              items: data,
+                                              onChanged: (value) {
                                                 setState(() {
-                                                  interfaceA = value;
+                                                  comboA = value;
                                                 });
-                                              }
-                                            },
-                                            decoration: const InputDecoration(
-                                                labelText: 'Interface A',
-                                                hintText:
-                                                    'Select an Interface'));
+                                              },
+                                              itemAsString: (item) =>
+                                                  "${item.name} | ${item.occupied == true ? "Occupied" : "Free"}",
+                                              dropdownBuilder: (context, item) {
+                                                return Container(
+                                                  padding:
+                                                      const EdgeInsets.all(8),
+                                                  margin:
+                                                      const EdgeInsets.all(10),
+                                                  child: Text(item?.name ??
+                                                      comboA?.name ??
+                                                      ""),
+                                                );
+                                              },
+                                            )
+                                          ],
+                                        );
                                       } else {
                                         return const CircularProgressIndicator();
                                       }
@@ -266,85 +387,117 @@ class _AddConnectionState extends State<AddConnection>
                               ),
                             ],
                           ),
+
                           /////////////////////////
                           // SIDE B
                           /////////////////////////
 
-                          Column(children: [
-                            Container(
-                              margin: const EdgeInsets.all(24),
-                              child: DropdownSearch<String>(
-                                dropdownBuilder: (context, item) {
-                                  return Container(
-                                    padding: const EdgeInsets.all(8),
-                                    margin: const EdgeInsets.all(10),
-                                    child: Text(
-                                      item ?? deviceBName,
+                          Column(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.all(24),
+                                child: DropdownSearch<Device>(
+                                  filterFn: (item, filter) => item.name
+                                      .toLowerCase()
+                                      .contains(filter.toLowerCase()),
+                                  dropdownBuilder: (context, item) {
+                                    return Container(
+                                      padding: const EdgeInsets.all(8),
+                                      margin: const EdgeInsets.all(10),
+                                      child: Text(
+                                        item?.name ?? deviceBName,
+                                      ),
+                                    );
+                                  },
+                                  popupProps: PopupProps.modalBottomSheet(
+                                    itemBuilder: (context, item, isSelected) =>
+                                        Container(
+                                      padding: const EdgeInsets.all(8),
+                                      margin: const EdgeInsets.all(10),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            item.name,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium,
+                                          ),
+                                          Text(
+                                              " | ${item.location?.display} | ${item.rack?.name} | U${item.position}"),
+                                        ],
+                                      ),
                                     ),
-                                  );
-                                },
-                                popupProps: PopupProps.modalBottomSheet(
-                                  showSearchBox: true,
-                                  searchDelay:
-                                      const Duration(milliseconds: 100),
-                                  searchFieldProps: TextFieldProps(
-                                    decoration: InputDecoration(
-                                      border: const OutlineInputBorder(),
-                                      labelText: deviceBName,
+                                    showSearchBox: true,
+                                    searchDelay:
+                                        const Duration(milliseconds: 100),
+                                    searchFieldProps: TextFieldProps(
+                                      decoration: InputDecoration(
+                                        border: const OutlineInputBorder(),
+                                        labelText: deviceBName,
+                                      ),
                                     ),
+                                    modalBottomSheetProps:
+                                        ModalBottomSheetProps(
+                                            isScrollControlled: true,
+                                            backgroundColor:
+                                                Theme.of(context).primaryColor,
+                                            anchorPoint: const Offset(0.5, 5)),
+                                    constraints: const BoxConstraints(
+                                        maxHeight: 400,
+                                        maxWidth: double.infinity),
                                   ),
-                                  modalBottomSheetProps: ModalBottomSheetProps(
-                                      isScrollControlled: true,
-                                      backgroundColor:
-                                          Theme.of(context).primaryColor,
-                                      anchorPoint: const Offset(0.5, 5)),
-                                  constraints: const BoxConstraints(
-                                      maxHeight: 400,
-                                      maxWidth: double.infinity),
+                                  asyncItems: (device) => _getDevices(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      deviceBName =
+                                          value?.name ?? "Select a device";
+                                      deviceB = value;
+                                      comboB = null;
+                                    });
+                                  },
                                 ),
-                                asyncItems: (_) => _getDevices(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    deviceBName =
-                                        value?.split("|")[0].trim() ?? "";
-                                    deviceB = value
-                                        ?.split("|")[2]
-                                        .trim()
-                                        .substring(2);
-                                    interfaceB = null;
-                                  });
-                                },
                               ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-                              child: FutureBuilder(
-                                  future: _getInterfacesByDevice(deviceB ?? ""),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      var data = snapshot.data!;
-                                      return DropdownButtonFormField(
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge,
-                                          value: interfaceB,
+                              Container(
+                                margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                                child: FutureBuilder(
+                                    future: _getMixedPortsByDeviceID(
+                                        deviceB?.id.toString() ?? ""),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        if (snapshot.data == null) {
+                                          return const Text("");
+                                        }
+                                        var data = snapshot.data!;
+                                        return DropdownSearch<ComboModel>(
+                                          enabled: deviceB != null &&
+                                              data.isNotEmpty,
                                           items: data,
-                                          onChanged: (String? value) {
-                                            if (value != interfaceB) {
-                                              setState(() {
-                                                interfaceB = value;
-                                              });
-                                            }
+                                          onChanged: (value) {
+                                            setState(() {
+                                              comboB = value;
+                                            });
                                           },
-                                          decoration: const InputDecoration(
-                                              labelText: 'Interface B',
-                                              hintText: 'Select an Interface'));
-                                    } else {
-                                      return const CircularProgressIndicator();
-                                    }
-                                  }),
-                            ),
-                          ])
+                                          itemAsString: (item) =>
+                                              "${item.name} | ${item.occupied == true ? "Occupied" : "Free"}",
+                                          dropdownBuilder: (context, item) {
+                                            return Container(
+                                              padding: const EdgeInsets.all(8),
+                                              margin: const EdgeInsets.all(10),
+                                              child: Text(
+                                                item?.name ??
+                                                    comboB?.name ??
+                                                    "",
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        return const CircularProgressIndicator();
+                                      }
+                                    }),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -359,43 +512,80 @@ class _AddConnectionState extends State<AddConnection>
                     Container(
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
                       child: Text(
-                        "Scan cable QR and select Cable Type",
+                        // "Scan cable QR and select Cable Type",
+                        "Select Cable Type and Color (VLAN)",
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.all(20),
-                      width: double.infinity,
-                      child: FloatingActionButton.extended(
-                        heroTag: "cableScan",
-                        onPressed: () async => _cableBarcodeScanController
-                            .text = (await openScanner(context))!,
-                        //set size to fill the parent
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                        ),
-                        label: const Text("Scan Cable QR"),
-                        icon: const Icon(Icons.qr_code_scanner),
-                      ),
-                    ),
-                    Text(
-                      "Cable ID: $cableBarcodeScan",
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
+                        padding: const EdgeInsets.all(20),
+                        width: double.infinity,
+                        // child: FloatingActionButton.extended(
+                        //   heroTag: "cableScan",
+                        //   onPressed: () async {
+                        //     _cableBarcodeScanController.text = "032042";
+                        //     setState(() {
+                        //       cableBarcodeScan = _cableBarcodeScanController.text;
+                        //     });
+                        //     return;
+                        //     _cableBarcodeScanController.text =
+                        //         (await openScanner(context))!;
+                        //   },
+                        //   //set size to fill the parent
+                        //   shape: const RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        //   ),
+                        //   label: const Text("Scan Cable QR"),
+                        //   icon: const Icon(Icons.qr_code_scanner),
+                        // ),
+
+                        //dropdown menu for every colour in keeptrack VLANCOlor
+                        child: DropdownButtonFormField<ConnectionColour>(
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          value: connectionColours,
+                          itemHeight: 60,
+                          items: CONNECTION_COLOURS.map((colour) {
+                            return DropdownMenuItem<ConnectionColour>(
+                              value: colour,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(colour.description),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Container(
+                                        width: 20,
+                                        height: 20,
+                                        decoration: BoxDecoration(
+                                          color: colour.color,
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(5)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              connectionColours = value!;
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Cable Color (VLAN/Power)",
+                          ),
+                        )),
                     Container(
                       padding: const EdgeInsets.fromLTRB(20, 6, 20, 20),
                       child: DropdownButtonFormField<String>(
                           style: Theme.of(context).textTheme.bodyLarge,
                           value: cableType,
                           items: const [
-                            DropdownMenuItem(
-                              value: "mmf",
-                              child: Text("Fiber (MMF)"),
-                            ),
-                            DropdownMenuItem(
-                              value: "smf",
-                              child: Text("Fiber (SMF)"),
-                            ),
                             DropdownMenuItem(
                               value: "cat5e",
                               child: Text("cat5e"),
@@ -407,6 +597,18 @@ class _AddConnectionState extends State<AddConnection>
                             DropdownMenuItem(
                               value: "power",
                               child: Text("Power"),
+                            ),
+                            DropdownMenuItem(
+                              value: "dac-active",
+                              child: Text("Direct Attach Copper (SFP+)"),
+                            ),
+                            DropdownMenuItem(
+                              value: "mmf",
+                              child: Text("Fiber (MMF)"),
+                            ),
+                            DropdownMenuItem(
+                              value: "smf",
+                              child: Text("Fiber (SMF)"),
                             ),
                           ],
                           onChanged: (String? value) {
@@ -429,6 +631,10 @@ class _AddConnectionState extends State<AddConnection>
                       if (_addConnectionKey.currentState!.validate()) {
                         _addConnectionKey.currentState!.save();
                         _addNewConnection();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Please fill in all fields")));
                       }
                     },
                     label: const Text("Add Connection"),
@@ -439,39 +645,87 @@ class _AddConnectionState extends State<AddConnection>
         ));
   }
 
-  Future<String?> openScanner(BuildContext context) async {
-    setState(() {
-      cableBarcodeScan = null;
-    });
-    final String? code = await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (ctx) => Scaffold(
-                appBar: AppBar(title: const Text("Scan Cable Barcode")),
-                body: MobileScanner(
-                  allowDuplicates: false,
-                  onDetect: (barcode, args) {
-                    if (cableBarcodeScan == null) {
-                      Navigator.pop(context, barcode.rawValue);
-                    }
-                    setState(() {
-                      cableBarcodeScan = barcode.rawValue;
-                    });
-                  },
-                ))));
-    if (code == null) {
-      genSnack("No barcode detected");
-      return "";
-    }
-    if (await cablesAPI.checkExistenceById(await getToken(), code)) {
-      genSnack("Cable $code, already exists");
-      return "";
-    } else {
-      print("Cable $code, does not exist");
-      return code;
-    }
-  }
+  // Future<String?> openScanner(BuildContext context) async {
+  //   setState(() {
+  //     cableBarcodeScan = null;
+  //   });
+  //   final String? code = await Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //           builder: (ctx) => Scaffold(
+  //               appBar: AppBar(title: const Text("Scan Cable Barcode")),
+  //               body: MobileScanner(
+  //                 allowDuplicates: false,
+  //                 onDetect: (barcode, args) {
+  //                   if (cableBarcodeScan == null) {
+  //                     Navigator.pop(context, barcode.rawValue);
+  //                   }
+  //                   setState(() {
+  //                     cableBarcodeScan = barcode.rawValue;
+  //                   });
+  //                 },
+  //               ))));
+  //   if (code == null) {
+  //     genSnack("No barcode detected");
+  //     return "";
+  //   }
+  //   if (await cablesAPI.checkExistenceById(await getToken(), code)) {
+  //     genSnack("Cable $code, already exists");
+  //     return "";
+  //   } else {
+  //     print("Cable $code, does not exist");
+  //     return code;
+  //   }
+  // }
 
   @override
   bool get wantKeepAlive => true;
+
+  showSuccessDialog(String result, String cableDescription) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          //Dialog that covers half the screen showing the new cable id and the cable description
+          return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                height: 300,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("Cable Added Successfully",
+                        style: Theme.of(context).textTheme.titleLarge),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text("New Cable ID",
+                        style: Theme.of(context).textTheme.titleMedium),
+                    Text(result),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "Cable Description",
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    Text(cableDescription),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text("OK")),
+                    )
+                  ],
+                ),
+              ));
+        });
+  }
 }

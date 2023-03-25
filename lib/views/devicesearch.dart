@@ -6,6 +6,7 @@ import 'package:keeptrack/models/devices.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 import 'package:keeptrack/views/deviceview.dart';
 import 'package:keeptrack/views/hierarchysearch.dart';
+import 'package:searchable_listview/searchable_listview.dart';
 
 class DeviceSearch extends StatefulWidget {
   const DeviceSearch({super.key});
@@ -52,86 +53,44 @@ class _DeviceInterfaceState extends State<DeviceSearch> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: _searchDeviceKey,
-      child: Column(children: [
-        Container(
-          color: Theme.of(context).colorScheme.onInverseSurface,
-          width: double.infinity,
-          margin: const EdgeInsets.all(20),
-          child: Column(children: [
-            Container(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
-              child: Text(
-                "Search for Device",
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.all(24),
-              child: DropdownSearch<Device>(
-                itemAsString: (item) => item.name,
-                dropdownBuilder: (context, item) {
-                  return Container(
-                    padding: const EdgeInsets.all(8),
-                    margin: const EdgeInsets.all(10),
-                    child: Text(
-                      item?.name ?? deviceName,
-                    ),
-                  );
-                },
-                popupProps: PopupProps.modalBottomSheet(
-                    showSearchBox: true,
-                    searchDelay: const Duration(milliseconds: 100),
-                    searchFieldProps: TextFieldProps(
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        labelText: device?.name ?? deviceName,
-                      ),
-                    ),
-                    modalBottomSheetProps: ModalBottomSheetProps(
-                        isScrollControlled: true,
-                        backgroundColor: Theme.of(context).primaryColor,
-                        anchorPoint: const Offset(0.5, 5)),
-                    constraints: const BoxConstraints(
-                        maxHeight: 400, maxWidth: double.infinity),
-                    itemBuilder: (context, item, isSelected) => Container(
-                          padding: const EdgeInsets.all(8),
-                          margin: const EdgeInsets.all(10),
-                          child: Text(item.name),
-                        )),
-                asyncItems: (devList) => _getDevices(),
-                onChanged: (value) {
-                  setState(() {
-                    deviceName = value?.name ?? "";
-                    device = value;
-                  });
-                },
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.all(20),
-              child: FloatingActionButton.extended(
-                  heroTag: "deviceView",
-                  onPressed: () {
-                    if (deviceName == "") {
-                      genSnack("Please select a location");
-                      return;
-                    }
-                    //open material route to search by hierarchy
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              DeviceView(device?.name ?? "", device?.id ?? 0)),
-                    );
+        key: _searchDeviceKey,
+        child: Column(children: [
+          Expanded(
+            child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SearchableList<Device>(
+                  asyncListCallback: () => _getDevices(),
+                  asyncListFilter: (q, list) {
+                    return list
+                        .where((element) => element.name
+                            .toLowerCase()
+                            .contains(q.toLowerCase()))
+                        .toList();
                   },
-                  label: const Text("View Device"),
-                  icon: const Icon(Icons.search)),
-            ),
-          ]),
-        ),
-      ]),
-    );
+                  inputDecoration: InputDecoration(
+                      filled: true,
+                      labelText: "Search for a device",
+                      border: InputBorder.none,
+                      fillColor: Theme.of(context).colorScheme.surface),
+                  builder: (device) => ListTile(
+                    contentPadding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    tileColor: Theme.of(context).colorScheme.surface,
+                    title: Text(
+                      device.name,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    subtitle: Text(
+                        "${device.location?.display ?? ""} | ${device.rack?.name ?? "Unracked"} | U${device.position ?? "?"}"),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  DeviceView(device.name, device.id)));
+                    },
+                  ),
+                )),
+          )
+        ]));
   }
 }

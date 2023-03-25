@@ -17,13 +17,13 @@ class DevicesAPI {
           'Accept': 'application/json',
         });
     var responseBody = jsonDecode(response.body);
-    print(responseBody);
     var list = responseBody['results'] as List;
     if (response.statusCode == 200) {
       return (responseBody['results'] as List)
           .map((e) => Device.fromJson(e))
           .toList();
     } else {
+      print("Get Devices API: Error ${response.statusCode}");
       return [];
     }
   }
@@ -63,6 +63,7 @@ class DevicesAPI {
           .map((e) => Device.fromJson(e))
           .toList();
     } else {
+      print("Get Devices API: Error ${response.statusCode}");
       return [];
     }
   }

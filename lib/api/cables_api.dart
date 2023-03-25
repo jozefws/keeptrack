@@ -13,13 +13,11 @@ class CablesAPI {
     await dotenv.load();
     var uri =
         Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/$cableID');
-    print(uri);
     var response = await client.get(uri, headers: {
       'Authorization': 'Token $token',
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     });
-    print(response.body);
     var responseBody = jsonDecode(response.body);
     if (response.statusCode == 403) {
       print("Invalid token");
@@ -28,7 +26,8 @@ class CablesAPI {
     if (response.statusCode == 200) {
       return Cable.fromJson(responseBody);
     } else {
-      print("API: Error");
+      print(response.request);
+      print("Get Cable By ID API: Error ${response.statusCode}");
       return null;
     }
   }
@@ -37,7 +36,6 @@ class CablesAPI {
     await dotenv.load();
     var uri = Uri.parse(
         '${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/?label=$cableLabel');
-    print(uri);
     var response = await client.get(uri, headers: {
       'Authorization': 'Token $token',
       'Content-Type': 'application/json',
@@ -55,16 +53,16 @@ class CablesAPI {
       }
       return Cable.fromResultRootJson(responseBody);
     } else {
-      print("API: Error. ${response.statusCode}, ${response.body}");
+      print(
+          "GET Cable by Label API : Error. ${response.statusCode}, ${response.body}");
       return null;
     }
   }
 
-  Future<bool> checkExistenceById(String token, String cableID) async {
+  Future<bool> checkExistenceByLabel(String token, String cableID) async {
     await dotenv.load();
     var uri = Uri.parse(
         '${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/?label=$cableID');
-    print(uri);
     var response = await client.get(uri, headers: {
       'Authorization': 'Token $token',
       'Content-Type': 'application/json',
@@ -86,13 +84,13 @@ class CablesAPI {
         return true;
       }
     } else {
-      print("API: Error");
+      print("Check Cable Existence by ID API: Error");
       return false;
     }
   }
 
   // add cable
-  Future<bool> addConnection(String token, Cable cable) async {
+  Future<String> addConnection(String token, Cable cable) async {
     await dotenv.load();
     var uri = Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/');
     var response = await client.post(
@@ -105,19 +103,21 @@ class CablesAPI {
       body: jsonEncode({
         'a_terminations': [
           {
-            'object_type': 'dcim.interface',
+            'object_type': 'dcim.${cable.terminationAType}',
             'object_id': cable.terminationAId,
           }
         ],
         'b_terminations': [
           {
-            'object_type': 'dcim.interface',
+            'object_type': 'dcim.${cable.terminationBType}',
             'object_id': cable.terminationBId,
           }
         ],
         'type': cable.type,
         'status': cable.status,
         'label': cable.label,
+        'description': cable.description,
+        'color': cable.color ?? "111111",
       }),
     );
     var responseBody = jsonDecode(response.body);
@@ -125,12 +125,10 @@ class CablesAPI {
       throw Exception('Invalid token');
     }
     if (response.statusCode == 201) {
-      return true;
+      return responseBody['id'].toString();
     } else {
-      print("API: Error");
-      print(response.statusCode);
-      print(response.body);
-      return false;
+      print("Add Cable API: Error ${response.statusCode}, ${response.body}");
+      return "Error";
     }
   }
 
@@ -154,8 +152,6 @@ class CablesAPI {
       'label': cable.label,
     });
 
-    print(body);
-
     await dotenv.load();
     var uri = Uri.parse(
         '${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/${cable.id}/');
@@ -172,7 +168,8 @@ class CablesAPI {
     try {
       var responseBody = jsonDecode(response.body);
     } catch (e) {
-      print(e);
+      print("Update connection API: Error $e");
+      return false;
     }
     if (response.statusCode == 403) {
       throw Exception('Invalid token');
@@ -180,9 +177,50 @@ class CablesAPI {
     if (response.statusCode == 200) {
       return true;
     } else {
-      print("API: Error");
-      print(response.statusCode);
-      print(response.body);
+      print("Update Cable API: Error ${response.statusCode}, ${response.body}");
+      return false;
+    }
+  }
+
+  // update cable via delete and create new one due to bug in netbox, issue #
+  Future<String> updateConnectionBAD(String token, Cable cable) async {
+    if (await deleteConnection(token, cable)) {
+      String newLabel = await addConnection(token, cable);
+      if (newLabel != "Error") {
+        return newLabel;
+      } else {
+        return "false";
+      }
+    } else {
+      return "false";
+    }
+  }
+
+  Future<bool> deleteConnection(String token, Cable cable) async {
+    await dotenv.load();
+    var uri = Uri.parse(
+        '${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/${cable.id}/');
+    var response = await client.delete(
+      uri,
+      headers: {
+        'Authorization': 'Token $token',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
+    try {
+      var responseBody = jsonDecode(response.body);
+    } catch (e) {
+      print("Delete connection API: Error $e");
+      return false;
+    }
+    if (response.statusCode == 403) {
+      throw Exception('Invalid token');
+    }
+    if (response.statusCode == 204) {
+      return true;
+    } else {
+      print("Delete Cable API: Error ${response.statusCode}, ${response.body}");
       return false;
     }
   }

@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 class Cable {
   final int id;
   String label;
+  String? description;
   final String? url;
+  String? terminationAType;
   String? terminationAId;
   String? terminationAName;
   String? terminationADeviceID;
   String? terminationADeviceName;
+  String? terminationBType;
   String? terminationBId;
   String? terminationBName;
   String? terminationBDeviceID;
@@ -19,40 +22,47 @@ class Cable {
   Cable({
     required this.id,
     required this.label,
+    this.description,
     this.url,
+    this.terminationAType,
     this.terminationAId,
     this.terminationAName,
     this.terminationADeviceID,
     this.terminationADeviceName,
+    this.terminationBType,
     this.terminationBId,
     this.terminationBName,
     this.terminationBDeviceID,
     this.terminationBDeviceName,
-    required this.status,
-    required this.type,
+    this.status,
+    this.type,
     this.color,
   });
 
   factory Cable.fromJson(Map<String, dynamic> json) {
-    print(json);
     return Cable(
       id: json['id'],
       label: json['label'],
+      description: json['description'] ?? "",
       url: json['url'],
-      terminationAId: json['a_terminations'][0]['object_id'].toString(),
-      terminationAName: json['a_terminations'][0]['object']['name'],
+      terminationAType: json['a_terminations']?[0]["object_type"] ?? "",
+      terminationAId: json['a_terminations']?[0]['object_id'].toString() ?? "",
+      terminationAName: json['a_terminations']?[0]['object']['name'] ?? "",
       terminationADeviceID:
-          json['a_terminations'][0]['object']['device']['id'].toString(),
-      terminationADeviceName: json['a_terminations'][0]['object']['device']
-          ['name'],
-      terminationBId: json['b_terminations'][0]['object_id'].toString(),
+          json['a_terminations']?[0]['object']['device']['id'].toString() ?? "",
+      terminationADeviceName:
+          json['a_terminations']?[0]['object']['device']['name'] ?? "",
+      terminationBType: json['b_terminations']?[0]["object_type"] ?? "",
+      terminationBName: json['b_terminations']?[0]['object']['name'] ?? "",
+      terminationBId: json['b_terminations']?[0]['object_id'].toString() ?? "",
       terminationBDeviceID:
-          json['b_terminations'][0]['object']['device']['id'].toString(),
-      terminationBDeviceName: json['b_terminations'][0]['object']['device']
-          ['name'],
-      status: json['status'][0],
-      type: json['type'],
-      color: json['color'],
+          json['b_terminations']?[0]['object']?['device']?['id'].toString() ??
+              "",
+      terminationBDeviceName:
+          json['b_terminations']?[0]['object']?['device']?['name'] ?? "",
+      status: json['status']?[0] ?? "",
+      type: json['type'] ?? "",
+      color: json['color'] ?? "",
     );
   }
 

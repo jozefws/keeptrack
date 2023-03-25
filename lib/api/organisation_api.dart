@@ -25,6 +25,7 @@ class OrganisationAPI {
           .map((e) => Location.fromJson(e))
           .toList();
     } else {
+      print("Get Locations API: Error ${response.statusCode}");
       return [];
     }
   }

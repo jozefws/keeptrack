@@ -1,12 +1,20 @@
+import 'dart:convert';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:keeptrack/api/poweroutlets_api.dart';
+import 'package:keeptrack/api/powerport_api.dart';
 import 'package:keeptrack/models/cables.dart';
+import 'package:keeptrack/models/devices.dart';
+import 'package:keeptrack/models/interfaceComboModel.dart';
+import 'package:keeptrack/models/interfaces.dart';
+import 'package:keeptrack/models/poweroutlet.dart';
+import 'package:keeptrack/models/powerport.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-
-import '../api/cables_api.dart';
-import '../api/devices_api.dart';
-import '../api/interfaces_api.dart';
-import '../provider/netboxauth_provider.dart';
+import 'package:keeptrack/api/cables_api.dart';
+import 'package:keeptrack/api/devices_api.dart';
+import 'package:keeptrack/api/interfaces_api.dart';
+import 'package:keeptrack/provider/netboxauth_provider.dart';
 
 class ModifyConnection extends StatefulWidget {
   const ModifyConnection({super.key});
@@ -22,24 +30,19 @@ class _ModifyConnectionState extends State<ModifyConnection>
   final _modifyConnectionKey = GlobalKey<FormState>();
   TabController? _tabController;
 
-  List<String> devices = [];
+  List<Device> devices = [];
 
-  String deviceAName = "Scan Cable QR",
-      deviceBName = "Scan Cable QR",
-      interfaceAName = "Scan Cable QR",
-      interfaceBName = "Scan Cable QR";
+  String? cableBarcodeScan, cableType, cableStatus, cableDescription;
+  Device? deviceA, deviceB;
+  ComboModel? comboA, comboB;
 
-  String? deviceA,
-      deviceB,
-      interfaceA,
-      interfaceB,
-      cableBarcodeScan,
-      cableType,
-      cableStatus;
+  // Interface? interfaceA, interfaceB;
 
   CablesAPI cablesAPI = CablesAPI();
   DevicesAPI devicesAPI = DevicesAPI();
   InterfacesAPI interfacesAPI = InterfacesAPI();
+  PowerPortsAPI powerPortsAPI = PowerPortsAPI();
+  PowerOutletsAPI powerOutletsAPI = PowerOutletsAPI();
 
   final TextEditingController _cableBarcodeScanController =
       TextEditingController();
@@ -52,75 +55,167 @@ class _ModifyConnectionState extends State<ModifyConnection>
 
   genSnack(String message) {
     ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text("Error: $message")));
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
-  Future<List<String>> _getDevices() async {
+  Future<List<Device>> _getDevices() async {
     var i = await devicesAPI.getDevices(await getToken());
-    return i
-        .map((e) =>
-            "${e.name} | Rack: ${(e.rack?.name)?.substring(4) ?? "Unracked"} | ID${e.id}")
-        .toList();
+    if (i.isEmpty) {
+      genSnack("No devices found");
+      return [];
+    }
+    return i;
   }
 
-  Future<List<DropdownMenuItem<String>>?> _getInterfacesByDevice(
-      String deviceID) async {
+  Future<Device?> getDevicesByID(String? id) async {
+    if (id == null) {
+      return null;
+    }
+    var i = await devicesAPI.getDeviceByID(await getToken(), id);
+    return i;
+  }
+
+  Future<List<Interface>> _getInterfacesByDevice(String deviceID) async {
     if (deviceID == "") {
       return [];
     }
-    final i =
+    var i =
         await interfacesAPI.getInterfacesByDevice(await getToken(), deviceID);
     if (i.isEmpty) {
       genSnack("No interfaces found");
+      return [];
     }
-    return i
-        .map((e) => DropdownMenuItem(
-              value: e.id.toString(),
-              child: Text(e.name),
-            ))
-        .toList();
+    return i;
   }
 
-  Cable currentCable = Cable(
-    terminationADeviceID: "",
-    terminationBDeviceID: "",
-    terminationAId: "",
-    terminationBId: "",
-    type: "",
-    status: "",
-    label: "",
-    id: -1,
-  );
+  Future<List<PowerPort>> _getPowerPortsByDevice(String deviceID) async {
+    if (deviceID == "") {
+      return [];
+    }
+    var i =
+        await powerPortsAPI.getPowerPortsByDevice(await getToken(), deviceID);
+    if (i.isEmpty) {
+      genSnack("No power ports found");
+      return [];
+    }
+    return i;
+  }
+
+  Future<List<PowerOutlet>> _getPowerOutletsByDevice(String deviceID) async {
+    if (deviceID == "") {
+      return [];
+    }
+    var i = await powerOutletsAPI.getPowerOutletsByDevice(
+        await getToken(), deviceID);
+    if (i.isEmpty) {
+      genSnack("No power outlets found");
+      return [];
+    }
+    return i;
+  }
+
+  Future<List<ComboModel>?> _getMixedPortsByDeviceID(String deviceID) async {
+    if (deviceID == "") {
+      return [];
+    }
+    final interfaces =
+        interfacesAPI.getInterfacesByDevice(await getToken(), deviceID);
+    final powerPorts =
+        powerPortsAPI.getPowerPortsByDevice(await getToken(), deviceID);
+    final powerOutlets =
+        powerOutletsAPI.getPowerOutletsByDevice(await getToken(), deviceID);
+
+    List<ComboModel> comboList = [];
+
+    // map all interfaces, powerports and poweroutlets to a single list
+    await Future.wait([interfaces, powerPorts, powerOutlets]).then((value) {
+      value.forEach((element) {
+        if (element != null) {
+          element.forEach((e) {
+            if (e is Interface) {
+              comboList.add(ComboModel(
+                  id: e.id,
+                  name: e.name,
+                  url: e.url,
+                  objectType: "interface",
+                  occupied: e.occupied,
+                  interface: e));
+            } else if (e is PowerPort) {
+              comboList.add(ComboModel(
+                  id: e.id,
+                  name: e.name,
+                  url: e.url,
+                  objectType: "powerport",
+                  occupied: e.occupied,
+                  powerPort: e));
+            } else if (e is PowerOutlet) {
+              comboList.add(ComboModel(
+                  id: e.id,
+                  name: e.name,
+                  url: e.url,
+                  objectType: "poweroutlet",
+                  occupied: e.occupied,
+                  powerOutlet: e));
+            }
+          });
+        }
+      });
+    });
+    if (comboList.isEmpty) {
+      genSnack("No ports found on device");
+      return [];
+    }
+    return comboList;
+  }
+
+  Cable? currentCable;
 
   void _setCurrentInformation(String code) async {
     Future<Cable?> cableDevices =
         cablesAPI.getCableByID(await getToken(), code);
-    cableDevices.then((value) {
+    if (await cableDevices == null) {
+      genSnack("No cable found");
+      return;
+    }
+    cableDevices.then((value) async {
+      Device? tempA = await getDevicesByID(value?.terminationADeviceID);
+      Device? tempB = await getDevicesByID(value?.terminationBDeviceID);
+      // Interface? tempAInterface = await interfacesAPI.getInterfaceByID(
+      //     await getToken(), value?.terminationAId as String);
+      // Interface? tempBInterface = await interfacesAPI.getInterfaceByID(
+      //     await getToken(), value?.terminationBId as String);
+
+      ComboModel? tempComboA =
+          await getComboModel(value?.terminationAId, value?.terminationAType);
+      ComboModel? tempComboB =
+          await getComboModel(value?.terminationBId, value?.terminationBType);
+
       if (value == null) {
         genSnack("No cable found");
       } else {
         setState(() {
           currentCable = value;
-          cableBarcodeScan = code;
-          deviceA = currentCable.terminationADeviceID;
-          deviceAName = currentCable.terminationADeviceName ?? "Name not found";
-          deviceB = currentCable.terminationBDeviceID;
-          deviceBName = currentCable.terminationBDeviceName ?? "Name not found";
-          interfaceA = currentCable.terminationAId;
-          interfaceB = currentCable.terminationBId;
-          cableType = currentCable.type;
+          cableBarcodeScan = currentCable?.label;
+          cableDescription = currentCable?.description;
+          deviceA = tempA;
+          deviceB = tempB;
+          comboA = tempComboA;
+          comboB = tempComboB;
         });
       }
     });
   }
 
   verifyModifications() {
-    if (deviceAName != currentCable.terminationADeviceName ||
-        deviceBName != currentCable.terminationBDeviceName ||
-        interfaceA != currentCable.terminationAId ||
-        interfaceB != currentCable.terminationBId ||
-        cableType != currentCable.type) {
-      if (deviceAName == "Scan Cable QR" || deviceBName == "Scan Cable QR") {
+    if (deviceA?.name != currentCable?.terminationADeviceName ||
+        deviceB?.name != currentCable?.terminationBDeviceName ||
+        comboA?.id.toString() != currentCable?.terminationAId ||
+        comboB?.id.toString() != currentCable?.terminationAId ||
+        cableType != currentCable?.type) {
+      if (deviceA == null ||
+          deviceB == null ||
+          comboA == null ||
+          comboB == null) {
         return;
       } else {
         modifyCable();
@@ -132,20 +227,48 @@ class _ModifyConnectionState extends State<ModifyConnection>
 
   void modifyCable() async {
     if (await showAlert()) {
-      currentCable.terminationADeviceID = deviceA;
-      currentCable.terminationBDeviceID = deviceB;
-      currentCable.terminationAId = interfaceA;
-      currentCable.terminationBId = interfaceB;
-      currentCable.type = cableType;
+      currentCable?.terminationADeviceID = deviceA?.id.toString();
+      currentCable?.terminationAType = comboA?.objectType;
+      currentCable?.terminationBDeviceID = deviceB?.id.toString();
+      currentCable?.terminationBType = comboB?.objectType;
+      currentCable?.terminationAId = comboB?.id.toString();
+      currentCable?.terminationBId = comboB?.id.toString();
+      currentCable?.description = cableDescription;
+      currentCable?.status = "connected";
 
-      if (await cablesAPI.updateConnection(await getToken(), currentCable)) {
-        genSnack("Cable modified successfully");
+      if (currentCable != null) {
+        String result = await cablesAPI.updateConnectionBAD(
+            await getToken(), currentCable as Cable);
+        if (result != "false") {
+          genSnack("Cable modified successfully");
+          AlertDialog(
+            title: const Text("Cable Modified"),
+            content: Column(
+              children: [
+                Text("Cable modified successfully"),
+                Text("Cable ID: ${result}"),
+              ],
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("OK"))
+            ],
+          );
+          return;
+        } else {
+          genSnack("Cable modification failed");
+          return;
+        }
       } else {
-        genSnack("Cable modification failed");
+        genSnack("Cable modification failed, cable was null");
+        return;
       }
-      genSnack("Cable modified successfully");
     } else {
       genSnack("Modification cancelled");
+      return;
     }
   }
 
@@ -158,71 +281,51 @@ class _ModifyConnectionState extends State<ModifyConnection>
                   children: [
                     const Text("Are you sure you want to modify this cable?"),
                     Container(
-                        color: Theme.of(context).colorScheme.primaryContainer,
-                        padding: const EdgeInsets.all(10),
                         margin: const EdgeInsets.only(top: 20),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Row(
-                              children: [
-                                Text("Device A: ",
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge),
-                                Text(currentCable.terminationADeviceName !=
-                                        deviceAName
-                                    ? "${currentCable.terminationADeviceName} -> $deviceAName"
-                                    : "No changes"),
-                              ],
+                            Text("Device A",
+                                style: Theme.of(context).textTheme.titleMedium),
+                            Text(currentCable?.terminationADeviceName !=
+                                    deviceA?.name
+                                ? "${currentCable?.terminationADeviceName}  >  ${deviceA?.name}"
+                                : "No changes"),
+                            const SizedBox(height: 20),
+                            Text(
+                              "Device B",
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
-                            SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Text(
-                                  "Device B: ",
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                Text(currentCable.terminationBDeviceName !=
-                                        deviceBName
-                                    ? "${currentCable.terminationBDeviceName} -> $deviceBName"
-                                    : "No changes"),
-                              ],
+                            Text(currentCable?.terminationBDeviceName !=
+                                    deviceB?.name
+                                ? "${currentCable?.terminationBDeviceName}  >  ${deviceB?.name}"
+                                : "No changes"),
+                            const SizedBox(height: 20),
+                            Text(
+                              "Interface A",
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
-                            SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Text(
-                                  "Interface A: ",
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                Text(currentCable.terminationAId != interfaceA
-                                    ? "${currentCable.terminationAId} -> $interfaceA"
-                                    : "No changes"),
-                              ],
+                            Text(currentCable?.terminationAId !=
+                                    comboA?.id.toString()
+                                ? "${currentCable?.terminationAName}  >  ${comboA?.name}"
+                                : "No changes"),
+                            const SizedBox(height: 20),
+                            Text(
+                              "Interface B",
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
-                            SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Text(
-                                  "Interface B: ",
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                Text(currentCable.terminationBId != interfaceB
-                                    ? "${currentCable.terminationBId} -> $interfaceB"
-                                    : "No changes"),
-                              ],
+                            Text(currentCable?.terminationBId !=
+                                    comboB?.id.toString()
+                                ? "${currentCable?.terminationBName} > ${comboB?.name}"
+                                : "No changes"),
+                            const SizedBox(height: 20),
+                            Text(
+                              "New description",
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
-                            SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Text(
-                                  "Cable Type: ",
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                Text(currentCable.type != cableType
-                                    ? "${currentCable.type} -> $cableType"
-                                    : "No changes"),
-                              ],
-                            ),
+                            Text(currentCable?.description != cableDescription
+                                ? "${currentCable?.description ?? "None"}  >  $cableDescription"
+                                : "No changes"),
                           ],
                         ))
                   ],
@@ -256,81 +359,72 @@ class _ModifyConnectionState extends State<ModifyConnection>
               Container(
                   width: double.infinity,
                   margin: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   color: Theme.of(context).colorScheme.onInverseSurface,
-                  child: Column(children: [
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
-                      child: Text(
-                        "Scan cable QR and select Cable Type",
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      width: double.infinity,
-                      child: FloatingActionButton.extended(
-                        heroTag: "cableScan",
-                        onPressed: () async {
-                          _cableBarcodeScanController.text =
-                              (await openScanner(context))!;
-                        },
-                        //set size to fill the parent
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                        ),
-                        label: const Text("Scan Cable QR"),
-                        icon: const Icon(Icons.qr_code_scanner),
-                      ),
-                    ),
-                    Text(
-                      "Cable ID: $cableBarcodeScan",
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(20, 6, 20, 20),
-                      child: DropdownButtonFormField<String>(
-                          style: Theme.of(context).textTheme.bodyLarge,
-                          value: cableType,
-                          items: const [
-                            DropdownMenuItem(
-                              value: "mmf",
-                              child: Text("Fiber (MMF)"),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            FloatingActionButton.extended(
+                              heroTag: "cableScan",
+                              onPressed: () async {
+                                _cableBarcodeScanController.text =
+                                    (await openScanner(context))!;
+                              },
+                              icon: const Icon(Icons.qr_code_scanner),
+                              label: const Text("Scan"),
                             ),
-                            DropdownMenuItem(
-                              value: "smf",
-                              child: Text("Fiber (SMF)"),
+                            const SizedBox(
+                              width: 20,
                             ),
-                            DropdownMenuItem(
-                              value: "cat3",
-                              child: Text("cat3"),
-                            ),
-                            DropdownMenuItem(
-                              value: "cat5e",
-                              child: Text("cat5e"),
-                            ),
-                            DropdownMenuItem(
-                              value: "cat6",
-                              child: Text("cat6"),
-                            ),
-                            DropdownMenuItem(
-                              value: "power",
-                              child: Text("Power"),
-                            ),
+                            // icon with a keyboard suggesting to type it manually
+                            Expanded(
+                              child: TextFormField(
+                                //set the keyboard type to number only
+                                keyboardType: TextInputType.number,
+                                controller: _cableBarcodeScanController,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Cable ID',
+                                ),
+                                //when the user is done typing, set the current information
+                                onFieldSubmitted: (value) {
+                                  _setCurrentInformation(value);
+                                },
+                              ),
+                            )
                           ],
-                          onChanged: (String? value) {
-                            if (value != cableType) {
-                              setState(() {
-                                cableType = value;
-                              });
-                            }
-                          },
-                          decoration: const InputDecoration(
-                              labelText: 'Select a Cable Type')),
-                    ),
-                  ])),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          utf8.decode(currentCable?.label.runes.toList() ??
+                              "".runes.toList()),
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        //show color of cbale
+                        Text(currentCable?.color == null ? "" : "Color:"),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 2, 0, 0),
+                          child: Divider(
+                            color: Color(int.parse(
+                                "0Xff${currentCable?.color ?? "000000"}")),
+                            thickness: currentCable?.color == null ? 0 : 10,
+                          ),
+                        ),
+                      ])),
               Container(
                 width: double.infinity,
-                margin: const EdgeInsets.all(20),
+                margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                 color: Theme.of(context).colorScheme.onInverseSurface,
                 child: Column(
                   children: [
@@ -365,22 +459,22 @@ class _ModifyConnectionState extends State<ModifyConnection>
                                     future: _getDevices(),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
-                                        devices = snapshot.data as List<String>;
+                                        devices = snapshot.data as List<Device>;
                                       } else {
                                         return const Center(
                                             child: CircularProgressIndicator(
                                           semanticsLabel: "Loading",
                                         ));
                                       }
-                                      return DropdownSearch<String>(
+                                      return DropdownSearch<Device>(
                                         enabled: cableBarcodeScan != null,
                                         dropdownBuilder: (context, item) {
                                           return Container(
                                             padding: const EdgeInsets.all(8),
                                             margin: const EdgeInsets.all(10),
-                                            child: Text(
-                                              item ?? deviceAName,
-                                            ),
+                                            child: Text(item?.name ??
+                                                deviceA?.name ??
+                                                ""),
                                           );
                                         },
                                         popupProps: PopupProps.modalBottomSheet(
@@ -391,7 +485,8 @@ class _ModifyConnectionState extends State<ModifyConnection>
                                             decoration: InputDecoration(
                                               border:
                                                   const OutlineInputBorder(),
-                                              labelText: deviceAName,
+                                              labelText: deviceA?.name ??
+                                                  "Scan QR Code",
                                             ),
                                           ),
                                           modalBottomSheetProps:
@@ -406,20 +501,15 @@ class _ModifyConnectionState extends State<ModifyConnection>
                                               maxHeight: 400,
                                               maxWidth: double.infinity),
                                         ),
-                                        items: [
-                                          for (var device in devices)
-                                            "${device.split("|")[0].trim()} | ${device.split("|")[1].trim()} | ${device.split("|")[2].trim()}"
-                                        ],
+                                        items: devices,
+                                        itemAsString: (item) =>
+                                            "${item.name} | ${item.location?.display} | ${item.rack?.name}",
                                         onChanged: (value) {
                                           setState(() {
-                                            deviceAName =
-                                                value?.split("|")[0].trim() ??
-                                                    "";
-                                            deviceA = value
-                                                ?.split("|")[2]
-                                                .trim()
-                                                .substring(2);
-                                            interfaceA = null;
+                                            deviceA = value;
+                                            comboA = null;
+                                            cableDescription =
+                                                "${value?.name}:? > ${comboB?.name}";
                                           });
                                         },
                                       );
@@ -428,28 +518,40 @@ class _ModifyConnectionState extends State<ModifyConnection>
                               Container(
                                 margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
                                 child: FutureBuilder(
-                                    future:
-                                        _getInterfacesByDevice(deviceA ?? ""),
+                                    future: _getMixedPortsByDeviceID(
+                                        deviceA?.id.toString() ?? ""),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
+                                        if (snapshot.data == null) {
+                                          return const Text("");
+                                        }
                                         var data = snapshot.data!;
-                                        return DropdownButtonFormField(
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge,
-                                            value: interfaceA,
-                                            items: data,
-                                            onChanged: (String? value) {
-                                              if (value != interfaceA) {
-                                                setState(() {
-                                                  interfaceA = value;
-                                                });
+                                        return DropdownSearch<ComboModel>(
+                                          enabled: deviceA != null,
+                                          items: data,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              if (value != comboA) {
+                                                comboA = value;
+                                                cableDescription =
+                                                    "${value?.name} > ${comboB?.name}";
                                               }
-                                            },
-                                            decoration: const InputDecoration(
-                                                labelText: 'Interface A',
-                                                hintText:
-                                                    'Select an Interface'));
+                                            });
+                                          },
+                                          itemAsString: (item) =>
+                                              "${item.name} | ${item.occupied == true ? "Occupied" : "Free"}",
+                                          dropdownBuilder: (context, item) {
+                                            return Container(
+                                              padding: const EdgeInsets.all(8),
+                                              margin: const EdgeInsets.all(10),
+                                              child: Text(
+                                                item?.name ??
+                                                    comboA?.name ??
+                                                    "",
+                                              ),
+                                            );
+                                          },
+                                        );
                                       } else {
                                         return const CircularProgressIndicator();
                                       }
@@ -457,6 +559,7 @@ class _ModifyConnectionState extends State<ModifyConnection>
                               ),
                             ],
                           ),
+
                           /////////////////////////
                           // SIDE B
                           /////////////////////////
@@ -469,22 +572,22 @@ class _ModifyConnectionState extends State<ModifyConnection>
                                     future: _getDevices(),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
-                                        devices = snapshot.data as List<String>;
+                                        devices = snapshot.data as List<Device>;
                                       } else {
                                         return const Center(
                                             child: CircularProgressIndicator(
                                           semanticsLabel: "Loading",
                                         ));
                                       }
-                                      return DropdownSearch<String>(
+                                      return DropdownSearch<Device>(
                                         enabled: cableBarcodeScan != null,
                                         dropdownBuilder: (context, item) {
                                           return Container(
                                             padding: const EdgeInsets.all(8),
                                             margin: const EdgeInsets.all(10),
-                                            child: Text(
-                                              item ?? deviceBName,
-                                            ),
+                                            child: Text(item?.name ??
+                                                deviceB?.name ??
+                                                ""),
                                           );
                                         },
                                         popupProps: PopupProps.modalBottomSheet(
@@ -495,7 +598,8 @@ class _ModifyConnectionState extends State<ModifyConnection>
                                             decoration: InputDecoration(
                                               border:
                                                   const OutlineInputBorder(),
-                                              labelText: deviceBName,
+                                              labelText: deviceB?.name ??
+                                                  "Scan QR Code",
                                             ),
                                           ),
                                           modalBottomSheetProps:
@@ -510,20 +614,15 @@ class _ModifyConnectionState extends State<ModifyConnection>
                                               maxHeight: 400,
                                               maxWidth: double.infinity),
                                         ),
-                                        items: [
-                                          for (var device in devices)
-                                            "${device.split("|")[0].trim()} | ${device.split("|")[1].trim()} | ${device.split("|")[2].trim()}"
-                                        ],
+                                        items: devices,
+                                        itemAsString: (item) =>
+                                            "${item.name} | ${item.location?.display} | ${item.rack?.name}",
                                         onChanged: (value) {
                                           setState(() {
-                                            deviceBName =
-                                                value?.split("|")[0].trim() ??
-                                                    "";
-                                            deviceB = value
-                                                ?.split("|")[2]
-                                                .trim()
-                                                .substring(2);
-                                            interfaceB = null;
+                                            deviceB = value;
+                                            comboB = null;
+                                            cableDescription =
+                                                "${comboA?.name} > ${value?.name}:?";
                                           });
                                         },
                                       );
@@ -532,28 +631,40 @@ class _ModifyConnectionState extends State<ModifyConnection>
                               Container(
                                 margin: const EdgeInsets.fromLTRB(24, 0, 24, 0),
                                 child: FutureBuilder(
-                                    future:
-                                        _getInterfacesByDevice(deviceB ?? ""),
+                                    future: _getMixedPortsByDeviceID(
+                                        deviceB?.id.toString() ?? ""),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
+                                        if (snapshot.data == null) {
+                                          return const Text("");
+                                        }
                                         var data = snapshot.data!;
-                                        return DropdownButtonFormField(
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge,
-                                            value: interfaceB,
-                                            items: data,
-                                            onChanged: (String? value) {
-                                              if (value != interfaceB) {
-                                                setState(() {
-                                                  interfaceB = value;
-                                                });
+                                        return DropdownSearch<ComboModel>(
+                                          enabled: deviceB != null,
+                                          items: data,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              if (value != comboB) {
+                                                comboB = value;
+                                                cableDescription =
+                                                    "${comboA?.name} > ${value?.name}";
                                               }
-                                            },
-                                            decoration: const InputDecoration(
-                                                labelText: 'Interface B',
-                                                hintText:
-                                                    'Select an Interface'));
+                                            });
+                                          },
+                                          itemAsString: (item) =>
+                                              "${item.name} | ${item.occupied == true ? "Occupied" : "Free"}",
+                                          dropdownBuilder: (context, item) {
+                                            return Container(
+                                              padding: const EdgeInsets.all(8),
+                                              margin: const EdgeInsets.all(10),
+                                              child: Text(
+                                                item?.name ??
+                                                    comboB?.name ??
+                                                    "",
+                                              ),
+                                            );
+                                          },
+                                        );
                                       } else {
                                         return const CircularProgressIndicator();
                                       }
@@ -569,7 +680,7 @@ class _ModifyConnectionState extends State<ModifyConnection>
               ),
               Container(
                 width: double.infinity,
-                margin: const EdgeInsets.all(20),
+                margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                 child: FloatingActionButton.extended(
                     heroTag: "modifyConnection",
                     // if (cableBarcodeScan == null) then disable button
@@ -609,7 +720,7 @@ class _ModifyConnectionState extends State<ModifyConnection>
       return "";
     }
 
-    if (await cablesAPI.checkExistenceById(await getToken(), code)) {
+    if (await cablesAPI.checkExistenceByLabel(await getToken(), code)) {
       _setCurrentInformation(code);
       return code;
     } else {
@@ -620,4 +731,45 @@ class _ModifyConnectionState extends State<ModifyConnection>
 
   @override
   bool get wantKeepAlive => true;
+
+  Future<ComboModel?> getComboModel(
+      String? terminationId, String? terminationType) async {
+    if (terminationId == null || terminationType == null) {
+      return null;
+    }
+
+    if (terminationType == "interface") {
+      Interface? i =
+          await interfacesAPI.getInterfaceByID(await getToken(), terminationId);
+      return ComboModel(
+          id: i?.id ?? 0,
+          name: i?.name ?? "Unknown",
+          url: i?.url ?? "Unknown",
+          occupied: i?.occupied ?? false,
+          objectType: terminationType,
+          interface: i);
+    } else if (terminationType == "poweroutlet") {
+      PowerOutlet? i = await powerOutletsAPI.getPowerOutletByID(
+          await getToken(), terminationId);
+      return ComboModel(
+          id: i?.id ?? 0,
+          name: i?.name ?? "Unknown",
+          url: i?.url ?? "Unknown",
+          occupied: i?.occupied ?? false,
+          objectType: terminationType,
+          powerOutlet: i);
+    } else if (terminationType == "powerport") {
+      PowerPort? i =
+          await powerPortsAPI.getPowerPortByID(await getToken(), terminationId);
+      return ComboModel(
+          id: i?.id ?? 0,
+          name: i?.name ?? "Unknown",
+          url: i?.url ?? "Unknown",
+          occupied: i?.occupied ?? false,
+          objectType: terminationType,
+          powerPort: i);
+    } else {
+      return null;
+    }
+  }
 }

@@ -24,11 +24,12 @@ class DeviceTypesAPI {
           .map((e) => DeviceType.fromJson(e))
           .toList();
     } else {
+      print("Get Device Types API: Error ${response.statusCode}");
       return [];
     }
   }
 
-  Future<DeviceType> getDeviceTypeById(String token, String ID) async {
+  Future<DeviceType?> getDeviceTypeById(String token, String ID) async {
     await dotenv.load();
 
     var response = await client.get(
@@ -42,7 +43,8 @@ class DeviceTypesAPI {
     if (response.statusCode == 200) {
       return DeviceType.fromJson(responseBody);
     } else {
-      return DeviceType(id: -1, name: 'Error', url: 'error');
+      print("Get Device Type API: Error ${response.statusCode}");
+      return null;
     }
   }
 }
