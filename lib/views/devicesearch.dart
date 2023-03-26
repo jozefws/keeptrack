@@ -73,7 +73,7 @@ class _DeviceInterfaceState extends State<DeviceSearch> {
                       border: InputBorder.none,
                       fillColor: Theme.of(context).colorScheme.surface),
                   builder: (device) => ListTile(
-                    contentPadding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    contentPadding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                     tileColor: Theme.of(context).colorScheme.surface,
                     title: Text(
                       device.name,

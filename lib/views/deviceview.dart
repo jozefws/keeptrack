@@ -1,13 +1,15 @@
-import 'dart:ffi';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:keeptrack/api/deviceTypes_api.dart';
 import 'package:keeptrack/api/devices_api.dart';
 import 'package:keeptrack/models/device_types.dart';
 import 'package:keeptrack/models/devices.dart';
+import 'package:keeptrack/models/servernetworkinterfaces.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 import 'package:keeptrack/views/hierarchysearch.dart';
-import 'package:keeptrack/views/interfaceView.dart';
+import 'package:keeptrack/models/powerport.dart';
+import 'package:keeptrack/api/powerport_api.dart';
 
 class DeviceView extends StatefulWidget {
   const DeviceView(this.deviceName, this.deviceID, {super.key});
@@ -21,11 +23,23 @@ class DeviceView extends StatefulWidget {
 class _DeviceViewState extends State<DeviceView> {
   DevicesAPI devicesAPI = DevicesAPI();
   DeviceTypesAPI deviceTypesAPI = DeviceTypesAPI();
+  PowerPortsAPI powerPortsAPI = PowerPortsAPI();
 
   Future<Device?> getDeviceById() async {
     var i = await devicesAPI.getDeviceByID(
         await getToken(), widget.deviceID.toString());
     return i;
+  }
+
+  Future<List<PowerPort>?> getPowerPortsByDevice(String id) async {
+    if (id == "") {
+      return null;
+    }
+    var i = await powerPortsAPI.getPowerPortsByDevice(await getToken(), id);
+    if (i.isNotEmpty) {
+      return i;
+    }
+    return null;
   }
 
   Future<DeviceType?> getDeviceTypeById(int id) async {
@@ -78,7 +92,7 @@ class _DeviceViewState extends State<DeviceView> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data != null) {
-                return Container(
+                return SizedBox(
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
                     child: displayDevice(snapshot.data!));
@@ -93,6 +107,8 @@ class _DeviceViewState extends State<DeviceView> {
   }
 
   displayDevice(Device device) {
+    List<ServerNetworkInterfaces?> serverNetworkInterfaces =
+        device.customFields!.serverNetworkInterfaces;
     return Container(
       height: MediaQuery.of(context).size.height,
       padding: const EdgeInsets.all(16),
@@ -142,6 +158,16 @@ class _DeviceViewState extends State<DeviceView> {
                   const SizedBox(
                     width: 8,
                   ),
+                  Chip(
+                      side: BorderSide.none,
+                      label: Text(
+                        device.deviceRole?.display ?? "Undefined",
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.primary),
+                  const SizedBox(
+                    width: 8,
+                  ),
                   // display tags as chips and background color from the color of the tag
                   Wrap(
                     spacing: 8,
@@ -168,7 +194,7 @@ class _DeviceViewState extends State<DeviceView> {
               ExpansionTile(
                 expandedAlignment: Alignment.centerLeft,
                 title: const Text("Device Details"),
-                childrenPadding: EdgeInsets.fromLTRB(16, 0, 0, 16),
+                childrenPadding: const EdgeInsets.fromLTRB(16, 0, 0, 16),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -190,6 +216,13 @@ class _DeviceViewState extends State<DeviceView> {
                       const Text("Serial Number: ",
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       Text(device.serial ?? "Undefined"),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text("Firmware: ",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(device.customFields?.firmware ?? "Undefined"),
                     ],
                   ),
                 ],
@@ -234,7 +267,7 @@ class _DeviceViewState extends State<DeviceView> {
                               const Text("Weight: ",
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
-                              Text("${snapshot.data?.weight ?? "Undefined"}"),
+                              Text(snapshot.data?.weight ?? "Undefined"),
                               Text(snapshot.data?.weightUnit ?? ""),
                             ],
                           ),
@@ -267,6 +300,188 @@ class _DeviceViewState extends State<DeviceView> {
                   ),
                 ],
               ),
+              FutureBuilder(
+                future: getPowerPortsByDevice(device.id.toString()),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data != null) {
+                      List<PowerPort> powerPort =
+                          snapshot.data as List<PowerPort>;
+                      return ExpansionTile(
+                        expandedAlignment: Alignment.centerLeft,
+                        title: const Text("Power Ports"),
+                        childrenPadding:
+                            const EdgeInsets.fromLTRB(16, 0, 0, 16),
+                        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: powerPort.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                isThreeLine: false,
+                                title: Text(
+                                  powerPort[index].name,
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onTertiaryContainer),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        "${powerPort[index].allocatedDraw}W/${powerPort[index].maximumDraw}W (Allocated/Maximum)"),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    Text(
+                                      utf8.decode(powerPort[index]
+                                              .cable
+                                              ?.label
+                                              .runes
+                                              .toList() ??
+                                          "No Cable".runes.toList()),
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    } else {
+                      return const Text("No power ports found");
+                    }
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+              ),
+              ExpansionTile(
+                expandedAlignment: Alignment.centerLeft,
+                title: const Text("CPU & RAM Information"),
+                childrenPadding: const EdgeInsets.fromLTRB(16, 0, 0, 16),
+                expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Text("CPU Type: ",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(device.customFields?.cpuType.toString() ??
+                          "Undefined"),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text("CPU Count: ",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(device.customFields?.cpuCount.toString() ??
+                          "Undefined"),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text("CPU Cores: ",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(device.customFields?.cpuCores.toString() ??
+                          "Undefined"),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text("CPU Threads: ",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(device.customFields?.cpuThreads.toString() ??
+                          "Undefined"),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text("RAM: ",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(device.customFields?.serverRam ?? "Undefined"),
+                    ],
+                  ),
+                ],
+              ),
+              serverNetworkInterfaces.isEmpty
+                  ? const SizedBox()
+                  : ExpansionTile(
+                      expandedAlignment: Alignment.centerLeft,
+                      title: const Text("Interface Information"),
+                      expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: serverNetworkInterfaces.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(
+                                  " ${serverNetworkInterfaces[index]?.interfaceName ?? "Undefined"}\x09\x00",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer,
+                                  )),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ListView.builder(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: serverNetworkInterfaces[index]
+                                              ?.interfaces
+                                              ?.length ??
+                                          0,
+                                      itemBuilder: (context, index2) {
+                                        var interface =
+                                            serverNetworkInterfaces[index]
+                                                ?.interfaces?[index2];
+
+                                        return ListTile(
+                                          title: Text(
+                                            "Ref: ${interface?.IFace ?? "Undefined"}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .tertiary),
+                                          ),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "${interface?.IP ?? "No IP"} ${interface?.HostName == "" ? "" : "| ${interface?.HostName}"}",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge,
+                                              ),
+                                              Text(
+                                                "${interface?.MAC ?? ""} ${interface?.speed == "" ? "" : "| ${interface?.speed}"}",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge,
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }),
+                                  Divider()
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
             ],
           ),
         )

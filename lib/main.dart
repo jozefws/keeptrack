@@ -181,11 +181,10 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
                       BottomNavigationBarItem(
                           icon: Icon(Icons.add_link), label: 'Add'),
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.screen_search_desktop_outlined),
-                          label: 'Search'),
+                          icon: Icon(Icons.cable_outlined), label: 'Search'),
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.settings_ethernet),
-                          label: 'Interfaces'),
+                          icon: Icon(Icons.screen_search_desktop_outlined),
+                          label: 'Devices'),
                     ],
                     currentIndex: selectedIndex,
                     onTap: onItemTapped,

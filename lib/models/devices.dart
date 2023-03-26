@@ -1,5 +1,7 @@
 import 'dart:ffi';
 
+import 'package:keeptrack/models/customfields.dart';
+import 'package:keeptrack/models/device_role.dart';
 import 'package:keeptrack/models/device_types.dart';
 import 'package:keeptrack/models/ip_addresses.dart';
 import 'package:keeptrack/models/locations.dart';
@@ -15,6 +17,7 @@ class Device {
   final String? serial;
   final String url;
   final DeviceType? deviceType;
+  final DeviceRole? deviceRole;
   final Manufacturer? manufacturer;
   final Rack? rack;
   final Tenant? tenant;
@@ -26,6 +29,7 @@ class Device {
   final String? status;
   final List<Tag>? tags;
   final Location? location;
+  final CustomFields? customFields;
 
   Device(
       {required this.id,
@@ -34,6 +38,7 @@ class Device {
       this.assetTag,
       this.serial,
       this.deviceType,
+      this.deviceRole,
       this.manufacturer,
       this.rack,
       this.tenant,
@@ -44,7 +49,8 @@ class Device {
       this.description,
       this.status,
       this.tags,
-      this.location});
+      this.location,
+      this.customFields});
 
   factory Device.fromJson(Map<String, dynamic> json) {
     return Device(
@@ -55,6 +61,9 @@ class Device {
         serial: json['serial'],
         deviceType: json['device_type'] != null
             ? DeviceType.fromJson(json['device_type'])
+            : null,
+        deviceRole: json['device_role'] != null
+            ? DeviceRole.fromJson(json['device_role'])
             : null,
         manufacturer: json['manufacturer'] != null
             ? Manufacturer.fromJson(json['manufacturer'])
@@ -74,6 +83,9 @@ class Device {
             : null,
         tags: json['tags'] != null
             ? List<Tag>.from(json['tags'].map((x) => Tag.fromJson(x)))
+            : null,
+        customFields: json['custom_fields'] != null
+            ? CustomFields.fromJson(json['custom_fields'])
             : null);
   }
 }

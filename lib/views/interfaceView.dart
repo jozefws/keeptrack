@@ -15,6 +15,7 @@ import 'package:keeptrack/models/powerfeed.dart';
 import 'package:keeptrack/models/poweroutlet.dart';
 import 'package:keeptrack/models/powerport.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
+import 'package:keeptrack/views/deviceview.dart';
 
 class ComboView extends StatefulWidget {
   const ComboView(this.combo, {super.key});
@@ -236,6 +237,7 @@ class _ComboViewState extends State<ComboView> {
   }
 
   displayDeviceCard(cable, deviceID, interfaceID, color) {
+    Cable _cable = cable;
     return FutureBuilder(
       future: _getDeviceByID(deviceID),
       builder: (context, snapshot) {
@@ -249,10 +251,23 @@ class _ComboViewState extends State<ComboView> {
                 children: [
                   Row(
                     children: [
-                      //device A name
-                      Text(device.name,
-                          style: Theme.of(context).textTheme.headlineSmall,
-                          overflow: TextOverflow.ellipsis),
+                      Expanded(
+                        child: Container(
+                          child: Text(device.name,
+                              style: Theme.of(context).textTheme.headlineSmall,
+                              overflow: TextOverflow.clip),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.open_in_new),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      DeviceView(device.name, device.id)));
+                        },
+                      )
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -300,7 +315,7 @@ class _ComboViewState extends State<ComboView> {
                             ],
                           );
                         } else {
-                          return SizedBox();
+                          return const SizedBox();
                         }
                       })
                 ],
@@ -536,7 +551,6 @@ class _ComboViewState extends State<ComboView> {
     } else if (type == "dcim.powerfeed") {
       return displayFeedCard(string, primaryContainer);
     } else {
-      print(type);
       return const Text("Error");
     }
   }
