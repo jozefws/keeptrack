@@ -7,6 +7,8 @@
         "Dialog",
         "dotenv",
         "hierarchysearch",
+        "IPAM",
+        "Jozef",
         "Netbox",
         "powerfeed",
         "powerfeeds",
