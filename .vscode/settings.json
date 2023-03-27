@@ -7,6 +7,7 @@
         "Dialog",
         "dotenv",
         "hierarchysearch",
+        "hostable",
         "IPAM",
         "Jozef",
         "Netbox",
@@ -15,6 +16,7 @@
         "poweroutlet",
         "poweroutlets",
         "powerport",
+        "SIGCOMM",
         "Unracked"
     ]
 }
