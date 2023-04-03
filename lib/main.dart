@@ -194,7 +194,7 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
                       if (snapshot.data!) {
                         return Scaffold(
                           backgroundColor:
-                              Theme.of(context).colorScheme.surface,
+                              Theme.of(context).colorScheme.background,
                           key: scaffoldKey,
                           endDrawer: Drawer(
                             child: settingsDrawer(scaffoldKey),
@@ -213,25 +213,37 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
                             child: navPages.elementAt(selectedIndex),
                           ),
                           bottomNavigationBar: BottomNavigationBar(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.onBackground,
+                            type: BottomNavigationBarType.shifting,
                             selectedItemColor:
                                 Theme.of(context).colorScheme.primary,
                             unselectedItemColor:
                                 Theme.of(context).colorScheme.onBackground,
-                            items: const [
+                            items: [
                               BottomNavigationBarItem(
-                                  icon: Icon(Icons.auto_fix_high),
-                                  label: 'Modify'),
+                                  icon: const Icon(Icons.auto_fix_high),
+                                  label: 'Modify',
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .secondaryContainer),
                               BottomNavigationBarItem(
-                                  icon: Icon(Icons.add_link), label: 'Add'),
+                                  icon: const Icon(Icons.add_link),
+                                  label: 'Add',
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .secondaryContainer),
                               BottomNavigationBarItem(
-                                  icon: Icon(Icons.cable_outlined),
-                                  label: 'Search Connection'),
+                                  icon: const Icon(Icons.cable_outlined),
+                                  label: 'Search Connection',
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .secondaryContainer),
                               BottomNavigationBarItem(
-                                  icon: Icon(
+                                  icon: const Icon(
                                       Icons.screen_search_desktop_outlined),
-                                  label: 'Devices'),
+                                  label: 'Devices',
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .secondaryContainer),
                             ],
                             currentIndex: selectedIndex,
                             onTap: onItemTapped,

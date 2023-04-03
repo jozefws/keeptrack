@@ -61,7 +61,7 @@ class _DeviceViewState extends State<DeviceView> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         title: Text(widget.deviceName),
-        titleTextStyle: const TextStyle(fontSize: 16),
+        titleTextStyle: Theme.of(context).textTheme.bodyLarge,
         actions: [
           IconButton(
             icon: const Icon(Icons.home),

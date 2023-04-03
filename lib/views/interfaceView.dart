@@ -116,7 +116,7 @@ class _ComboViewState extends State<ComboView> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           title: Text(widget.combo.name),
-          titleTextStyle: const TextStyle(fontSize: 16),
+          titleTextStyle: Theme.of(context).textTheme.bodyLarge,
           actions: [
             IconButton(
               icon: const Icon(Icons.home),
@@ -215,7 +215,7 @@ class _ComboViewState extends State<ComboView> {
                       height: 200,
                       child: VerticalDivider(
                         color: cable.color == ""
-                            ? Colors.white
+                            ? Theme.of(context).colorScheme.inverseSurface
                             : Color(int.parse("0xFF${cable.color}")),
                         thickness: 8,
                       ),
@@ -271,11 +271,9 @@ class _ComboViewState extends State<ComboView> {
                   Row(
                     children: [
                       Expanded(
-                        child: Container(
-                          child: Text(device.name,
-                              style: Theme.of(context).textTheme.headlineSmall,
-                              overflow: TextOverflow.clip),
-                        ),
+                        child: Text(device.name,
+                            style: Theme.of(context).textTheme.headlineSmall,
+                            overflow: TextOverflow.clip),
                       ),
                       IconButton(
                         icon: const Icon(Icons.open_in_new),
@@ -312,11 +310,10 @@ class _ComboViewState extends State<ComboView> {
                           style: Theme.of(context).textTheme.bodyLarge),
                     ],
                   ),
-                  const Divider(
-                    height: 20,
-                    thickness: 2,
-                    color: Colors.white,
-                  ),
+                  Divider(
+                      height: 20,
+                      thickness: 2,
+                      color: Theme.of(context).colorScheme.onTertiary),
                   FutureBuilder(
                       future: _getInterfaceByID(interfaceID),
                       builder: (context, snapshot) {

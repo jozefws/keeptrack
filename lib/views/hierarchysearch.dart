@@ -139,7 +139,7 @@ class _HierarchySearchState extends State<HierarchySearch> {
                 },
                 icon: const Icon(Icons.home))
           ],
-          titleTextStyle: const TextStyle(fontSize: 16),
+          titleTextStyle: Theme.of(context).textTheme.bodyLarge,
         ),
         // display all racks in a vertical list
         body: Column(

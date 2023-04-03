@@ -178,7 +178,9 @@ class _SearchConnectionState extends State<SearchConnection>
                           ),
                           modalBottomSheetProps: ModalBottomSheetProps(
                               isScrollControlled: true,
-                              backgroundColor: Theme.of(context).primaryColor,
+                              backgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer,
                               anchorPoint: const Offset(0.5, 5)),
                           constraints: const BoxConstraints(
                               maxHeight: 400, maxWidth: double.infinity),

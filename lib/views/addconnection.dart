@@ -337,7 +337,8 @@ class _AddConnectionState extends State<AddConnection>
                                                     isScrollControlled: true,
                                                     backgroundColor:
                                                         Theme.of(context)
-                                                            .primaryColor,
+                                                            .colorScheme
+                                                            .primaryContainer,
                                                     anchorPoint:
                                                         const Offset(0.5, 5)),
                                             constraints: const BoxConstraints(
@@ -386,10 +387,10 @@ class _AddConnectionState extends State<AddConnection>
                                                             ModalBottomSheetProps(
                                                                 isScrollControlled:
                                                                     true,
-                                                                backgroundColor:
-                                                                    Theme.of(
-                                                                            context)
-                                                                        .primaryColor,
+                                                                backgroundColor: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .primaryContainer,
                                                                 anchorPoint:
                                                                     const Offset(
                                                                         0.5,
@@ -500,7 +501,8 @@ class _AddConnectionState extends State<AddConnection>
                                                     isScrollControlled: true,
                                                     backgroundColor:
                                                         Theme.of(context)
-                                                            .primaryColor,
+                                                            .colorScheme
+                                                            .primaryContainer,
                                                     anchorPoint:
                                                         const Offset(0.5, 5)),
                                             constraints: const BoxConstraints(
@@ -549,10 +551,10 @@ class _AddConnectionState extends State<AddConnection>
                                                             ModalBottomSheetProps(
                                                                 isScrollControlled:
                                                                     true,
-                                                                backgroundColor:
-                                                                    Theme.of(
-                                                                            context)
-                                                                        .primaryColor,
+                                                                backgroundColor: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .primaryContainer,
                                                                 anchorPoint:
                                                                     const Offset(
                                                                         0.5,
