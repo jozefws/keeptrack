@@ -118,6 +118,50 @@ class _ComboViewState extends State<ComboView> {
           title: Text(widget.combo.name),
           titleTextStyle: Theme.of(context).textTheme.bodyLarge,
           actions: [
+            //delete icon button but cofirmation dialog is shown first
+            IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  // show an alert dialog to confirm deletion
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Delete Connection"),
+                          content: const Text(
+                              "Are you sure you want to delete this connection?"),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Cancel")),
+                            TextButton(
+                                onPressed: () async {
+                                  String cableID = widget
+                                          .combo.interface?.cableID
+                                          .toString() ??
+                                      widget.combo.powerOutlet?.cable?.id
+                                          .toString() ??
+                                      widget.combo.powerPort?.cable?.id
+                                          .toString() ??
+                                      "";
+                                  Cable? cable = await _getCableByID(cableID);
+                                  if (cable != null) {
+                                    cablesAPI.deleteConnection(
+                                        await getToken(), cable);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    return;
+                                  }
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Delete")),
+                          ],
+                        );
+                      });
+                }),
             IconButton(
               icon: const Icon(Icons.home),
               onPressed: () {

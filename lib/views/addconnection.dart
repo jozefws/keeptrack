@@ -364,9 +364,6 @@ class _AddConnectionState extends State<AddConnection>
                                                 deviceA?.id.toString() ?? ""),
                                             builder: (context, snapshot) {
                                               if (snapshot.hasData) {
-                                                if (snapshot.data == null) {
-                                                  return const Text("");
-                                                }
                                                 var data = snapshot.data!;
                                                 return Column(
                                                   children: [
