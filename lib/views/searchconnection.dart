@@ -1,6 +1,5 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:keeptrack/api/cables_api.dart';
 import 'package:keeptrack/api/devices_api.dart';
 import 'package:keeptrack/api/interfaces_api.dart';
@@ -15,7 +14,7 @@ import 'package:keeptrack/models/poweroutlet.dart';
 import 'package:keeptrack/models/powerport.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 import 'package:keeptrack/views/hierarchysearch.dart';
-import 'package:keeptrack/views/interfaceView.dart';
+import 'package:keeptrack/views/interfaceview.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class SearchConnection extends StatefulWidget {
@@ -47,22 +46,19 @@ class _SearchConnectionState extends State<SearchConnection>
 
   String? cableBarcodeScan;
 
-  Future<List<String>> _getDevices() async {
-    var i = await devicesAPI.getDevices(await getToken());
-    return i
-        .map((e) =>
-            "${e.name} | ${(e.rack?.name)?.substring(4) ?? "Unracked"} | ID${e.id}")
-        .toList();
-  }
-
   Future<List<Location>> _getLocations() async {
     var i = await organisationAPI.getLocations(await getToken());
     return i;
   }
 
   genSnack(String message) {
+    hideSnack();
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  hideSnack() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
 
   getToken() async {
@@ -118,7 +114,6 @@ class _SearchConnectionState extends State<SearchConnection>
             Container(
                 width: double.infinity,
                 margin: const EdgeInsets.all(20),
-                height: 280,
                 color: Theme.of(context).colorScheme.onInverseSurface,
                 child: Column(
                   children: [
@@ -136,6 +131,9 @@ class _SearchConnectionState extends State<SearchConnection>
                       //drop down search where the label is that items display name
                       //and the value is the items id
                       child: DropdownSearch<Location>(
+                        filterFn: (item, filter) => item.display
+                            .toLowerCase()
+                            .contains(filter.toLowerCase()),
                         dropdownBuilder: (context, item) {
                           return Container(
                             padding: const EdgeInsets.all(8),
@@ -156,10 +154,7 @@ class _SearchConnectionState extends State<SearchConnection>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  item.display +
-                                      (item.parent != null
-                                          ? " < ${item.parent!.display}"
-                                          : ""),
+                                  item.display,
                                   style: TextStyle(
                                       fontWeight: item.parent == null
                                           ? FontWeight.bold
@@ -174,11 +169,11 @@ class _SearchConnectionState extends State<SearchConnection>
                             ),
                           ),
                           showSearchBox: true,
-                          searchDelay: const Duration(milliseconds: 100),
-                          searchFieldProps: TextFieldProps(
+                          searchFieldProps: const TextFieldProps(
                             decoration: InputDecoration(
-                              border: const OutlineInputBorder(),
-                              labelText: locationName,
+                              border: OutlineInputBorder(),
+                              labelText:
+                                  "Type here to search or select from below",
                             ),
                           ),
                           modalBottomSheetProps: ModalBottomSheetProps(
@@ -224,8 +219,7 @@ class _SearchConnectionState extends State<SearchConnection>
                 )),
             Container(
                 width: double.infinity,
-                margin: const EdgeInsets.all(20),
-                height: 380,
+                margin: const EdgeInsets.fromLTRB(20, 0, 20, 10),
                 color: Theme.of(context).colorScheme.onInverseSurface,
                 child: Column(
                   children: [
@@ -257,10 +251,6 @@ class _SearchConnectionState extends State<SearchConnection>
                                 }
                                 ComboModel? combo = await _getMixedPortByID(
                                     cable.terminationAId!);
-                                // await interfacesAPI.getInterfaceByID(
-                                //     await getToken(),
-                                //     cable.terminationAId!);
-                                //get the device that the interface is connected to
                                 if (combo == null) {
                                   genSnack("Cable not found");
                                   return;
@@ -278,6 +268,7 @@ class _SearchConnectionState extends State<SearchConnection>
                         width: double.infinity,
                         margin: const EdgeInsets.all(20),
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter a cable ID';
@@ -289,15 +280,7 @@ class _SearchConnectionState extends State<SearchConnection>
                             border: OutlineInputBorder(),
                             labelText: 'or, enter Cable ID...',
                           ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.all(20),
-                      child: FloatingActionButton.extended(
-                          heroTag: "searchByLabelManual",
-                          onPressed: () async {
+                          onEditingComplete: () async {
                             if (_searchByLabelKey.currentState!.validate()) {
                               genSnack("Searching for cable...");
                               Cable? cable = await cablesAPI.getCableByID(
@@ -314,11 +297,12 @@ class _SearchConnectionState extends State<SearchConnection>
                                 genSnack("Cable not found");
                                 return;
                               }
+                              hideSnack();
                               moveToInterface(combo);
                             }
                           },
-                          label: const Text("Start Search"),
-                          icon: const Icon(Icons.search)),
+                        ),
+                      ),
                     ),
                   ],
                 )),

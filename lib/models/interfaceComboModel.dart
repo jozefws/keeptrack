@@ -11,6 +11,7 @@ class ComboModel {
   final Interface? interface;
   final PowerPort? powerPort;
   final PowerOutlet? powerOutlet;
+  final int? deviceID;
 
   ComboModel({
     required this.id,
@@ -21,5 +22,6 @@ class ComboModel {
     this.interface,
     this.powerPort,
     this.powerOutlet,
+    this.deviceID,
   });
 }

@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:tuple/tuple.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class NetboxAuthProvider extends ChangeNotifier {
   FlutterSecureStorage? secureStorage;
@@ -21,6 +22,11 @@ class NetboxAuthProvider extends ChangeNotifier {
   Future setToken(String token) async {
     await initSecureStorage();
     await secureStorage!.write(key: 'nb:token', value: token);
+  }
+
+  Future setTokenID(int id) async {
+    await initSecureStorage();
+    await secureStorage!.write(key: 'nb:tokenid', value: id.toString());
   }
 
   Future setTokenURL(String tokenURL) async {
@@ -43,9 +49,21 @@ class NetboxAuthProvider extends ChangeNotifier {
     return await secureStorage!.read(key: 'nb:token');
   }
 
+  Future<String?> getTokenID() async {
+    await initSecureStorage();
+    return await secureStorage!.read(key: 'nb:tokenid');
+  }
+
   Future<bool> isAuthenticated() async {
     await initSecureStorage();
-    return await secureStorage!.read(key: 'nb:token') != null;
+    String? token = await getToken();
+    String? tokenID = await getTokenID();
+
+    if (token == null || tokenID == null) {
+      return false;
+    } else {
+      return await checkToken(token, tokenID);
+    }
   }
 
   Future<dynamic> login(String username, String password) async {
@@ -66,6 +84,7 @@ class NetboxAuthProvider extends ChangeNotifier {
       final Map<String, dynamic> res = jsonDecode(response.body);
       await setToken(res['key']);
       await setTokenURL(res['url']);
+      await setTokenID(res['id']);
       await setUsername(username);
       notifyListeners();
       return const Tuple2<bool, String>(true, "Login successful");
@@ -122,6 +141,33 @@ class NetboxAuthProvider extends ChangeNotifier {
       return true;
     } else {
       return false;
+    }
+  }
+
+  Future<bool> checkToken(String token, String tokenID) async {
+    final client = http.Client();
+    final url =
+        Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/users/tokens/$tokenID');
+
+    var response = await client.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Token $token',
+      'Accept': 'application/json',
+    });
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<bool> isConnected() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      return false;
+    } else {
+      return true;
     }
   }
 }

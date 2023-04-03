@@ -1,4 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -73,9 +76,18 @@ class KeepTrack extends StatelessWidget {
           return MaterialApp(
             title: 'Keeptrack',
             home: Builder(builder: (context) {
-              return const Scaffold(
+              return Scaffold(
                 body: Center(
-                  child: CircularProgressIndicator(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 10),
+                      Text("Loading...",
+                          style: Theme.of(context).textTheme.titleMedium),
+                    ],
+                  ),
                 ),
               );
             }),
@@ -95,13 +107,12 @@ class KeepTrackHome extends StatefulWidget {
 class _KeepTrackHomeState extends State<KeepTrackHome> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   late final SharedPreferences prefs;
-  bool _isDark = false;
-  static int selectedIndex = 0;
+  static int selectedIndex = 2;
   static String selectedTitle = "Welcome to KeepTrack";
 
   static List<Widget> navPages = <Widget>[
-    const ModifyConnection(),
-    const AddConnection(),
+    const ModifyConnection(""),
+    const AddConnection(null, null),
     const SearchConnection(),
     const DeviceSearch(),
   ];
@@ -140,61 +151,122 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
 
   void getPrefs() async {
     prefs = await SharedPreferences.getInstance();
-    _isDark = prefs.getBool('settings/dark-mode') ?? false;
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<NetboxAuthProvider>(builder: (context, provider, child) {
       return FutureBuilder<bool>(
-          future: provider.isAuthenticated(),
+          future: provider.isConnected(),
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data!) {
-                return Scaffold(
-                  backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
-                  key: scaffoldKey,
-                  endDrawer: Drawer(
-                    child: settingsDrawer(scaffoldKey),
-                  ),
-                  appBar: AppBar(
-                      title: Text(selectedTitle),
-                      //show burger icon that opens drawer
-                      actions: <Widget>[
-                        IconButton(
-                          icon: const Icon(Icons.menu_open_outlined),
-                          onPressed: () =>
-                              scaffoldKey.currentState?.openEndDrawer(),
-                        )
-                      ]),
-                  body: SafeArea(
-                    child: navPages.elementAt(selectedIndex),
-                  ),
-                  bottomNavigationBar: BottomNavigationBar(
-                    backgroundColor: Theme.of(context).colorScheme.onBackground,
-                    selectedItemColor: Theme.of(context).colorScheme.primary,
-                    unselectedItemColor:
-                        Theme.of(context).colorScheme.onBackground,
-                    items: const [
-                      BottomNavigationBarItem(
-                          icon: Icon(Icons.auto_fix_high), label: 'Modify'),
-                      BottomNavigationBarItem(
-                          icon: Icon(Icons.add_link), label: 'Add'),
-                      BottomNavigationBarItem(
-                          icon: Icon(Icons.cable_outlined), label: 'Search'),
-                      BottomNavigationBarItem(
-                          icon: Icon(Icons.screen_search_desktop_outlined),
-                          label: 'Devices'),
+            if (!snapshot.hasData) {
+              var connectivityResult = Connectivity().checkConnectivity();
+
+              return Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 10),
+                      Text("Checking Connection State...",
+                          style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: 10),
+                      Text("Connectivity Result: $connectivityResult",
+                          style: Theme.of(context).textTheme.titleMedium),
                     ],
-                    currentIndex: selectedIndex,
-                    onTap: onItemTapped,
+                  ),
+                ),
+              );
+            } else {
+              if (snapshot.data == false) {
+                return const Scaffold(
+                  body: Center(
+                    child: Text("No internet connection"),
                   ),
                 );
-              } else {
-                return const LoginPage();
               }
+              return FutureBuilder<bool>(
+                  future: provider.isAuthenticated(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data!) {
+                        return Scaffold(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.surface,
+                          key: scaffoldKey,
+                          endDrawer: Drawer(
+                            child: settingsDrawer(scaffoldKey),
+                          ),
+                          appBar: AppBar(
+                              title: Text(selectedTitle),
+                              //show burger icon that opens drawer
+                              actions: <Widget>[
+                                IconButton(
+                                  icon: const Icon(Icons.settings),
+                                  onPressed: () =>
+                                      scaffoldKey.currentState?.openEndDrawer(),
+                                )
+                              ]),
+                          body: SafeArea(
+                            child: navPages.elementAt(selectedIndex),
+                          ),
+                          bottomNavigationBar: BottomNavigationBar(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.onBackground,
+                            selectedItemColor:
+                                Theme.of(context).colorScheme.primary,
+                            unselectedItemColor:
+                                Theme.of(context).colorScheme.onBackground,
+                            items: const [
+                              BottomNavigationBarItem(
+                                  icon: Icon(Icons.auto_fix_high),
+                                  label: 'Modify'),
+                              BottomNavigationBarItem(
+                                  icon: Icon(Icons.add_link), label: 'Add'),
+                              BottomNavigationBarItem(
+                                  icon: Icon(Icons.cable_outlined),
+                                  label: 'Search Connection'),
+                              BottomNavigationBarItem(
+                                  icon: Icon(
+                                      Icons.screen_search_desktop_outlined),
+                                  label: 'Devices'),
+                            ],
+                            currentIndex: selectedIndex,
+                            onTap: onItemTapped,
+                            //show label
+                            showUnselectedLabels: true,
+                          ),
+                        );
+                      } else {
+                        return const LoginPage();
+                      }
+                    } else {
+                      //if after 1 minute we still don't have a response, show error
+                      while (
+                          snapshot.connectionState == ConnectionState.waiting) {
+                        return Scaffold(
+                          body: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const CircularProgressIndicator(),
+                                const SizedBox(height: 10),
+                                Text("Checking Netbox Authentication...",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                      return const LoginPage();
+                    }
+                  });
             }
-            return const Center(child: CircularProgressIndicator());
           });
     });
   }
@@ -238,16 +310,23 @@ class _KeepTrackHomeState extends State<KeepTrackHome> {
             ),
           ],
         ),
-        Container(
-          child: FutureBuilder<String>(
-              future: getDomain(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Text("${snapshot.data!}");
-                }
-                return CircularProgressIndicator();
-              }),
-        ),
+        FutureBuilder<String>(
+            future: getDomain(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Text(snapshot.data!);
+              }
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 10),
+                  Text("Loading domain...",
+                      style: Theme.of(context).textTheme.titleMedium),
+                ],
+              );
+            }),
         Expanded(
           child: Align(
             alignment: Alignment.bottomCenter,

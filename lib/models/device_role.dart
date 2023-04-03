@@ -1,13 +1,3 @@
-import 'dart:ffi';
-
-import 'package:keeptrack/models/device_types.dart';
-import 'package:keeptrack/models/ip_addresses.dart';
-import 'package:keeptrack/models/locations.dart';
-import 'package:keeptrack/models/manufacturer.dart';
-import 'package:keeptrack/models/racks.dart';
-import 'package:keeptrack/models/tenant.dart';
-import 'package:keeptrack/models/tags.dart';
-
 class DeviceRole {
   final int id;
   final String url;

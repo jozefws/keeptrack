@@ -16,6 +16,7 @@ import 'package:keeptrack/models/poweroutlet.dart';
 import 'package:keeptrack/models/powerport.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 import 'package:keeptrack/views/deviceview.dart';
+import 'package:keeptrack/views/modifyconnection.dart';
 
 class ComboView extends StatefulWidget {
   const ComboView(this.combo, {super.key});
@@ -147,11 +148,26 @@ class _ComboViewState extends State<ComboView> {
                 padding: const EdgeInsets.fromLTRB(32.0, 16.0, 32.0, 4.0),
                 child: ListView(children: [
                   //decode cable label in utf8
-                  Center(
-                    child: Text(
-                      utf8.decode(cable.label.runes.toList()),
-                      style: const TextStyle(fontSize: 20),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(utf8.decode(cable.label.runes.toList()),
+                            style: const TextStyle(fontSize: 20),
+                            overflow: TextOverflow.clip),
+                      ),
+                      FloatingActionButton(
+                          // go back to root and then go to modify connection with cable id
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TreeModifyConnection(
+                                      cable.id.toString())),
+                            );
+                          },
+                          child: const Icon(Icons.edit)),
+                    ],
                   ),
                   const SizedBox(height: 20),
                   const Text("Device A",
@@ -184,11 +200,14 @@ class _ComboViewState extends State<ComboView> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(utf8.decode(cable.label.runes.toList()),
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
+                            style: Theme.of(context).textTheme.titleMedium),
+                        Text(
+                          "Cable ID: ${cable.id.toString()}",
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
                         Text(cable.type ?? "",
                             style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w300)),
+                                fontSize: 14, fontWeight: FontWeight.w300)),
                       ],
                     ),
                     SizedBox(
@@ -553,5 +572,34 @@ class _ComboViewState extends State<ComboView> {
     } else {
       return const Text("Error");
     }
+  }
+}
+
+class TreeModifyConnection extends StatefulWidget {
+  const TreeModifyConnection(this.cableID, {super.key});
+  final String? cableID;
+
+  @override
+  State<TreeModifyConnection> createState() => _TreeModifyConnectionState();
+}
+
+class _TreeModifyConnectionState extends State<TreeModifyConnection> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Modify Connection ${widget.cableID}"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              //push until root
+              Navigator.popUntil(context, (route) => route.isFirst);
+            },
+          ),
+        ],
+      ),
+      body: ModifyConnection(widget.cableID),
+    );
   }
 }

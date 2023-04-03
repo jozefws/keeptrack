@@ -14,7 +14,7 @@ class ConnectionColour {
 
 // data class for 3 VLANs, 21, 22, 23 where 21 is red, 22 is green, 23 is blue
 
-List<ConnectionColour> CONNECTION_COLOURS = [
+List<ConnectionColour> nbConnectionColours = [
   ConnectionColour(
       description: "VLAN 20",
       hexColor: "F44336",

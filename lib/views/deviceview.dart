@@ -62,6 +62,14 @@ class _DeviceViewState extends State<DeviceView> {
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         title: Text(widget.deviceName),
         titleTextStyle: const TextStyle(fontSize: 16),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              Navigator.popUntil(context, ModalRoute.withName("/"));
+            },
+          ),
+        ],
       ),
       persistentFooterButtons: [
         FloatingActionButton.extended(
@@ -70,7 +78,7 @@ class _DeviceViewState extends State<DeviceView> {
             Navigator.popUntil(context, ModalRoute.withName("/"));
           },
           icon: const Icon(Icons.arrow_back),
-          label: const Text("New Search"),
+          label: const Text("Back"),
         ),
         FloatingActionButton.extended(
           heroTag: "viewInterfaces",
@@ -474,7 +482,7 @@ class _DeviceViewState extends State<DeviceView> {
                                           ),
                                         );
                                       }),
-                                  Divider()
+                                  const Divider()
                                 ],
                               ),
                             );
