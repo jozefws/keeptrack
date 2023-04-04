@@ -246,6 +246,8 @@ class _AddConnectionState extends State<AddConnection>
                 child: Container(
                   color: Theme.of(context).colorScheme.surface,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
                         width: double.infinity,
@@ -363,7 +365,9 @@ class _AddConnectionState extends State<AddConnection>
                                             future: _getMixedPortsByDeviceID(
                                                 deviceA?.id.toString() ?? ""),
                                             builder: (context, snapshot) {
-                                              if (snapshot.hasData) {
+                                              if (snapshot.hasData &&
+                                                  snapshot.connectionState !=
+                                                      ConnectionState.waiting) {
                                                 var data = snapshot.data!;
                                                 return Column(
                                                   children: [
@@ -431,7 +435,15 @@ class _AddConnectionState extends State<AddConnection>
                                                   ],
                                                 );
                                               } else {
-                                                return const CircularProgressIndicator();
+                                                return Row(
+                                                  children: const [
+                                                    Text("Loading ports..."),
+                                                    SizedBox(
+                                                      width: 24,
+                                                    ),
+                                                    CircularProgressIndicator(),
+                                                  ],
+                                                );
                                               }
                                             }),
                                       ),
@@ -524,7 +536,9 @@ class _AddConnectionState extends State<AddConnection>
                                             future: _getMixedPortsByDeviceID(
                                                 deviceB?.id.toString() ?? ""),
                                             builder: (context, snapshot) {
-                                              if (snapshot.hasData) {
+                                              if (snapshot.hasData &&
+                                                  snapshot.connectionState !=
+                                                      ConnectionState.waiting) {
                                                 if (snapshot.data == null) {
                                                   return const Text("");
                                                 }
@@ -595,7 +609,15 @@ class _AddConnectionState extends State<AddConnection>
                                                   ],
                                                 );
                                               } else {
-                                                return const CircularProgressIndicator();
+                                                return Row(
+                                                  children: const [
+                                                    Text("Loading ports..."),
+                                                    SizedBox(
+                                                      width: 24,
+                                                    ),
+                                                    CircularProgressIndicator(),
+                                                  ],
+                                                );
                                               }
                                             }),
                                       ),

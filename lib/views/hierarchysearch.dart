@@ -12,6 +12,7 @@ import 'package:keeptrack/models/powerport.dart';
 import 'package:keeptrack/models/racks.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 import 'package:keeptrack/views/addconnection.dart';
+import 'package:keeptrack/views/deviceview.dart';
 import 'package:keeptrack/views/interfaceview.dart';
 
 class HierarchySearch extends StatefulWidget {
@@ -115,16 +116,35 @@ class _HierarchySearchState extends State<HierarchySearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton.extended(
-          heroTag: "displayInfo",
-          onPressed: () {
-            // go to the next screen to display all devices in the rack
-            Navigator.popUntil(context, (route) => route.isFirst);
-          },
-          icon: const Icon(Icons.search),
-          label: const Text("New Search"),
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        ),
+        persistentFooterButtons: [
+          // Button to view device info if widget is a device
+          if (widget.type == "DEVICE")
+            FloatingActionButton.extended(
+              heroTag: "deviceInfo",
+              onPressed: () {
+                // go to the next screen to display all devices in the rack
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            DeviceView(widget.location, widget.locationID)));
+              },
+              icon: const Icon(Icons.info),
+              label: const Text("Device Info"),
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            ),
+
+          FloatingActionButton.extended(
+            heroTag: "displayInfo",
+            onPressed: () {
+              // go to the next screen to display all devices in the rack
+              Navigator.popUntil(context, (route) => route.isFirst);
+            },
+            icon: const Icon(Icons.search),
+            label: const Text("New Search"),
+            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          ),
+        ],
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           title: Text(

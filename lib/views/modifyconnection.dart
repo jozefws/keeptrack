@@ -323,6 +323,7 @@ class _ModifyConnectionState extends State<ModifyConnection>
         builder: (context) => AlertDialog(
                 title: const Text("Confirm Modification"),
                 content: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text("Confirm the following changes:"),
                     Container(
@@ -408,6 +409,8 @@ class _ModifyConnectionState extends State<ModifyConnection>
           key: _modifyConnectionKey,
           child: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                     width: double.infinity,
@@ -416,7 +419,7 @@ class _ModifyConnectionState extends State<ModifyConnection>
                     color: Theme.of(context).colorScheme.onInverseSurface,
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -614,15 +617,21 @@ class _ModifyConnectionState extends State<ModifyConnection>
                                                 deviceA?.id.toString() ?? "",
                                                 originalComboA?.id),
                                             builder: (context, snapshot) {
-                                              if (snapshot.hasData) {
+                                              if (snapshot.hasData &&
+                                                  snapshot.connectionState !=
+                                                      ConnectionState.waiting) {
                                                 interfaces = snapshot.data
                                                     as List<ComboModel>;
                                               } else {
-                                                return const Center(
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                  semanticsLabel: "Loading",
-                                                ));
+                                                return Row(
+                                                  children: const [
+                                                    Text("Loading ports..."),
+                                                    SizedBox(
+                                                      width: 24,
+                                                    ),
+                                                    CircularProgressIndicator(),
+                                                  ],
+                                                );
                                               }
                                               return DropdownSearch<ComboModel>(
                                                 selectedItem: comboA,
@@ -678,13 +687,11 @@ class _ModifyConnectionState extends State<ModifyConnection>
                                                 itemAsString: (item) =>
                                                     "${item.name} | ${item.occupied == true ? "Current Port" : "Free"}",
                                                 onChanged: (value) {
-                                                  setState(() {
-                                                    if (value != comboA) {
-                                                      comboA = value;
-                                                      cableDescription =
-                                                          "${value?.name} > ${comboB?.name}";
-                                                    }
-                                                  });
+                                                  if (value != comboA) {
+                                                    comboA = value;
+                                                    cableDescription =
+                                                        "${value?.name} > ${comboB?.name}";
+                                                  }
                                                 },
                                               );
                                             }),
@@ -763,15 +770,21 @@ class _ModifyConnectionState extends State<ModifyConnection>
                                                 deviceB?.id.toString() ?? "",
                                                 originalComboB?.id),
                                             builder: (context, snapshot) {
-                                              if (snapshot.hasData) {
+                                              if (snapshot.hasData &&
+                                                  snapshot.connectionState !=
+                                                      ConnectionState.waiting) {
                                                 interfaces = snapshot.data
                                                     as List<ComboModel>;
                                               } else {
-                                                return const Center(
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                  semanticsLabel: "Loading",
-                                                ));
+                                                return Row(
+                                                  children: const [
+                                                    Text("Loading ports..."),
+                                                    SizedBox(
+                                                      width: 24,
+                                                    ),
+                                                    CircularProgressIndicator(),
+                                                  ],
+                                                );
                                               }
                                               return DropdownSearch<ComboModel>(
                                                 selectedItem: comboB,
@@ -827,13 +840,11 @@ class _ModifyConnectionState extends State<ModifyConnection>
                                                 itemAsString: (item) =>
                                                     "${item.name} | ${item.occupied == true ? "Current Port" : "Free"}",
                                                 onChanged: (value) {
-                                                  setState(() {
-                                                    if (value != comboB) {
-                                                      comboB = value;
-                                                      cableDescription =
-                                                          "${comboA?.name} > ${value?.name}";
-                                                    }
-                                                  });
+                                                  if (value != comboB) {
+                                                    comboB = value;
+                                                    cableDescription =
+                                                        "${comboA?.name} > ${value?.name}";
+                                                  }
                                                 },
                                               );
                                             }),

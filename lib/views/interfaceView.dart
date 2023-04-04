@@ -319,8 +319,14 @@ class _ComboViewState extends State<ComboView> {
                             style: Theme.of(context).textTheme.headlineSmall,
                             overflow: TextOverflow.clip),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.open_in_new),
+                      ActionChip(
+                        avatar: Icon(
+                          Icons.open_in_new,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.primaryContainer,
+                        side: BorderSide.none,
                         onPressed: () {
                           Navigator.push(
                               context,
@@ -328,6 +334,11 @@ class _ComboViewState extends State<ComboView> {
                                   builder: (context) =>
                                       DeviceView(device.name, device.id)));
                         },
+                        labelStyle: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer),
+                        label: const Text("View"),
                       )
                     ],
                   ),
@@ -407,13 +418,14 @@ class _ComboViewState extends State<ComboView> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     //device A name
                     Text(interface.name,
-                        style: Theme.of(context).textTheme.titleSmall),
-                    const Text(" | "),
-                    //show the text after the first (
-                    Text(interface.typeLabel,
+                        style: Theme.of(context).textTheme.titleMedium),
+                    //show the text after first space
+                    Text(interface.typeLabel.split(" ").last,
                         style: Theme.of(context).textTheme.bodyMedium),
                   ],
                 ),
@@ -601,7 +613,6 @@ class _ComboViewState extends State<ComboView> {
   }
 
   filterPortType(String type, String string, Color primaryContainer) {
-    print(type);
     if (type == "dcim.interface") {
       return displayInterfaceCard(string, primaryContainer);
     } else if (type == "dcim.powerport") {

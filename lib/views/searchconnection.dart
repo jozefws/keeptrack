@@ -193,6 +193,17 @@ class _SearchConnectionState extends State<SearchConnection>
                             locationName = value!.display;
                             location = value;
                           });
+                          if (locationName == "Select a location") {
+                            genSnack("Please select a location");
+                            return;
+                          }
+                          //open material route to search by hierarchy
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HierarchySearch(
+                                    location.slug, locationID, "LOCATION")),
+                          );
                         },
                       ),
                     ),
