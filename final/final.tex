@@ -48,7 +48,7 @@
 \end{center}
 
 \pagebreak
-\pagenumbering{roman}    
+\pagenumbering{roman}
 
 % temp to do list
 \section{Temp To Do List}
@@ -242,56 +242,102 @@ In this project, assets are considered to be both physical server hardware, such
 
 Additionally, a paper written on the review of QR codes highlights that QR codes can store more data in the same area, have data redundancy, are faster to scan and are "readable from any direction in 360\degree"\cite{mishra2017review}. Whilst these benefits seem to make it the clear choice over barcodes, QR codes contain data in both dimensions. Though this is a benefit in most use cases, it is likely to pose a problem when scanning codes stuck to ethernet cables.
 
-Where, barcodes contain data in one dimension which is then repeated vertically, allowing for their placement to be more dynamic, e.g. on a cable. This is clearly shown in figure 3 of Mishra et al., fig. \ref{fig:barcode}. So, for this project it was initially decided that it will use barcodes for cables, and then QR codes for other assets will be used. But after the interview processes and observations, it was decided that QR codes would be more beneficial as they can store more contextual data. It was realised following consultation from CGI, the global IT consultation firm, that having labels that only hold abstract data can be considered a single point of failure to gather information. Especially as it was initially decided that the information stored for cables will be a random short number assigned to each cable, suitable for barcodes - But completely abstract for humans to read. So in the situation of netbox being down, or the QR code being damaged, the information stored on the label would be useless. Therefordde a combination of a meaningful label and a QR code would be used. Then each QR code will store the netbox unique ID for that cable. This way, the QR code can be scanned and the information can be retrieved from netbox. This is a more robust system than just having a label with a randomly generated number.
+Where, barcodes contain data in one dimension which is then repeated vertically, allowing for their placement to be more dynamic, e.g. on a cable. This is clearly shown in figure 3 of Mishra et al., fig. \ref{fig:barcode}. So, for this project it was initially decided that it will use barcodes for cables, and then QR codes for other assets will be used. But after the interview processes and observations, it was decided that QR codes would be more beneficial as they can store more contextual data. It was realised following consultation from CGI, the global IT consultation firm, that having labels that only hold abstract data can be considered a single point of failure to gather information. Especially as it was initially decided that the information stored for cables will be a random short number assigned to each cable, suitable for barcodes - But completely abstract for humans to read. So in the situation of netbox being down, or the QR code being damaged, the information stored on the label would be useless. Therefore a combination of a meaningful label and a QR code would be used. Then each QR code will store the netbox unique ID for that cable. This way, the QR code can be scanned and the information can be retrieved from netbox. This is a more robust system than just having a label with a randomly generated number.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=.75\textwidth]{images/barcode_mishra.png}
+\includegraphics[width=.50\textwidth]{images/barcode_mishra.png}
 \caption{Barcode vs QR code}
 \label{fig:barcode}
 \end{figure}
 
-Whilst an Augmented Reality visualisation feature is dependent on time and the success of other elements. It is still important to consider related work with these features, especially as it could be a feature added on. Whilst already investigating Cloud3DView \cite{cloud3dview}, which uses 3D visualisation, a more apt implementation would be by using the QR codes placed on assets to aid in visualising data. This is very similar to the work outlined in the paper, "Applying QR code in augmented reality applications" \cite{applyingQR}. This paper displays how the elements of the QR code can be used to position elements in the AR scene and simultaneously generate information embedded in the QR code. Should this be a feature that can be implemented, it is likely the project will follow a similar method as to what Kan et al. set out \cite{applyingQR}. With the existing desire to implement a multi-format code scanner, i.e. both barcode and QR, this would be a good addition to the project. Further, there already exists a cross-platform plugin for Augmented Reality in Flutter which can be utilised \cite{ar_flutter}.
+Whilst the addition of the augmented reality visualisation feature was dependent on time and the success of other elements. It was still important to consider related work with these features, especially as it could be a feature added on with future development. Whilst already investigating Cloud3DView \cite{cloud3dview}, which uses 3D visualisation, a more apt implementation would be by using the QR codes placed on assets to aid in visualising data. This is very similar to the work outlined in the paper, "Applying QR code in augmented reality applications" \cite{applyingQR}. This paper displays how the elements of the QR code can be used to position elements in the AR scene and simultaneously generate information embedded in the QR code. Should this be a feature that can be implemented in the future, it is likely the best approach will be to follow a similar method as to what Kan et al. set out \cite{applyingQR}. Further, there already exists a cross-platform plugin for Augmented Reality in Flutter which can be utilised \cite{ar_flutter}, this would be a good starting point for future development. This feature would allow the user to scan the environment with the devices camera and see the assets in the room, as well as the cables connecting them as they walk around. Possibly allowing for the user to see the cables in the room and their traces to find ports, location etc. This would be a very useful feature for the user to have, as it would allow for a more intuitive and interactive way to visualise the data and the task of tracing connections. Though, the amount of time it would take to implement this feature would be significant, especially with the need to 3D map the server room as well significant development of a backend system to store the data.
 
 \section{Description of the Work}
 \label{sec:work}
-This project aims to create a mobile application that will allow users to add, view and manage assets and cables in server rooms. With the specific application to Small/Medium enterprises. The application will be built using Flutter, a cross-platform framework which will allow for the app to be used on both Android and iOS devices. The application will be built upon Netbox DCIM \cite{Netbox} and their RESTful API \cite{NetboxAPI}. 
+The aim of this project was to create a mobile application that will allow users to add, view and manage assets and cables in server rooms. With the specific application to Small/Medium enterprises. The application has been built using Flutter, a cross-platform framework which will allow for the app to be used on both Android and iOS devices, but additionally has support for Windows, Web, Mac and Linux devices. The application has been built upon the Netbox DCIM software \cite{Netbox} and their RESTful API \cite{NetboxAPI}. This allows the app to communicate with the Netbox database as well as provide a mobile functionality of Netbox's interface.  
 
-The project aims to build upon this API to create a more user-friendly and intuitive interface for server administrators to use. With this in mind, a second key aspect is investigating the best interface for data entry in this context. This will be done by interviewing and observing the system administrators at the school using iterative prototypes of increasing fidelity.
+The project has built upon the API to create a more user-friendly and intuitive interface for server administrators to use. With this in mind, a second key aspect was to investigate the best interface for data entry in this context. This was done by interviewing and observing the system administrators at the school using iterative prototypes of increasing fidelity.
 
-\subsection{Project Stretch Goals}
+\subsection{Original Project Stretch Goals}
 \label{sec:stretchgoals}
-Following the interviews during the current state analysis and the investigation of similar work, the further goal to implement an augmented reality visualisation feature is desirable. This feature will allow users to visualise asset information and networking details in a highly interactive way. 
+Following the interviews during the current state analysis and the investigation of similar work, a set of project stretch goals were established for the interim stage of the project. One of the most aspirational being to implement the augmented reality visualisation feature. This feature will allow users to visualise asset information and networking details in a highly interactive way. Due to the time constraints of the project it wasn't something that was feasible for its time scale and it was deemed to be out of scope. 
 
-Desirable features that could be implemented depending on time constraints in priority order: 
+
+Other desirable features that were considered: 
 \begin{itemize}
-\item Journals for assets, allowing for notes to be added to assets, e.g. when a new component is added, or when a component is removed.
+\item Journaling for assets, allowing for notes to be added to assets, e.g. when a new component is added, or when a component is removed.
+\subitem Originally it was intended to use the existing journaling feature in Netbox, but as of the time of writing this report, this feature did not a good exposure via the API and so would require significant development outside of the core focus. Though it is something that could easily be added.
 
 \item Auditing of assets, allowing for the user to scan an asset and then be presented with a form to fill out, e.g. the asset is in good condition, or the asset is faulty. 
+\subitem Similarly to the above, it was intended to use the journaling feature to add this functionality but given the limited API exposure it was also deemed to be difficult to implement. Though, it was not considered at the time of implementation to utilise the ability to comment on a device and could have been investigated with more time. 
 
-\item In-App SSH terminal, allowing for the user to connect to a device and run commands, e.g. to check the status of a service.
+\item In-App SSH terminal, allowing for the user to connect to a device and run commands, e.g. to check the status of a service. 
+\subitem Whilst this was a great idea in the projects conceptualization, a considerable oversight was the networking restrictions that would restrict this feature drastically. In the case of computer science and their current infrastructure, most server devices are under separate virtual LANs (VLANs). These VLANs don't have wireless capabilities and so a mobile device would not be able to connect. Whilst in other scenarios,this might be less of an issue and is a good concept to implement for quick testing/diagnosing. 
+\end{itemize}
 
-\item Augmented reality to visualise asset information and networking details.
+
+\subsection{Functional Specification}
+Below is the functional specification of the software outlying what the application will do.
+\subsubsection{Authentication and Security}
+\begin{itemize}
+    \item The app will utilise the netbox API to provide authentication and a secure connection to the netbox database.
+    \item The app must use the users username and password to authenticate with the netbox API to create a token.
+    \item The app must detect if a user is logged in and if not, prompt the user to log in.
+    \item The app must know if the token being used has expired and then prompt the user to log in again.
+    \item The app must not display any data if the user is not logged in or if the token has expired.
+    \item The app must allow the user to log out of the app and delete the token automatically.
+    \item The app must store the token securely on the device.
+    
+\end{itemize}
+
+\subsubsection{Asset Management and Information}
+\begin{itemize}
+    \item The app will allow the user to view and manage assets and cables in the netbox database.
+    \item The app shall allow the user to add, edit and delete cables in the netbox database.
+    \item The app shall allow the user to search for assets in the netbox database.
+    \item The app must be cross-platform and support Android and iOS devices.
+    \item The app must be able to scan QR codes and barcodes. 
+    \item The app must be able to visualise cable connections.
+    \item The app must allow users to search for connections and assets via a hierarchical search.
+\end{itemize}
+
+\subsubsection{User Interface}
+\begin{itemize}
+    \item The app must use highly contrasting colours to ensure good accessibility.
+    \item The app should have a dark and light mode to allow for user preference.
+    \item The app should allow the user to toggle between the dark and light theme easily. 
+    \item The app should use Material3 widgets and icons for a consistent look and feel.
+    \item The app should use Material3 icons for increased usability and learnability.
 \end{itemize}
 
 \section{Methodology}
 \label{sec:methodology}
-With all of the aims and aspects of the projects in mind, it was decided to use a participatory design approach, with iterative prototypes of increasing fidelity. Then, with user evaluation and feedback, the final product will be created. This will be done by following the steps outlined in the following list:
+With all of the aims and aspects of the projects in mind, it was decided to use a participatory design approach, with iterative prototypes of increasing fidelity. Then, with user evaluation and feedback, the final product will be created. This was done by following the steps outlined in the following:
 
 \begin{enumerate}
     \item Create low-fidelity prototypes
     \item Current state analysis and initial interviews
-    \item Create higher fidelity interactive prototypes
-    \item User evaluation and feedback
+    \item Create higher fidelity interactive prototypes and gain user feedback.
     \item Minimal Viable Prototype with user feedback
-    \item Create final product
+    \item User observations and interviews.
+    \item Create final product with observation suggested changes.
 \end{enumerate}
 
-Whilst deciding on a cross-platform framework to build this project on, Flutter become the obvious choice. Not only with previous experiences working with it, but also with the fact it has become the most popular cross-platform framework \cite{JetBrainsFlutter}. Further, with personal work in aiding the development of Labmonitor\cite{labmonitor}, there is a familiarity with the code scanning package that will also be used in this project\cite{barcodeScannerPlugin}.
+On top of these steps there was a need to decide upon the platform to build the app. Whilst knowing it the app needed to be cross-platform, Flutter become the obvious choice. Not only with previous experiences working with it, but also with the fact it has become the most popular cross-platform framework \cite{JetBrainsFlutter} used. Further, with personal work in aiding the development of Labmonitor\cite{labmonitor}, there is a familiarity with the code scanning package that will also be used in this project\cite{barcodeScannerPlugin}.
+
+The approach of the app development was to use the Agile methodology, with the use of a Kanban board to track the progress of the project. This was done by using Trello to create a board with the following columns: To-Do, Doing/Waiting and Issue. Then as tasks were moved from the backlog/created. An example of the trello board can be seen in Appendix \ref{sec:trello_board}.
+
+With the iterative nature of the project, it was decided to use a combination of user interviews and observations to gain feedback on the app and its features. The initial interviews and state analysis were ran as one-on-one interactive discussions with the system administrators (RST) to gain an understanding of the current state of the system. For more details see the Current State Analysis and Initial Interviews section (\ref{sec:current_state_analysis}). Simultaneously, the interviewees were also shown related products and asked to give their opinions on them. This allowed for a review of features and user interfaces with the aim of gaining inspiration for the next iteration of prototypes. 
+
+With this information and feedback, a set of high-fidelity prototypes were created. These were then shown to the interviewees in a less formal setting, allowing for a more natural discussion. This allowed for a faster, less fixed iterative design process where changes could be made quicker and more easily. This higher fidelity prototype was then slowly progressed into a minimal viable product (MVP). Then as development continued and the MVP was created, the user feedback was then used to make changes to the app. Once the MVP was completed, it was then shown to the interviewees again, this time for a set of user observations and discussions. 
+
+From these observations and comments from the interviewees, the final product was then created. This was primarily making slight changes to the user interface and adding small features that were requested. This process is outlined in more detail in the following sections.
 
 \subsection{Current State Analysis and Initial Interviews}
 \label{sec:current_state_analysis}
-To begin with, using personal experience, knowledge and  understanding of the requirements, a set of low-fidelity prototypes were made. These were primarily created in order establish an initial set of features. A set of interviews were conducted with the system administrators (RST) to extend upon original experiences.  Within these interviews, the current state of the system was discussed, to understand the current workflow and the problems that are faced.
+
+To begin with, using personal experience, knowledge and  understanding of the requirements, a set of low-fidelity prototypes were made. These were primarily created in order establish an initial set of features. A set of interviews were then conducted with the system administrators (RST) to extend upon original experiences.  Within these interviews, the current state of the system was discussed, to understand the current workflow and the problems that are faced from their perspective.
 
 This was done by asking broad questions such as:
 
@@ -301,7 +347,21 @@ This was done by asking broad questions such as:
     \item Do you have any suggestions for the new system?
 \end{itemize}
 
-Then, each interviewee was showed the low-fidelity prototype of the application, intending to gather initial thoughts on the proposed layouts and to see if there were any features that they would like to see added/removed. Their responses were recorded and then analysed, to identify any repeating ideas, mainly using thematic analysis \cite{thematicAnal}.
+Then, each interviewee was showed the low-fidelity prototype of the application, intending to gather initial thoughts on the proposed layouts and to see if there were any features that they would like to see added/removed. Their responses were recorded and then analysed, to identify any repeating ideas, primarily using thematic analysis \cite{thematicAnal}. For more details on the analysis of the interviews and the points that were raised, see WHAT??!?!?!?!?!?!?!?!?!?!?!?!?!?
+
+\subsection{High Fidelity Prototypes}
+\label{sec:high_fidelity_prototypes}
+Once the initial interviews were conducted, a higher fidelity prototype was created. This was done using Figma to create a set of interactive prototypes. Additionally, the theme of the app was generated using the Material3 Theme Builder for figma\cite{material3ColourTool}. This was used to create a theme for the app that gave its interface a consistent feel and to increase its usability and learnability. To develop further on the apps usability, the Material3 widgets also used to design the interface as well as the Material3 icons. Specifically, the Material3 Design Kit for Figma was used. This allowed for the design of the app to be consistent with what the actual app will look like as Flutter has a Material widgets library available to use. 
+
+\subsection{User Observations and Interviews}
+\label{sec:user_observations_and_interviews}
+This stage was done with each member of the RST team with the aim of noting on the usability of the app and any issues that were found. This was done by asking the interviewees to perform a set of tasks, these were:
+\begin{itemize}
+    \item Finding a device and what a certain port is connected to.
+    \item Update the connection of a specific cable to connect to a different port/device.
+    \item Find how much RAM a certain device has.
+    \item Add a connection between two specific devices, on a specific port with a specific cable type and colour.
+\end{itemize}
 
 \section{Design}
 \label{sec:design}
