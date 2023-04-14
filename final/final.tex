@@ -51,7 +51,6 @@
 \pagenumbering{roman}
 
 % temp to do list
-\section{Temp To Do List}
 \begin{itemize}
     \item Sunbird - Filter search not done. Reflection. 
     \item Pathfinder - downloads database and syncs, reflection, waiting for API calls
@@ -61,14 +60,13 @@
     \item Do I remove the related work on the Cloud3DView? I didn't do the augmented reality part.
     \item What was taken from the data entry method research into the design???
     \item Automatic Naming to added to the design section - Reduce the amount of typing user has to do. Homogenous naming scheme. Refer to the paper by the CPNI about importance of naming.
+    \item Not adding interface adding to the app REFLECTION - Though, this was a great reduction in detail to what can be done in the web interface. Additionally, it wouldn't be a task that would be done often and or in situ. Therefore, it was decided that this would not be a feature that would be included in the app.
 \end{itemize}
 \pagebreak
 
 \section*{Abstract}
     \noindent
     A unique set of challenges are faced by small and medium companies that host their own server spaces. Although these devices are typically business-critical, they are typically squeezed into encumbered spaces, with lacklustre lighting and limited access. Further, and critically, this makes the maintaining and documenting of these devices inherently more difficult. Current alternative solutions fail to focus on in-situ use and are typically bloated with features for large data centres. This project will investigate the needs and requirements that can solve these challenges, with a focus on Human-Computer Interaction. From these designs, this project then implements a cross-platform mobile application that satisfies these needs. It was found that the tool should be easy to use, intuitive and make use of HCI best practices to improve upon existing interfaces. The prototyping process allowed the discovery of new requirements to increase intuitive interactions, such as searching by hierarchy. Notably, some drawbacks were found in the use of Netbox as a backend system and open source software in general.  
-
-    % Some of the findings. Rather than a table of contents.
 
 \section*{Acknowledgements}
     \noindent
@@ -337,7 +335,7 @@ From these observations and comments from the interviewees, the final product wa
 \subsection{Current State Analysis and Initial Interviews}
 \label{sec:current_state_analysis}
 
-To begin with, using personal experience, knowledge and  understanding of the requirements, a set of low-fidelity prototypes were made. These were primarily created in order establish an initial set of features. A set of interviews were then conducted with the system administrators (RST) to extend upon original experiences.  Within these interviews, the current state of the system was discussed, to understand the current workflow and the problems that are faced from their perspective.
+To begin with, using personal experience, knowledge and understanding of the requirements, a set of low-fidelity prototypes were made. These were primarily created in order establish an initial set of features. A set of interviews were then conducted with the system administrators (RST) to extend upon original experiences.  Within these interviews, the current state of the system was discussed, to understand the current workflow and the problems that are faced from their perspective.
 
 This was done by asking broad questions such as:
 
@@ -347,15 +345,17 @@ This was done by asking broad questions such as:
     \item Do you have any suggestions for the new system?
 \end{itemize}
 
-Then, each interviewee was showed the low-fidelity prototype of the application, intending to gather initial thoughts on the proposed layouts and to see if there were any features that they would like to see added/removed. Their responses were recorded and then analysed, to identify any repeating ideas, primarily using thematic analysis \cite{thematicAnal}. For more details on the analysis of the interviews and the points that were raised, see WHAT??!?!?!?!?!?!?!?!?!?!?!?!?!?
+Then, each interviewee was showed the low-fidelity prototype of the application, intending to gather initial thoughts on the proposed layouts and to see if there were any features that they would like to see added/removed. Their responses were recorded and then analysed, to identify any repeating ideas, primarily using thematic analysis \cite{thematicAnal}. For more details on the analysis of the interviews and the points that were raised, see the interview analysis section (\ref{sec:ui_design_interview_analysis}).
 
 \subsection{High Fidelity Prototypes}
 \label{sec:high_fidelity_prototypes}
-Once the initial interviews were conducted, a higher fidelity prototype was created. This was done using Figma to create a set of interactive prototypes. Additionally, the theme of the app was generated using the Material3 Theme Builder for figma\cite{material3ColourTool}. This was used to create a theme for the app that gave its interface a consistent feel and to increase its usability and learnability. To develop further on the apps usability, the Material3 widgets also used to design the interface as well as the Material3 icons. Specifically, the Material3 Design Kit for Figma was used. This allowed for the design of the app to be consistent with what the actual app will look like as Flutter has a Material widgets library available to use. 
+Once the initial interviews were conducted, a higher fidelity prototype was created. This was done using Figma to create a set of interactive prototypes. Additionally, the theme of the app was generated using the Material3 Theme Builder for figma\cite{material3ColourTool}. This was used to create a theme for the app that gave its interface a consistent feel and to increase its usability and learnability. To develop further on the apps usability, Material3 widgets and icons were also used to design the interface. Specifically, the Material3 Design Kit for Figma was used \cite{material3DesignKit}. This allowed for the design of the app to be consistent with what the actual app will look like as Flutter has a Material widgets library available to use. Material widgets and icons are used in many popular apps such as Google Maps, Gmail and YouTube, and by using them in this app, it has allowed for a familiar look and feel. 
+
+As mentioned previously, once these prototypes were completed they were then shown to the interviewees in a less formal setting. This allowed for a faster iteration of changes and design decisions. This was done by simply asking for opinions on the current state of the app and if there were any changes that they would like to see. From these discussions, the app was then iterated upon, with the aim of creating a minimal viable product (MVP). Once again more details of the outcomes of the high fidelity prototypes can be found in the design section (\ref{sec:design}).
 
 \subsection{User Observations and Interviews}
 \label{sec:user_observations_and_interviews}
-This stage was done with each member of the RST team with the aim of noting on the usability of the app and any issues that were found. This was done by asking the interviewees to perform a set of tasks, these were:
+Once the MVP was completed, it was then shown to the interviewees again, this time for a set of user observations and discussions. This stage was done with each member of the RST team with the aim of noting on the usability of the app and any issues that were discovered. To achieve this a set of tasks were created, these were:
 \begin{itemize}
     \item Finding a device and what a certain port is connected to.
     \item Update the connection of a specific cable to connect to a different port/device.
@@ -363,13 +363,119 @@ This stage was done with each member of the RST team with the aim of noting on t
     \item Add a connection between two specific devices, on a specific port with a specific cable type and colour.
 \end{itemize}
 
+These tasks were then given to the interviewees in situ in the server room as well as a mobile device pre-loaded with the app. The users were then read the tasks and asked to complete them. This was done to see how well the app could be used in a real-world setting. The users were asked during the tasks to think aloud, this was done to gain an understanding of their thought process and to see if there were any issues that they were facing. Once all the tasks were completed the users were then asked to give their opinions on the app and if there were any changes that they would like to see. This stage then allowed for the final changes to be made to the app before the project was completed. For more details on the outcomes of the user observations and interviews, see the design section (\ref{sec:observations}).
+
 \section{Design}
 \label{sec:design}
 The following section will outline the design of the project. Specifically; the user interfaces design, the system architecture and the interviews and observations that have been conducted.
 
 \subsection{User Interface Design}
 \label{sec:ui_design}
-Following the initial interviews, a set of high-fidelity prototypes are being created. These are currently being created using Figma \cite{figma}, a web-based prototyping tool. Chosen due to extensive prior use and its high reputability, with the UX Design Institute describing it as the best prototyping tool \cite{figmaUX}. With Figma's prototyping features, it is possible to create interactive prototypes, these will then be used to conduct further interviews, but with a more evaluative, task-based, focus. Then based on the feedback, an initial Minimal Viable Product (MVP) will be created. This will be done by following the steps outlined in the next section. Then an evaluation will be made on the MVP, to inspire any last changes/features in the final design, which then will be used to build upon the MVP to create the final product. See below for the current high-fidelity prototype progress.
+The user interface design of the app has been created using Figma and was iterated upon using the feedback from the interviews. As mentioned in the methodology, the app was designed with the use of three main principles in mind; usability, learnability and consistency. These principles were used to ensure that the app was easy to use and learn, and that it had a consistent feel and look. There were three primary stages to the design process; initial low-fidelity prototypes, current state analysis and high-fidelity prototypes. These are outlined in more detail below. 
+
+\subsubsection{Initial Low Fidelity Prototypes}
+\label{sec:ui_design_initial_prototypes}
+As mentioned in the methodology section (\ref{sec:methodology}), the initial low-fidelity prototypes were based on my own personal experiences and knowledge of what the requirements were. Based on this, the low fidelity, `Napkin Prototypes' were created. These were created using Powerpoint and were used to establish a set of features that were required. 
+
+The low fidelity prototypes designs were focused around six main features. These were:
+\begin{itemize}
+    \item Add, View and Update Connections (Cables)
+    \item Add and View Interfaces (Ports)
+    \item View Device Information (RAM, CPU, etc.)
+\end{itemize}
+
+For each of these features, screens were created to show the layout of the app. For connection management, the screens were:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/initial_prototype_connections.png}
+    \caption{Connections Screens}
+    \label{fig:low_fidelity_prototypes_connections}
+\end{figure}
+
+For adding a connection between two devices (Top Left Fig.\ref{fig:low_fidelity_prototypes_connections}) the user would be presented with tab that would allow them to select the two devices that they wanted to connect. This way it would be easy to switch between both devices whilst simultaneously not overpopulating the screen with too much data. To select a device, a user could choose a device based on a hierarchical search of sorts, first choosing rack, then device, then interface. Next the user would need to scan a pre-existing cable with a barcode scanner. Finally the user would choose the cable type and then add the connection. 
+
+To view a connection, the user would have two primary methods - Either by searching by the barcode on the cable, or by searching by one of the two devices that the cable is connected to. This would then show the user the connection (Bottom Middle Fig.\ref{fig:low_fidelity_prototypes_connections}) and the devices that are connected to it, their location and interface. Finally updating a connection (Top and Bottom Right Fig.\ref{fig:low_fidelity_prototypes_connections})would share the same initial search layout, but allowing the user to change the cable device and interface terminations. This would also use the tab based layout. 
+
+For interface management, the screens were:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{images/initial_prototype_interfaces.png}
+    \caption{Interfaces Screens}
+    \label{fig:low_fidelity_prototypes_interfaces}
+\end{figure}
+
+Based off the initial requirements for the app, the user would need to be able to add and view interfaces. To add an interface (Left Fig.\ref{fig:low_fidelity_prototypes_interfaces}), the user would need to select the device that they wanted to add the interface to. This would be done by selecting the rack, then the device. Once the device was selected, the user would then be able to add the interface. This would be done by selecting the interface type and name. 
+
+Secondly to view a devices interfaces (Right Fig.\ref{fig:low_fidelity_prototypes_interfaces}), the user would need to be able to search for the device initially via its rack and then device. This would then show the user the interfaces that are connected to the device. A second approach would be by searching for the device directly by its name in a text field. At this prototype stage there wasn't a design for the interfaces itself, but it was assumed that the user would be able to see the interface type and name. 
+
+Finally for device management and side menu bar, the screens were:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/initial_prototype_devices.png}
+    \caption{Devices Screens}
+    \label{fig:low_fidelity_prototypes_devices}
+\end{figure}
+
+To view a device (Left Fig.\ref{fig:low_fidelity_prototypes_devices}), the user would need to be able to search for the device by its name and again by rack then device. This would then display a new screen (Middle Fig.\ref{fig:low_fidelity_prototypes_devices}) that would show the user the device information in an expandable list. This was designed with the intention to improve upon the overwhelming amount of information that is shown on Netbox equivalent screen. This collapsible list would allow the user to only see the information that they want to see.
+
+Finally the side menu bar (Right Fig.\ref{fig:low_fidelity_prototypes_devices}) was designed to be quickly accessible from anywhere in the app. This would show the current user logged in as well as navigate to other systems, e.g. online Netbox instance. Additionally this would be where the user could log out of the app if needed.
+
+Additionally, the app itself is designed upon a multi page layout with navigation between pages being done via a bottom navigation bar. This was chosen as it is a common design pattern in mobile apps and is easy to use. 
+
+
+\subsubsection{Current State \& Interview Analysis}
+\label{sec:ui_design_interview_analysis}
+Following these completion of these designs, they were then shown to the interviewees as a part of the current state analysis. This was done with the intention of ensuring that the base requirements were considered but also any comments on the designs themselves as well as any additional requirements that were not considered. 
+
+As mentioned in the methodology section \ref{sec:current_state_analysis}, the interviews were conducted in person with a set of questions that were designed to elicit the current state of the schools server room. Then, the interviewees were shown related products and asked to interact and comment on them. Finally, the interviewees were shown the low fidelity prototypes and with the context of their previous answers and opinions on related products, were asked to comment on the designs. Additionally, the interviewees were asked if there were any additional requirements that they felt were not considered.
+
+Three interviews were conducted, each interviewee being a full time system administrator for the school of computer science and a member of the RST team. The interviews were conducted in person, recorded and lasted approximately 45 minutes. These recordings then have been transcribed and analysed. These transcripts were then analysed using a thematic analysis approach \cite{thematicAnal}. First by reading through the transcripts, and then identifying any themes that were present. Each interviewee is referred to as Interviewee 1, 2 and 3. 
+
+The primary themes that were identified from the interviews were:
+
+\begin{itemize}
+    \item Legacy systems: Many systems in the workplace are outdated, which leads to issues with maintenance and troubleshooting.
+
+    \item Documentation and organisation: Documentation is lacking, and there is a need for well-labelled and well-thought-out cabling and documentation. Interviewees suggest using a dynamic system like Netbox to help with documentation, capturing a document outlining a system's specifications, owner, and status, and implementing a journaling/auditing feature to make troubleshooting easier in the future. There is also a need for an inventory system to track physical devices and use unique identifiers for each connection, as well as implementing QR codes on servers to make identifying them easier.
+
+    \item Adaptability and flexibility: There needs to be more flexibility and adaptability in the team, as new people will come and go, and the system may need to be modified or expanded.
+
+    \item Reorganizing and replatforming: There is a lot of work to do in terms of reorganising and replatforming systems. The team needs to balance outdated and modern technology and address single point failures in the team.
+
+    \item Visual representation: Interviewees suggested an AR feature for visualizing the inventory system would be beneficial. A visual representation, such as AR, is easier to relate to than data. But, it may be overly complicated to implement.
+
+    \item Monitoring and maintenance: Monitoring and maintenance are important in server management. Temperature monitoring in server rooms is essential, and the current solution isn't viable. End of life and warranty information should be easily accessible, and a view on Netbox of this information could be useful.
+
+    \item Resistance to change: There is resistance to the idea of integrating the data centre into a larger facility, and staff members have expressed resistance to this idea.
+
+\end{itemize}
+
+With these themes in mind, the low fidelity prototypes were then modified to address them and to ensure that the base requirements were considered. These modifications are outlined in the next section. 
+
+
+Aside from the themes above, the most notable takeaway from the interviews was that there is a lack of documentation, with interviewee one explaining "There's a lot of undocumented scripts, a lot of undocumented servers. There's a lot of undocumented all over." This is a core aspect that the project has aimed to address, with the goal of creating a system makes it easier to document and maintain the server room. 
+
+Additionally there were a number of design ideas that were suggested by the interviewees, such as the use of augmented reality, similar to that of Cloud3DView \cite{cloud3dview}, to help visualize the server room. This was not included in the low fidelity prototypes as it was not considered a core requirement, but it was something considered as a stretch goal post the MVP. Though interviewee one described the idea as a "very stretch goal" and "complicated".
+
+One core design suggestion was to implement a hierarchical search feature, similar to that of Pathfinder \cite{PathfinderMobile}, to help users find devices easier. Interviewee 1 described Pathfinders search function as "useful" and more "interactive". Interviewee 2 also mentioned that Pathfinder's hierarchical functionality would also be great "support wise" and that "knowing all that information beforehand would be brilliant". Specifically, it can aid in the networking troubleshooting process, for example DHCP configuration issues.
+
+On a similar note, interviewee three mentioned that the low fidelity device searching screen was too complicated, and that a simple search bar would be better. Specifically, "I'm thinking if you can find the easy way to locate the device, rather than select the Rack, the size, the room and the device from the scroll down list". 
+
+A specific comment was made about the addition of connections, where interviewee one mentioned that being able to specify the colour of the cable would be important for troubleshooting as well as a visual aid.  
+
+Interviewee three made a suggestion about a feature to run simple commands on devices, such as a ping command, to help with troubleshooting. This was not included in the low fidelity prototypes as it was not considered a core requirement, but it was something considered as a stretch goal post the MVP. Specifically interviewee three mentioned, "I would really like to check the servers status in real time and having some basic commands would be helpful".
+
+Finally, one feature that interviewee one suggested was the addition of journaling for devices. Specifically that it would build a history of changes and fixes to issues as they arise. 
+
+
+\subsubsection{High Fidelity Prototypes}
+\label{sec:ui_design_high_fidelity_prototypes}
+Following the initial interviews, a set of high-fidelity prototypes were then created. These were created using Figma \cite{figma}, a web-based prototyping tool. Chosen due to extensive prior use and its high reputability, with the UX Design Institute describing it as the best prototyping tool \cite{figmaUX}. With Figma's prototyping features, it is possible to create interactive prototypes, these will then be used to conduct further interviews, but with a more evaluative, less formal focus. These higher fidelity prototypes also include changes raised during the interview process as well as new features.
+
+As mentioned previously, the interface has been focused around Material Design, which is described as "an adaptable system of guidelines, components, and tools that support the best practices of user interface design."\cite{materialDesign}. It has several User Experience (UX) principles at its core (such as accessibility) that will create a user-friendly interface. Material is widely used and will give users a sense of familiarity, especially icons and GUI elements. This similarity will increase learnability and reduce the user's cognitive load.
+
+See figure \ref{fig:figma} for the higher fidelity prototypes. These were based around five core screens.
 
 \begin{figure}[H]
     \centering
@@ -379,7 +485,8 @@ Following the initial interviews, a set of high-fidelity prototypes are being cr
 \end{figure}
 
 
-The interface will be based on the Material Design, which is described as "an adaptable system of guidelines, components, and tools that support the best practices of user interface design."\cite{materialDesign}. It has several User Experience (UX) principles at its core (such as accessibility) that will create a user-friendly interface. Material is widely used and will give users a sense of familiarity, especially icons and GUI elements. This similarity will increase learnability and reduce the user's cognitive load.
+
+
 
 \subsection{Development and System Architecture}
 \label{sec:development} 
@@ -402,28 +509,34 @@ Further, there is a separation between views, API calls and providers. This give
 \label{sec:implementation}
 The implementation has focused on the development of the core logical structure of the app and the creation of a foundation for the UI to test functionality. The current progress allows a user to sign into the app using their Netbox credentials. This information is then stored securely using the Flutter Secure Storage plugin \cite{securestorage}. The current UI allows the user to add a connection between two devices. More specifically, it allows searching for devices via a searchable dropdown, which then dynamically loads its interfaces, with a tab view that allows the user to select the interface on each device. Further, the current implementation has a working integration of the barcode/QR code scanner plugin \cite{barcodeScannerPlugin}. See below for screenshots of the current UI, fig. \ref{fig:currentUIScreenshots}. 
 
-\begin{figure}[H]%
+\begin{figure}[H]
     \centering
     \subfloat[\centering Login Page]{{\includegraphics[width=2.5cm]{images/login.png} }}%
     \qquad
-    \subfloat[\centering Add Connection Page]{{\includegraphics[width=2.5cm]{images/addcon.png} }}%
+    \subfloat[\centering Add Connection Page]{{\includegraphics[width=2.5cm]{images/addcon.png} }}
     \qquad
     \subfloat[\centering Device Search]{{\includegraphics[width=2.5cm]
-    {images/search.png} }}%
+    {images/search.png} }}
     \caption{Screenshots of the current Keeptrack UI}%
-    \label{fig:currentUIScreenshots}%
+    \label{fig:currentUIScreenshots}
 \end{figure}
 
+\subsection{User Observations and Implementation Changes}
+\label{sec:observations}
+The following section will outline the user observations and the changes made to the app based on these observations. These changes were then implemented to create the final version. 
 
-\section{Progress}
-\label{sec:progress}
-The following section will outline the progress made on the project, and the challenges faced. Further, it describes the future work plan and adjustments to milestones. 
-\subsection{Projection Management}
-\label{sec:project_management}
+
+% TO DO AFTER MEETING.
+
+\section{Evaluation}
+\label{sec:evaluation}
+
+\section{Summary and Reflections}
+\label{sec:summary}
+\subsection{Project Management}
+\label{sec:project_management_summary}
 
 Whilst the project is still in its early stages, there has been some good progress made, though less so than initially planned. This is due to several factors. Firstly, I hadn't assigned enough weekly time to work on the project, which has led to slower progress overall. Secondly, I hadn't accounted for interviewee availability, which led to a delay in the interviews and therefore the creation of the high-fidelity prototypes. However, I have been able to make progress on the technical side of the project, which has allowed me to create a foundation for the UI and the core logic of the app. I am satisfied with the technical progress made and I believe that with the core foundations now in place, technical progress can be completed more quickly.
-
-\pagebreak
 
 I also didn't expect that the literature review would take as long as it did, or more specifically for this project - finding similar applications along with technical and HCI-based papers. Finding applications that had easily accessible trials posed a harder challenge than I had anticipated. But I believe that the similar work I have found has given me a better insight into a mixture of HCI and technical aspects of the project. Though, I struggled to find HCI-focused papers that were related to the scenario posed, e.g. encumbered use of a mobile device. 
 
@@ -435,18 +548,7 @@ Comparing the initial Gantt chart, seen in appendix \ref{sec:init_gantt_charts},
 
 During weekly meetings with the project supervisor, we discussed the progress made and the work that needs to be completed. To keep track of the discussions, a document was maintained. Each meeting I would write up a summary of topics I wanted to discuss, and then during the meeting add notes to each section. Then following the meeting, I would review a Trello board (See appendix \ref{sec:trello_board}) to see what tasks I had completed and what tasks I needed to complete. Though, initially, I didn't assign dates to each task this was changed quickly after failing to achieve tasks in coordination with the work plan. Additionally, each task is also colour coded based on work type. 
 
-\subsection{Contributions and Reflections}
-\label{sec:contributions}
-The primary contributions I have made to the project so far are the literature review, interviews and technical work done to date. From this work, I'll be able to create a set of high-fidelity prototypes and start creating a Minimal Viable Product (MVP) soon after. Although, I am aware that I have somewhat fallen behind on the project. I estimate this to only be a week or two behind, but with the reshuffling of the work plan, and the time set aside for run-over, I am confident that I can complete the project within the time frame given.
-
-Overall I am happy with the progress made so far. Initially, whilst I had a good idea of what the app needed to be, following the work done I have a better understanding of what will make the app useful. Additionally, I have also learnt that there is a significant lacking in the market for a product like this. 
-
-
-Notably, I think it is important that I reach out to external stakeholders, outside of the university, to get a better understanding of the market and what is needed. It is possible that more ideas will arise from this and that the project will not be limited to what RST needs. 
-
-I think that with the next steps of the project it is important that I establish a more constant workflow, rather than the bursts of work I have carried out so far. I think that this will create more iterative progress and can prompt more user feedback. Notably, I think that there is a bigger risk of feature creep than I expected and I think I will need to pay more attention to this moving forward.
-
-\subsubsection{Laws, Social, Ethical and Professional Issues}
+\subsection{Laws, Social, Ethical and Professional Issues}
 \label{sec:computer_laws}
 As this project intends to be open source under the Mozilla Public License Version 2.0 I foresee no implications for intellectual property. It is currently and will be publicly available via Github \cite{keeptrackgithub}. Although, it is possible the work may be exploited for commercial gain but is dependent on the success of the project and the possibility to be implemented externally.
 
@@ -472,24 +574,6 @@ I believe that from a broader perspective, this project will not have significan
     \centering
     \includegraphics[width=.75\textwidth]{images/trello-board.png}
 \end{figure}   
-
-\subsection{Initial Gantt Chart}
-\label{sec:init_gantt_charts}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\textwidth]{images/keeptrack-gantt-initial.png}
-    \label{fig:initialworkplan}
-\end{figure}
-
-\subsection{Updated Gantt Chart}
-\label{sec:updated_gantt_charts}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\textwidth]{images/keeptrack-gantt-interim.png}
-    \label{fig:updatedworkplan}
-\end{figure}
-
 
 % Document End
 \end{document} 
