@@ -97,12 +97,12 @@ V.~Braun and V.~Clarke, ``Using thematic analysis in psychology,'' {\em
   Qualitative Research in Psychology}, vol.~3, no.~2, pp.~77--101, 2006.
 
 \bibitem{material3ColourTool}
-M.~Design, ``Material theme builder: Figma community.''
-  URL:\url={https://www.figma.com/community/plugin/1034969338659738588/Material-Theme-Builder}.
+M.~Design, ``Material theme builder: Figma community.'' URL:
+  \url={https://www.figma.com/community/plugin/1034969338659738588/Material-Theme-Builder}.
 
 \bibitem{material3DesignKit}
-M.~Design, ``Material 3 design kit: Figma community.''
-  URL:\url={https://www.figma.com/community/file/1035203688168086460/Material-3-Design-Kit}.
+M.~Design, ``Material 3 design kit: Figma community.'' URL:
+  \url={https://www.figma.com/community/file/1035203688168086460/Material-3-Design-Kit}.
 
 \bibitem{figma}
 Figma, ``Figma: the collaborative interface design tool.'' URL:
@@ -120,6 +120,9 @@ Figma, ``Figma: the collaborative interface design tool.'' URL:
   \url{https://m3.material.io/}, 2022.
 \newblock Accessed: 04-12-2022.
 
+\bibitem{flask}
+``Flask.'' URL: \url={https://palletsprojects.com/p/flask/}.
+
 \bibitem{dao}
 Oracle, ``Design patterns: Data access object.'' URL:
   \url{https://www.oracle.com/java/technologies/data-access-object.html}.
@@ -128,11 +131,6 @@ Oracle, ``Design patterns: Data access object.'' URL:
 \bibitem{keeptrackgithub}
 J.~Sieniawski, ``Keeptrack.'' URL: \url{https://github.com/jozefws/keeptrack},
   2022.
-\newblock Accessed: 04-12-2022.
-
-\bibitem{securestorage}
-J.~Steenbakker, ``flutter secure storage.'' URL:
-  \url{https://pub.dev/packages/flutter_secure_storage/}, 2022.
 \newblock Accessed: 04-12-2022.
 
 \bibitem{ethicsguidelines}

@@ -2,14 +2,14 @@
 \contentsline {subsection}{\numberline {1.1}Aims \& Objectives}{3}{subsection.1.1}%
 \contentsline {subsection}{\numberline {1.2}Background}{3}{subsection.1.2}%
 \contentsline {section}{\numberline {2}Related Work}{4}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Application and Product Reviews}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.1}Related Products}{4}{subsection.2.1}%
 \contentsline {subsubsection}{\numberline {2.1.1}Sunbird DCIM}{4}{subsubsection.2.1.1}%
 \contentsline {subsubsection}{\numberline {2.1.2}Pathfinder Mobile}{5}{subsubsection.2.1.2}%
 \contentsline {subsubsection}{\numberline {2.1.3}Netbox}{6}{subsubsection.2.1.3}%
-\contentsline {subsection}{\numberline {2.2}Papers focused on HCI and User Experience}{7}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Papers focused on Technical aspects of the project}{8}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.2}HCI and User Experience}{7}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Asset Identification \& Visualisation}{8}{subsection.2.3}%
 \contentsline {section}{\numberline {3}Description of the Work}{10}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Original Project Stretch Goals}{10}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.1}Project Scope}{10}{subsection.3.1}%
 \contentsline {subsection}{\numberline {3.2}Functional Specification}{11}{subsection.3.2}%
 \contentsline {subsubsection}{\numberline {3.2.1}Authentication and Security}{11}{subsubsection.3.2.1}%
 \contentsline {subsubsection}{\numberline {3.2.2}Asset Management and Information}{12}{subsubsection.3.2.2}%
@@ -20,15 +20,19 @@
 \contentsline {subsection}{\numberline {4.3}User Observations and Interviews}{14}{subsection.4.3}%
 \contentsline {section}{\numberline {5}Design}{15}{section.5}%
 \contentsline {subsection}{\numberline {5.1}User Interface Design}{15}{subsection.5.1}%
-\contentsline {subsubsection}{\numberline {5.1.1}Initial Low Fidelity Prototypes}{15}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Low Fidelity Prototypes}{15}{subsubsection.5.1.1}%
 \contentsline {subsubsection}{\numberline {5.1.2}Current State \& Interview Analysis}{18}{subsubsection.5.1.2}%
 \contentsline {subsubsection}{\numberline {5.1.3}High Fidelity Prototypes}{20}{subsubsection.5.1.3}%
-\contentsline {subsection}{\numberline {5.2}Development and System Architecture}{21}{subsection.5.2}%
-\contentsline {section}{\numberline {6}Implementation}{22}{section.6}%
-\contentsline {subsection}{\numberline {6.1}User Observations and Implementation Changes}{22}{subsection.6.1}%
-\contentsline {section}{\numberline {7}Evaluation}{23}{section.7}%
-\contentsline {section}{\numberline {8}Summary and Reflections}{23}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Project Management}{23}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Laws, Social, Ethical and Professional Issues}{24}{subsection.8.2}%
-\contentsline {section}{\numberline {A}Appendix}{27}{appendix.A}%
-\contentsline {subsection}{\numberline {A.1}Trello Board}{27}{subsection.A.1}%
+\contentsline {subsection}{\numberline {5.2}Development and System Architecture}{24}{subsection.5.2}%
+\contentsline {section}{\numberline {6}Implementation}{25}{section.6}%
+\contentsline {subsection}{\numberline {6.1}User Observations and Implementation Changes}{25}{subsection.6.1}%
+\contentsline {section}{\numberline {7}Evaluation}{25}{section.7}%
+\contentsline {section}{\numberline {8}Summary and Reflections}{25}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Project Management}{25}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Laws, Social, Ethical and Professional Issues}{25}{subsection.8.2}%
+\contentsline {section}{\numberline {A}Appendix}{i}{appendix.A}%
+\contentsline {subsection}{\numberline {A.1}Trello Board}{i}{subsection.A.1}%
+\contentsline {section}{\numberline {B}Current State Interview Takeaways}{i}{appendix.B}%
+\contentsline {subsection}{\numberline {B.1}Interview 1}{i}{subsection.B.1}%
+\contentsline {subsection}{\numberline {B.2}Interview 2}{iii}{subsection.B.2}%
+\contentsline {subsection}{\numberline {B.3}Interview 3}{iv}{subsection.B.3}%
