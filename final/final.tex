@@ -570,20 +570,17 @@ Further, there is a separation between views, API calls and providers. This give
 
 \section{Implementation}
 \label{sec:implementation}
-% The implementation has focused on the development of the core logical structure of the app and the creation of a foundation for the UI to test functionality. The current progress allows a user to sign into the app using their Netbox credentials. This information is then stored securely using the Flutter Secure Storage plugin \cite{securestorage}. The current UI allows the user to add a connection between two devices. More specifically, it allows searching for devices via a searchable dropdown, which then dynamically loads its interfaces, with a tab view that allows the user to select the interface on each device. Further, the current implementation has a working integration of the barcode/QR code scanner plugin \cite{barcodeScannerPlugin}. See below for screenshots of the current UI, fig. \ref{fig:currentUIScreenshots}. 
+As mentioned in the methodology section (Section \ref{sec:methodology}), the app was built using Flutter and its Dart programming language. Flutter enables the app to be built for both Android and iOS whilst also having a single codebase. By using Flutters build in libraries as well as third party libraries, the requirements of the app were met. The following is a list of third party libraries used in the app:
+\begin{itemize}
+    \item \textbf{flutter\_dotenv} - Used to load environment variables from a .env file. This is used to store sensitive information such as the Netbox API URL and the API token \cite{dot_env}.
+    \item \textbf{flutter\_secure\_storage} - Used to store the API token securely on the device. This is used to authenticate the user to the Netbox instance \cite{secure_sec}.
+    \item \textbf{flutter\_launcher\_icons} - Used to generate the app icon for both Android and iOS \cite{icon_launch}.
+    \item \textbf{mobile\_scanner} - Used to scan QR codes and return the result \cite{barcodeScannerPlugin}.
+    \item \textbf{dropdown\_search} - Used to create the dropdown search bar for searching for devices, sites, and racks \cite{dropdown}.
+    \item \textbf{searchable\_listview} - Used to create the list of devices and allow for it to be searchable. This is used in the device search page \cite{searchable}. 
+\end{itemize}
 
-% \begin{figure}[H]
-%     \centering
-%     \subfloat[\centering Login Page]{{\includegraphics[width=2.5cm]{images/login.png} }}%
-%     \qquad
-%     \subfloat[\centering Add Connection Page]{{\includegraphics[width=2.5cm]{images/addcon.png} }}
-%     \qquad
-%     \subfloat[\centering Device Search]{{\includegraphics[width=2.5cm]
-%     {images/search.png} }}
-%     \caption{Screenshots of the current Keeptrack UI}%
-%     \label{fig:currentUIScreenshots}
-% \end{figure}
-
+One of the primary challenges that was encountered during the development of the app was the use of futures and asynchronous programming. This was due to the fact that the apps entire structure is based on the use of futures and the data being returned from the Netbox API. Whilst doing a few API calls it was straightforward, but due to the amount of data that is returned from the API, the structuring of the code became more complex. For example, the device search page lists over 300 devices, meaning that the data that is fetched from the API is quite large. This occurs in most places in the app and had to be made efficient as possible. The app uses two approaches, one where the UI waits for the data to be returned and then displays it, and the other where the UI is displayed first and then the data is fetched and displayed. The latter approach is used in the device search page, as it allows for the user to start searching for devices as soon as the page is loaded. The previous approach is used in the add connection page, where the interfaces are fetched and displayed once the user has selected a device. 
 \subsection{User Observations and Implementation Changes}
 \label{sec:observations}
 % The following section will outline the user observations and the changes made to the app based on these observations. These changes were then implemented to create the final version. 
@@ -625,7 +622,6 @@ I believe that from a broader perspective, this project will not have significan
 % Bibliography
 \bibliographystyle{ieeetr}
 \bibliography{citation} 
-
 
 \pagebreak
 \pagenumbering{roman}

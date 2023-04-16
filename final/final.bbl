@@ -98,11 +98,11 @@ V.~Braun and V.~Clarke, ``Using thematic analysis in psychology,'' {\em
 
 \bibitem{material3ColourTool}
 M.~Design, ``Material theme builder: Figma community.'' URL:
-  \url={https://www.figma.com/community/plugin/1034969338659738588/Material-Theme-Builder}.
+  \url{https://www.figma.com/community/plugin/1034969338659738588Material-Theme-Builder}.
 
 \bibitem{material3DesignKit}
 M.~Design, ``Material 3 design kit: Figma community.'' URL:
-  \url={https://www.figma.com/community/file/1035203688168086460/Material-3-Design-Kit}.
+  \url{https://www.figma.com/community/file/1035203688168086460/Material-3-Design-Kit}.
 
 \bibitem{figma}
 Figma, ``Figma: the collaborative interface design tool.'' URL:
@@ -121,7 +121,7 @@ Figma, ``Figma: the collaborative interface design tool.'' URL:
 \newblock Accessed: 04-12-2022.
 
 \bibitem{flask}
-``Flask.'' URL: \url={https://palletsprojects.com/p/flask/}.
+Pallets, ``Flask.'' URL: \url{https://palletsprojects.com/p/flask/}.
 
 \bibitem{dao}
 Oracle, ``Design patterns: Data access object.'' URL:
@@ -132,6 +132,26 @@ Oracle, ``Design patterns: Data access object.'' URL:
 J.~Sieniawski, ``Keeptrack.'' URL: \url{https://github.com/jozefws/keeptrack},
   2022.
 \newblock Accessed: 04-12-2022.
+
+\bibitem{dot_env}
+mockturtl, ``Flutter dotenv.'' URL:
+  \url{https://pub.dev/packages/flutter_dotenv}, Aug 2021.
+
+\bibitem{secure_sec}
+J.~Steenbakker, ``Flutter secure storage.'' URL:
+  \url{https://pub.dev/packages/flutter_secure_storage}, Feb 2023.
+
+\bibitem{icon_launch}
+M.~O'Sullivan, ``Flutter launcher icons.'' URL:
+  \url{https://pub.dev/packages/flutter_launcher_icons}, Apr 2023.
+
+\bibitem{dropdown}
+salimdev, ``Dropdown search.'' URL:
+  \url{https://pub.dev/packages/dropdown_search}, Feb 2023.
+
+\bibitem{searchable}
+Unknown, ``Searchable listview.'' URL:
+  \url{https://pub.dev/packages/searchable_listview}, Mar 2023.
 
 \bibitem{ethicsguidelines}
 C.~Greehalgh, ``Research ethics guidelines for academic staff, researchers and
