@@ -47,9 +47,8 @@ M.~Van~Kleek, M.~Bernstein, D.~R. Karger, and M.~Schraefel, ``Gui---phooey! the
   on User interface software and technology}, pp.~193--202, 2007.
 
 \bibitem{cpni}
-{\relax Center for the Protection of National Infrastructure}, ``Protecting
-  your assets.'' URL: \url{https://www.cpni.gov.uk/protecting-your-assets}, 07
-  2020.
+\relax Center for the Protection~of National~Infrastructure, ``Protecting your
+  assets.'' URL: \url{https://www.cpni.gov.uk/protecting-your-assets}, 07 2020.
 \newblock Accessed: 03-12-2022.
 
 \bibitem{lotlikar2013comparative}
@@ -83,7 +82,7 @@ Jetbrains, ``Which cross-platform mobile frameworks do you use?.'' URL:
 \newblock Accessed: 03-12-2022.
 
 \bibitem{labmonitor}
-A.~Dagnall and J.~Sieniawski, ``Labmonitor.'' url:
+A.~Dagnall and J.~Sieniawski, ``Labmonitor.'' URL:
   \url{https://precursor.cs.nott.ac.uk/labmonitor.html}, 2022.
 \newblock Accessed: 03-12-2022.
 
@@ -152,6 +151,16 @@ salimdev, ``Dropdown search.'' URL:
 \bibitem{searchable}
 Unknown, ``Searchable listview.'' URL:
   \url{https://pub.dev/packages/searchable_listview}, Mar 2023.
+
+\bibitem{netboxBug}
+J.~Sieniawski, ``\relax index out of range bug for patch requests to cables api
+  - issue 11901.'' URL:
+  \url{https://github.com/netbox-community/netbox/issues/11901}, Mar 2023.
+
+\bibitem{caldwell2008web}
+B.~Caldwell, M.~Cooper, L.~G. Reid, G.~Vanderheiden, W.~Chisholm, J.~Slatin,
+  and J.~White, ``Web content accessibility guidelines (wcag) 2.0,'' {\em WWW
+  Consortium (W3C)}, vol.~290, pp.~1--34, 2008.
 
 \bibitem{ethicsguidelines}
 C.~Greehalgh, ``Research ethics guidelines for academic staff, researchers and
