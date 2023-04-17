@@ -13,36 +13,26 @@
 
 \begin{document}
  
-% Titlepage
 \thispagestyle{empty}
 \begin{center}
     \centering
-% University logo
     \includegraphics[width=0.5\linewidth]{images/nottingham-logo.png}
     \vspace{2.5cm}
     {\Large \par}
-% Project title
-    {\LARGE \textbf{A Cross-platform Networking Configuration \& Auditing Mobile Application}\par}
+    {\LARGE \textbf{A Cross-platform Networking Configuration \& Management Mobile Application}\par}
     \vspace{1.5cm}
     {\small Submitted April 2023, in partial fulfilment of \break the conditions for the award of the degree \textbf{BSc Computer Science}.\par}
-
-% Author Name
     \vspace{1cm}
     {\Large \textbf{Jozef W. Sieniawski}\par}
     {\textbf{20296126}\par}
     \vspace{1cm}
-% Supervisor
     {\normalsize \textbf{Supervised by Prof. Chris Greenhalgh}\par}
     \vspace{1cm}
-% School and University
     {\normalsize School of Computer Science\par}
     {\normalsize University of Nottingham\par}
     \vspace{2cm}
-
-% Declaration
     {\normalsize I declare that this dissertation is my own work, except as indicated in the text:\par}
     \vspace{1cm}
-    % image signature
     {\normalsize Signature: \underline{ \includegraphics[width=0.25\linewidth]{images/signature.png}}\par}
     \vspace{0.25cm}
     {\normalsize Date: \today\par}
@@ -50,8 +40,6 @@
 
 \pagebreak
 \pagenumbering{roman}
-
-% \end{itemize}
 \pagebreak
 
 \section*{Abstract}
@@ -63,17 +51,14 @@
     I would like to thank my supervisor, Prof. Chris Greenhalgh, for his guidance, wisdom and support throughout the project. Additionally, I thank my family and friends for their support and encouragement throughout my time at university. With special thanks to Aidan `Dozy' Dagnall for his advice on interface design.
     Finally, I would like to thank the rest of the Research Support Team; Vik, Li and especially Dr. Michael Wilson for their support, insight and knowledge.
 
-% Table of contents
 \pagebreak
 
 \tableofcontents
 \pagebreak 
 \pagenumbering{arabic}    
 
-% Add spacing between paragraphs
 \setlength{\parskip}{2ex}
 
-% Introduction
 \section{Introduction \& Motivation}
 \label{sec:introduction}
 With the work the Research Support Team (RST) do within the School of Computer Science at Nottingham, one of the primary responsibilities revolves around its server spaces. This involves the installation and configuration of new servers, as well as the maintenance of existing hardware and legacy systems. When faced with the task of migrating servers to a new location or retiring old devices, the problem of understanding the configuration of the existing servers arose. There lacked a consistent documentation format that could be used to replicate the configuration of a server in a new location or add a new server entirely.
@@ -171,8 +156,6 @@ Sunbird DCIM is a feature-full Data Centre Infrastructure Management (DCIM) Pack
 
 Though, some of its features could be useful in the implementation of the project. For example, the visualisation of data centres via a 3D model could be an interesting feature to implement in the project but might be out of scope. Especially with the additional research and testing that it would require. On the other hand, the search for assets and connections that Sunbird has, while thorough, is not as intuitive as the project aims to be. The immediate view lists all assets and their information, with 25 columns of data. It is overwhelming and not very useful without filters and custom views. Further, Sunbird intends to serve clients that might have thousands of assets, not quite hundreds like Computer Science has, so the requirements of searching and filtering are different. Though filtering by an extensive set of categories is a useful feature and could be implemented in the project, but in a more intuitive manner. 
 
-% NOTE: Feature not implemented.
-
 Sunbird is a prime example of what the project is not. It is enterprise-level DCIM software that is `overkill' for SMEs. Whilst it is a great tool for large data centres, its depth of features and complexity would add to the difficulty of implementing and using the software day to day.
 
 \subsubsection{Pathfinder Mobile}
@@ -180,13 +163,13 @@ Sunbird is a prime example of what the project is not. It is enterprise-level DC
 
 Pathfinder Mobile is a mobile component to the complete Pathfinder package, it is designed to be used in conjunction with the full software and used as an "anytime and anywhere" \cite{PathfinderMobile} tool. It allows existing users of Pathfinder to access data remotely and in situ, with an intriguing focus on "work orders". These are created at a workstation, i.e. a laptop, which then synchronizes the work orders with the mobile app. From here the work orders can be executed on-site by using "graphical instructions support"\cite{Pathfinder}. Finally, on completion, all changes are uploaded to the pathfinder client. See below for screenshots from the Pathfinder Mobile app. 
 
-\begin{figure}[H]%
+\begin{figure}[H]
     \centering
-    \subfloat[\centering Side Panel]{{\includegraphics[width=4cm]{images/pathfinder_overview.png} }}%
+    \subfloat[\centering Side Panel]{{\includegraphics[width=4cm]{images/pathfinder_overview.png} }}
     \qquad
-    \subfloat[\centering Network Trace]{{\includegraphics[width=4cm]{images/pathfinder_trace.png} }}%
-    \caption{Screenshots of the Pathfinder Mobile App}%
-    \label{fig:pathfinder_screenshots}%
+    \subfloat[\centering Network Trace]{{\includegraphics[width=4cm]{images/pathfinder_trace.png} }}
+    \caption{Screenshots of the Pathfinder Mobile App}
+    \label{fig:pathfinder_screenshots}
 \end{figure}
 
 A similar environment interaction would work well for this project, with more complex modifications being completed/generated on a desktop client on the school's Netbox instance, i.e. templating. Then once completed, this can be synchronized with the mobile app to be used in situ. For example, verifying the correct cable is connected to the correct port. Additionally, completing work that is easier on desktop, e.g. adding a new asset, and then synchronizing it to the mobile app so that its networking configuration can be added in situ. 
@@ -251,8 +234,6 @@ The project has built upon the API to create a more user-friendly and intuitive 
 \subsection{Project Scope}
 \label{sec:stretchgoals}
 
-% I considered a range of methods to tackle the project. 
-
 Following the interviews during the current state analysis and the investigation of similar work, I considered a range of methods to tackle the project. One of the most aspirational being to implement the augmented reality visualisation feature. This feature would allow users to visualise asset information and networking details in a highly interactive way. Due to the time constraints of the project it wasn't something that was feasible for its time scale and it was deemed to be out of scope. 
 
 Below is an outline of the features that were considered to be out of scope for the project. Though, it is important to note that these features are not considered to be impossible to implement, but rather that they would require significant development time and would be out of scope for the project.
@@ -309,12 +290,7 @@ Below is the functional specification of the software outlying what the applicat
 \section{Methodology}
 \label{sec:methodology}
 
-% Discuss more about the overall approach
-% Human centred design approach... references. 
-% Why this approach.
-
-
-With all of the aims and aspects of the projects in mind, it was decided to use a participatory design approach, with iterative prototypes of increasing fidelity. Then, with user evaluation and feedback, the final product was created. This was done by following the steps outlined in the following:
+With all of the aims and aspects of the projects in mind, it was decided to use a human centred design approach, with iterative prototypes of increasing fidelity. This focus was decided based around the problem itself, and the complexity of what a solution would entail. To create a good solution it needed user involvement throughout and therefore this was deemed the best approach. Then, with user evaluation and feedback, the final product would then be created. The following list outlines, in order, the steps take to complete the project.
 
 \begin{enumerate}
     \item Create low-fidelity prototypes
@@ -503,7 +479,6 @@ To highlight the separation of sections, they were given a different background 
 
 Add connection (2nd from left fig.\ref{fig:figma}) remained primarily the same with the addition of this sectioned approach and theming. There was a removal of searching rack and device and replaced with a scan device button. This change was inspired by the comments made by interviewee 1 and 3. Specifically, interviewee 1 mentioned that "we need a QR code on the front and back (of the servers)". This way they can be identified easier by one, people who are familiar with the space as well as those who aren't (Appendix \ref{sec:thematicAnalysisInterview1}[22]). Secondly, interviewee 3 proposed that adding labels to devices to help with identification (Appendix \ref{sec:thematicAnalysisInterview3}[11]). With this in mind, the scan device button was added to allow users to scan the QR code on the device to automatically fill in the device information. 
 
-% hierarchy search
 One of the biggest changes that was made was the addition of a hierarchical search feature which was added to the `Connection Search' screen (center fig.\ref{fig:figma}). This was added to address the comments made during the interviews. Specifically, based on feedback from the use of Pathfinder, the hierarchical search feature was added to help users find connections easier (Appendix \ref{sec:thematicAnalysisInterview1}[33,34,36] as well as \ref{sec:thematicAnalysisInterview3}[18]). The hierarchical search method would allow the user to search for connections by first selecting the room, then the rack, the device and finally the interface. This would allow the user to narrow down the search results to a specific device. To implement this feature, I used a similar approach to what Pathfinder \cite{PathfinderMobile} uses, with a clickable list that changes based on the user's selection. See below for the initial designs.
 
 \begin{figure}[H]
@@ -512,7 +487,7 @@ One of the biggest changes that was made was the addition of a hierarchical sear
     \caption{Hierarchical Search}
     \label{fig:hierarchical_search}
 \end{figure}
-% image on the left with text on the right
+
 \begin{wrapfigure}[16]{r}{0.32\textwidth}
     \centering
     \includegraphics[width=0.26\textwidth]{images/connection_display.png}
@@ -541,9 +516,6 @@ As it was suggested by interviewee 2, having access to knowledge of the device w
     \caption{Device Search}
     \label{fig:device_search}
 \end{figure}
-
-% device information
-
 
 \subsection{Development and System Architecture}
 \label{sec:development} 
@@ -719,13 +691,12 @@ Additionally, there are notices regarding the Data Protection Act (2018). The  d
 I believe that from a broader perspective, this project has not had significant implications for society. However, I believe that it has had a positive impact on the System Administrators (RST) and the wider system administrator community. I believe with the project being open source and with a focus on HCI, it is accessible to a wide range of people. Finally, giving DCIM software another platform to be accessed on, I believe that the project has provided a positive step towards the future of DCIM software and data centre management.
 \pagebreak
 
-% Bibliography
 \bibliographystyle{ieeetr}
 \bibliography{citation} 
 
 \pagebreak
 \pagenumbering{roman}
-% Appendix
+
 \appendix
 \section{Trello Board}
 \label{sec:trello_board}
@@ -777,6 +748,4 @@ I believe that from a broader perspective, this project has not had significant 
     \item Further work suggestion to integrate the new connection addition to a printing system.
 \end{enumerate}
 
-
-% Document End
 \end{document} 
