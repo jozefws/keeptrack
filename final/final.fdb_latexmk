@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex final"] 1681904073 "final.aux" "final.bbl" "final" 1681904084
+["bibtex final"] 1681905224 "final.aux" "final.bbl" "final" 1681905235
   "c:/texlive/2022/texmf-dist/bibtex/bst/base/ieeetr.bst" 1668077259 18361 1a00e58565e7f19bf2b3e1bfb82254ae ""
   "citation.bib" 1681898863 16050 4055082fc3ae2a22db19f1f6cd4b17f8 ""
-  "final.aux" 1681904083 19093 617a1458186a7525e7c6fecee1df2a8f "pdflatex"
+  "final.aux" 1681905233 17488 22550478560f2fc381dee90593a4e30e "pdflatex"
   (generated)
   "final.bbl"
   "final.blg"
-["pdflatex"] 1681904074 "c:/Users/jozef/Documents/Github/keeptrack/final/final.tex" "final.pdf" "final" 1681904084
-  "c:/Users/jozef/Documents/Github/keeptrack/final/final.tex" 1681904063 100832 a9fff37b871b14be4b172d30c942b524 ""
+["pdflatex"] 1681905225 "c:/Users/jozef/Documents/Github/keeptrack/final/final.tex" "final.pdf" "final" 1681905235
+  "c:/Users/jozef/Documents/Github/keeptrack/final/final.tex" 1681905205 100931 50760d9f6cabb9f3cabd6d294e8c757c ""
   "c:/texlive/2022/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1668077570 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "c:/texlive/2022/texmf-dist/fonts/map/fontname/texfonts.map" 1668078289 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2022/texmf-dist/fonts/tfm/jknappen/ec/tcrm0600.tfm" 1668077989 1536 12e8c510d3e158fdd0e9a42e75118bd9 ""
@@ -92,11 +92,11 @@
   "c:/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1668080959 4569281 766eb7ed4a78db57b8d349fe2f67a1b6 ""
   "c:/texlive/2022/texmf-var/web2c/pdftex/pdflatex.fmt" 1668081049 1696344 f90c6bce3939f35decb291f782a94e78 ""
   "c:/texlive/2022/texmf.cnf" 1668080934 713 e69b156964470283e0530f5060668171 ""
-  "final.aux" 1681904083 19093 617a1458186a7525e7c6fecee1df2a8f "pdflatex"
-  "final.bbl" 1681904074 6973 962ab8d7cea72c71c19345d6cb7998a9 "bibtex final"
-  "final.out" 1681904083 7112 f83ad6238f1a7ea68ab93878f76424d0 "pdflatex"
-  "final.tex" 1681904063 100832 a9fff37b871b14be4b172d30c942b524 ""
-  "final.toc" 1681904083 3691 dc3bbad7dd01c4d3af13d33ab0a0ae0c "pdflatex"
+  "final.aux" 1681905233 17488 22550478560f2fc381dee90593a4e30e "pdflatex"
+  "final.bbl" 1681905225 6973 962ab8d7cea72c71c19345d6cb7998a9 "bibtex final"
+  "final.out" 1681905233 6006 171c2e8c321e9ab50605e77171dd2ab9 "pdflatex"
+  "final.tex" 1681905205 100931 50760d9f6cabb9f3cabd6d294e8c757c ""
+  "final.toc" 1681905233 3070 4ed2e8bf6861982a1bc4f551ffbc4a23 "pdflatex"
   "images/barcode_mishra.png" 1679848247 28223 a0679c7cb5a97e479c8b21b78dd80356 ""
   "images/connection_display.png" 1681671779 35419 8d32ea88e42a4098cc90e12414385cb8 ""
   "images/device_info.png" 1681671779 57110 4c19216f75e14be558a67ef0e6297924 ""
@@ -112,8 +112,6 @@
   "images/initial_prototype_devices.png" 1681671779 36400 4a072c8d6e6c0647ffab87255ef8a457 ""
   "images/initial_prototype_interfaces.png" 1681671779 13845 a62c5d762ca6257015c342b132aee2c1 ""
   "images/interface_add.png" 1681671779 29929 965b425bfeb2bff449b1f964711cb6db ""
-  "images/keeptrack-gantt-final.png" 1681754076 224586 47f505057124158b04be7e08d5d65072 ""
-  "images/keeptrack-gantt-initial.png" 1679848247 31816 caf38aa25efc3e841de1a87b497b2493 ""
   "images/nottingham-logo.png" 1679848247 96781 49505ce718f72227875510d1ee7b19f8 ""
   "images/pathfinder_overview.png" 1679848247 350906 00d1bd33e113cc1b6ae385a588185b4d ""
   "images/pathfinder_trace.png" 1679848247 82627 c9ad0e28ab0d09eab3caf9757a3797b7 ""
@@ -122,8 +120,6 @@
   "images/signature.png" 1679855432 9800 1a068f3b731228852ef313963ed7eb0e ""
   "images/sunbirddcim.png" 1679848247 2068286 51ceece0fd79d10eb7bd057250c4cd7a ""
   "images/top-level-archi.png" 1679848247 92942 54747314263e8b931dd957a3c5b99374 ""
-  "images/trello-board.png" 1679848247 1554285 2ad2d23e74047d2ad53fc96b6b05e16f ""
-  "interviews/thematicAnalysis.tex" 1681671779 9528 a164cf056d7f313981bd9a353152e0f7 ""
   (generated)
   "final.aux"
   "final.log"
