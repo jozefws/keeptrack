@@ -7,7 +7,9 @@
 \usepackage{subfig}
 \usepackage[hidelinks]{hyperref}
 \usepackage{enumitem}
-
+\usepackage{multirow, tabularx, booktabs}
+\usepackage{tikz}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;} 
 \setlength
 \parindent{0pt}
 
@@ -23,16 +25,13 @@
     \vspace{1.5cm}
     {\small Submitted April 2023, in partial fulfilment of \break the conditions for the award of the degree \textbf{BSc Computer Science}.\par}
     \vspace{1cm}
-    {\Large \textbf{Jozef W. Sieniawski}\par}
-    {\textbf{20296126}\par}
+    {\Large\textbf{Student ID 20296126}\par}
     \vspace{1cm}
-    {\normalsize \textbf{Supervised by Prof. Chris Greenhalgh}\par}
-    \vspace{1cm}
-    {\normalsize School of Computer Science\par}
+    {\large School of Computer Science\par}
     {\normalsize University of Nottingham\par}
     \vspace{2cm}
-    {\normalsize I declare that this dissertation is my work, except as indicated in the text:\par}
-    \vspace{1cm}
+    {\normalsize I herby declare that this dissertation is my work, except as indicated in the text:\par}
+    \vspace{3cm}
     {\normalsize Signature: \underline{ \includegraphics[width=0.25\linewidth]{images/signature.png}}\par}
     \vspace{0.25cm}
     {\normalsize Date: \today\par}
@@ -69,7 +68,7 @@ Whilst alternative methods exist, they are typically a segment of a far larger s
 
 Further, the project is open source and available for use by the wider community of server administrators. This allows for the Human-Computer interaction findings that have been implemented to be used in similar applications. Importantly, the tool utilises and is integrated with Netbox\cite{Netbox}, an open-source tool for managing network infrastructure. This acts as the backend and database for the tool and allows for use in the wider context of server management with features such as asset management and IP address management (IPAM) already built in.
 
-The Research Support Team acted as a prime example of the target audience for the tool. Their position provided great insight into the struggles of small and medium enterprises (SMEs) that maintain their server systems. Additionally, with the nature of an academic setting, there was a large range of hardware, from legacy to cutting edge. This helped provide a range of devices and interfaces to test the tool with. Further, as mentioned previously, these `self-managed' spaces are often cramped and hard to navigate. Computer Science at Nottingham was no exception. Below is a picture of a rack in the server space before renovations (fig. \ref{fig:server_rack}), a good example of the environment that the project is designed for.
+The Research Support Team acted as a prime example of the target audience for the tool. Their position provided great insight into the struggles of small and medium enterprises (SMEs) that maintain their server systems. Additionally, with the nature of an academic setting, there was a large range of hardware, from legacy to cutting edge. This helped provide a range of devices and interfaces to test the tool with. Further, as mentioned previously, these `self-managed' spaces are often cramped and hard to navigate. Computer Science at Nottingham was no exception. Below is a picture of racks in the server space before renovations (fig. \ref{fig:server_rack}), a good example of the environment the project is designed for.
 
 \begin{figure}[H]
     \centering
@@ -101,9 +100,9 @@ Comparatively, shown below is another server space at Nottingham, which is focus
 
 \subsection{Aims \& Objectives}
 \label{sec:objectives}
-The project's aims with their respective objectives.
+The project's aims with their respective objectives:
 \begin{enumerate}[noitemsep, labelindent=0pt, label=\textbf{A\arabic*}]
-    
+
     \item To create a tool that will allow for cable configuration of server hardware to be
     easily digitised, visualised, queried and updated. 
         
@@ -114,14 +113,13 @@ The project's aims with their respective objectives.
         
     \item To achieve visualisations, the tool will illustrate the cable connections between devices, showing data clearly and concisely.
     \end{itemize}
-    \item To create an in situ cross-platform mobile app that can be utilised in restricted
-    spaces.    
+    \item To create the tool as an in situ cross-platform mobile app that can be utilised in restricted spaces.    
     \begin{itemize}[noitemsep, topsep=0pt]
         \item To achieve this, the tool will be cross-platform and will be able to be used on any mobile device supported by the Flutter framework.
         \item The tool will be designed with a focus on Human-Computer Interaction, to ensure that the tool is easy to use and can be understood by a wide range of users.
     \end{itemize} 
 
-    \item To create an app that can interact with other open-source software easily
+    \item To create the tool to be able to interact with other open-source software easily
     \begin{itemize}[noitemsep, topsep=0pt]
         \item The tool will be open source, so modifications can be made to the tool to allow for it to be used in other contexts.
         \item The tool will be built around modifiable models that can be changed easily for other software or a custom build backend.        
@@ -132,7 +130,7 @@ The project's aims with their respective objectives.
 
 \subsection{Background}
 \label{sec:background}
-During my work for the Research Support Team over the last 18 months and the challenges faced with server administration, I came to realise that there was a missing tool that could make a lot of tedious and time-consuming tasks easier. Once I began researching solutions to these problems, I came across Netbox, which is now our `source of truth' for our server space. It contains information about all of the hardware in the space, including the cables that connect them. Once Netbox began filling with data, the problem of finding and modifying that data in situ arose. I found that using the full-size interface was too clunky and so I wondered if there was a mobile app alternative, but there wasn't. This was the initial inspiration for the project. I wanted to create a tool that could be used in situ, on a mobile device, to make the task of managing the server space easier. Whilst it can be appreciated that in large data centre applications, a mobile application like Keeptrack (developed in this project) might not have the same desirability as a desktop application. But, acting as a companion tool alongside the desktop open-source software could be a great aid. With benefits for both platforms, they can be used in different situations, making workloads simpler and more efficient. Whilst there exists a companion app for a paid-for DCIM solution, there is no open-source equivalent. This was a gap in the market that the project aimed to fill, as well as carrying out research into the usage of mobile applications in this context.
+During my work for the Research Support Team (RST) over the last 18 months and the challenges faced with server administration, I came to realise that there was a missing tool that could make a lot of tedious and time-consuming tasks easier. My role within RST was to help the team wherever I was able and asked, naturally one of the biggest tasks was the overhaul and improvement of the server spaces. Once I began researching solutions to these problems, I came across Netbox, which is now our `source of truth' for our server space. It contains information about all of the hardware in the space, including the cables that connect them. Once Netbox began filling with data, the problem of finding and modifying that data in situ arose. I found that using the full-size interface was too clunky and so I wondered if there was a mobile app alternative, but there wasn't. This was the initial inspiration for the project. I wanted to create a tool that could be used in situ, on a mobile device, to make the task of managing the server space easier. Whilst it can be appreciated that in large data centre applications, a mobile application like this project might not have the same desirability as a desktop application. But, acting as a companion tool alongside the desktop open-source software could be a great aid. With benefits for both platforms, they can be used in different situations, making workloads simpler and more efficient. Whilst there exists a companion app for a paid-for DCIM solution, there is no open-source equivalent. This was a gap in the market that the project aimed to fill, as well as carrying out research into the usage of mobile applications in this context.
 
 \pagebreak
 
@@ -143,7 +141,7 @@ In this section, three aspects of related work are discussed; existing applicati
 \subsection{Related Products}
 \label{sec:app_reviews}
 
-Following research on open-source and paid-for cable management/DCIM software, it was found there are limited options that have access to the trial versions without a legitimate business interest. This restricted the options of related applications that could be investigated. This aside, there follows three different software packages that are relevant to the project. Including; Sunbird DCIM\cite{Sunbird}, a paid-for solution with a trial accessible publicly. Next, Pathfinder Mobile \cite{Pathfinder}, a mobile counterpart to the enterprise `Pathfinder' package, was the only high-quality mobile solution that was discovered. Finally, Netbox \cite{Netbox}, the open-source DCIM software that the project has been built around. These three packages were shown to three individuals within the Research Support Team and their feedback was recorded.
+Following research on open-source and paid-for cable management/DCIM software, it was found there are limited options that have access to the trial versions without a legitimate business interest. This restricted the options of related applications that could be investigated. This aside, there follows three different software packages that are relevant to the project. Including; Sunbird DCIM\cite{Sunbird}, a paid-for solution with a trial accessible publicly. Next, Pathfinder Mobile \cite{Pathfinder}, a mobile counterpart to the enterprise `Pathfinder' package, was the only high-quality mobile solution that was discovered. Finally, Netbox \cite{Netbox}, the open-source DCIM software that the project will be built around. These three packages were shown to three individuals within the Research Support Team and their feedback was recorded.
 
 \subsubsection{Sunbird DCIM}
 \label{sec:sunbird}
@@ -178,49 +176,49 @@ A similar environment interaction would work well for this project, with more co
 
 The Pathfinder app also allows for quick access to networking information, where users can complete the tracing of connections. Whilst this already was a core intention of the project, Pathfinders' method to visualise this is intuitive and similar to that which was discussed in the first current state analysis interview. These interviews are discussed more in detail in section \ref{sec:current_state_analysis}, but, notably, an interviewee mentioned a good method to do a visualisation is to list devices in a scrollable view. Then each connection between them is drawn on the screen, along with device and interface information displayed as well. This is also similar to the method used by Pathfinder, with the device name, location, interface name, type and cable type being displayed. This would aid in easing the process of tracing cables and connections, as well as verifying that the correct cable is connected to the correct port.
 
-One aspect of Pathfinder that could be improved upon is the search functionality to find assets. Whilst they describe their search as being `text-rich'. It seems to be less intuitive, and does a search based on every field, meaning that results for a simple search can be overwhelming. This is something that the project aims to improve upon, with a more practical search method, separating searches based on possible results. For example, not returning cables or power supplies when the user is only looking for devices. Further, their search by barcode scanner only simply enters the code into the search bar, not necessarily a bad method, but not as intuitive as it could be, for example - a button to scan the barcode, that on completion, automatically displays the asset information rather than needing another step.
+One aspect of Pathfinder that could be improved upon is the search functionality to find assets. Whilst the search is described as being `text-rich', it seems to be less intuitive, and does a search based on every field, meaning that results for a simple search can be overwhelming. This is something that the project aims to improve upon, with a more practical search method, separating searches based on possible results. For example, not returning cables or power supplies when the user is only looking for devices. Further, their search by barcode scanner only simply enters the code into the search bar, not necessarily a bad method, but not as intuitive as it could be, for example - a button to scan the barcode, that on completion, automatically displays the asset information rather than needing another step.
 
 A notable design element that the Pathfinder app implements is the focus on locations, assets, and connections in a hierarchical sense. For example, one method of displaying the data is to have a list of locations, then a list of assets within that location, and then a list of connections between those assets and so on. This is something that the project has also implemented due to the feedback from the interviews and has provided a straightforward way to display sometimes complex data.
 
-Overall, Pathfinders mobile app has been a good reference point for the project. It has a similar focus and a similar method of visualising data. Though it is a companion of a larger software package that exceeds the current requirements of the school, it has features that have been referred to and implemented in the project.  
+Overall, Pathfinders mobile app has been a good reference point for the project. It has a similar focus and a similar method of visualising data. Though it is a companion of a larger software package that exceeds the current requirements of the school, it has features that may be referred to and similarly implemented in the project.  
 
 \pagebreak
 
 \subsubsection{Netbox}
 \label{sec:netbox}
-Whilst searching for a DCIM solution for the School of Computer Science, Netbox became a clear choice. It has a solid feature core, it's open source, self 'hostable' and could help solve the problems that the school faced. As discovered during the Current State Analysis and personal experiences, the server rooms within CS are documented poorly due to a lack of consistent historical data. Most of the information is stored in the memory of long-gone staff or out-of-date spreadsheets. Netbox is to act as a `source of truth'\cite{Netbox}. More information on Netbox is included in the implementation section \ref{sec:development}. 
+
+Whilst searching for a DCIM solution for the School of Computer Science, Netbox became a clear choice. It has a solid feature core, it's open source, self 'hostable' and could help solve the problems that the school faced. As discovered during the Current State Analysis and personal experiences, the server rooms within CS are poorly documented due to a lack of consistent historical data. Most of the information is stored in the memory of long-gone staff or out-of-date spreadsheets. Netbox is to act as a `source of truth'\cite{Netbox} for the administrators. More information on Netbox is included in the implementation section \ref{sec:development}. 
 
 Netbox is built upon several data models, which interact and are nestable with each other. For example, a device can be a child of a rack, which is a child of a site. This is a similar method to Pathfinder and allows for a deeper relationship between data. This parent, child relationship allows for efficient tracing between devices and connections. With this approach and the solid API that Netbox provides it is possible to fetch this data and display it in a way that is intuitive and easy to use. 
 
-One drawback of Netbox is the tracing of connections and the addition of cables. It seems that the relationships can get a bit lost, and it is not as intuitive as it could be. This is something that the project improves upon, especially with in situ tracing, where navigating a large screen interface can be difficult. A primary example of this is the multiple types of ports or interfaces that a device can have. For example, a switch can have console ports, power ports,  network ports, and management ports; all of which are displayed on different pages and can be nested within each other. It can be difficult to navigate this, especially when the device has a lot of ports. This is something that the project aimed to improve upon, with a more intuitive and efficient way to display this data.
+One drawback of Netbox is the tracing of connections and the addition of cables. It seems that the relationships can get a bit lost, and it is not as intuitive as it could be. This is something that the project aims to improve upon, especially with in situ tracing, where navigating a large screen interface can be difficult. A primary example of this is the multiple types of ports or interfaces that a device can have. For example, a switch can have console ports, power ports, network ports, and management ports; all of which are displayed on different pages and can be nested within each other. It can be difficult to navigate this, especially when the device has a lot of ports. This is something that the project aimed to improve upon, with a more intuitive and efficient way to display this data.
 
-Whilst Netbox is a great tool, it is not without its flaws. This project solves one of its main issues, the clunky in situ use experience of the interface. Whilst it has a mobile-friendly web interface, there are limits as to how friendly it can be. The limited screen retail needs to be used efficiently, and having a complex interface nested inside a browser app is not the best way to do this. Additionally, there is a lot of data to be loaded and displayed, in a browser this can show as loading bars and a low frame rate. Here is where Keeptrack comes in, to sit on top of Netbox and provide a more intuitive and efficient interface for the user.  
+Whilst Netbox is a great tool, it is not without its flaws. This project intends to solve one of its main issues, the clunky in situ user experience of the interface. Whilst it has a mobile-friendly web interface, there are limits as to how friendly it can be. The limited screen retail of mobile devices needs to be used efficiently, and having a complex interface nested inside a browser app is not the best way to do this. There is a lot of data to be loaded and displayed, in a browser this can show as loading bars and or cause a low frame rate. Here is where this project comes in, to sit on top of Netbox and provide a more intuitive and efficient interface for the user.  
 
 
 \subsection{HCI and User Experience}
 \label{sec:HCI}
-There is a lack of significant research into areas of Human-Computer Interaction (HCI) and User Experience in the context of server management. But for the few relevant papers, have aided in the development of the project. The first paper is a write-up by Yin et al. \cite{cloud3dview} regarding their demonstration of Cloud3DView at SIGCOMM '13. Cloud3DView is an interactive 3D visualisation tool used for cloud-focused data centres. It uses FPS gamification to allow users to monitor situations and visualise data from a user-friendly interface, all remotely. Cloud3DView also included a focus on its use of `cutting-edge HCI technologies' \cite{cloud3dview}. Whilst the paper itself doesn't go into the reasoning of why certain HCI choices were made, it shows a good example of how a mobile device can be used to interact with a data centre and can be used to improve efficiency and user experience. 
+There is a lack of significant research into areas of Human-Computer Interaction (HCI) and User Experience in the context of server management. But for the few relevant papers, their findings may aid in the development of the project. The first paper is a write-up by Yin et al. \cite{cloud3dview} regarding their demonstration of Cloud3DView. This is an interactive 3D visualisation tool used for cloud-focused data centres. It uses FPS gamification to allow users to monitor situations and visualise data from a user-friendly interface, all remotely. Cloud3DView also included a focus on its use of `cutting-edge HCI technologies' \cite{cloud3dview}. Whilst the paper itself doesn't go into the reasoning of why certain HCI choices were made, it shows a good example of how a mobile device can be used to interact with a data centre and can be used to improve efficiency and user experience. 
 
-Though the focus of this project isn't to be a 3D visualisation tool, one aspect of Cloud3DView is the ability to view data about the devices in a 3D environment. Whilst, a 3D visualisation is out of scope for Keeptrack, an augmented reality feature was considered to be implemented and was discussed in the Current State Analysis interviews. This feature would allow users to view data/connections concerning the devices via a camera on their mobile device, offering an alternative method of visualisation. Though to add this, significant research would need to be done into the best way to implement this feature and how it would interact with the server room environment.
+Though the focus of this project isn't to be a 3D visualisation tool, one aspect of Cloud3DView is the ability to view data about the devices in a 3D environment. Whilst, a 3D visualisation is out of scope for this project, an augmented reality feature was considered to be implemented and was discussed in the Current State Analysis interviews (discussed in section \ref{sec:current_state_analysis}). This feature would allow users to view data/connections concerning the devices via a camera on their mobile device, offering an alternative method of visualisation. Though to add this, significant research would need to be done into the best way to implement this feature and how it would interact with the server room environment.
 
-Notably, in the paper about Cloud3DView, there was a focus on using mobile devices to be used for data visualisation, but no mention of their possible use for data entry. With the nature of the data being entered in server management, in some cases, a mobile format may offer a more intuitive/accessible platform than a desktop device. For example, entering the connection between two assets, where the information can be verified in situ in real time versus sitting at a desk far away. This is one of the workflows that the project was developed to improve upon.
+Notably, in the paper about Cloud3DView, there was a focus on using mobile devices to be used for data visualisation, but no mention of their possible use for data entry. With the nature of the data being entered in server management, in some cases, a mobile format may offer a more intuitive/accessible platform than a desktop device. For example, entering the connection between two assets, where the information can be verified in situ in real time versus sitting at a desk far away. This is one of the workflows that the project intends to improve upon.
 
-An important benefit of using mobile devices for data entry is the ability to use multiple interface types to enter data. For example, a user can enter data via an alphanumeric keyboard, numerical keypad, calendar picker, lists etc all whilst benefiting from the ease of a touchscreen interface. A comparative analysis into different data entry design patterns investigated three different patterns for seven different data types for a set of nine tasks testing different patterns \cite{myka2019comparative}. The investigation completed a set of usability tests to determine which pattern was the most effective, with different patterns benefiting different tasks/data types better than others. The results from this study have been used to inform the design of the interface for the project. Specifically for this project, the most relevant data types are; small numbers, single-choice lists and text.
+An important benefit of using mobile devices for data entry is the ability to use multiple interface types to enter data. For example, a user can enter data via an alphanumeric keyboard, numerical keypad, calendar picker, lists etc all whilst benefiting from the ease of a touchscreen interface. A comparative analysis into different data entry design patterns investigated three different patterns for seven different data types for a set of nine tasks testing different patterns \cite{myka2019comparative}. The investigation completed a set of usability tests to determine which pattern was the most effective, with different patterns benefiting different tasks/data types better than others. The results from this study will be used to inform the design of the interface for the project. Specifically for this project, the most relevant data types are; small numbers, single-choice lists and text.
 
-On a similar note, a study into the structure of data entry on mobile devices noted that existing interfaces `interfere with user input' and force `complex interactions to enter simple information' \cite{van2007gui}. This is especially apparent in some cases of the Netbox interface e.g., as mentioned previously, adding cable connections. Whilst, naturally, there are limitations as to how streamlined an interface can be on a desktop-based web application, there is more room for improvement on a mobile application. For example, the addition of a cable on mobile can be reduced to far fewer steps than on the web interface. Whilst it might reduce the granularity of the data, it would be a trade-off that would be worth it for the ease of use. Additionally, the project aimed to improve upon the current interface, not replace it. The current interface is, in theory, still available for users who prefer it, or for more complex tasks.
+On a similar note, a study into the structure of data entry on mobile devices noted that existing interfaces `interfere with user input' and force `complex interactions to enter simple information' \cite{van2007gui}. This is especially apparent in some cases of the Netbox interface e.g., as mentioned previously, adding cable connections. Whilst, naturally, there are limitations as to how streamlined an interface can be on a desktop-based web application, there is more room for improvement on a mobile application. For example, the addition of a cable on mobile can be reduced to far fewer steps than on the web interface. Whilst it might reduce the granularity of the data, it would be a trade-off that would be worth it for the ease of use. Additionally, the project aims to improve upon the current interface, not replace it. The current interface is, in theory, still available for users who prefer it, or for more complex tasks.
 
-Kleek et al's \cite{van2007gui} study further focused on the structure of data entry on mobile devices, its importance, but also the importance of not creating interfaces that deter users from entering data. Highlighting a fine balance between the two. One of the sources of problems for the school is the lack of data ever being entered anywhere. If the project has an interface that dissuades users or is perceived as too tedious then it will not solve a key problem. This project took upon the findings of this study to ensure that the interface is intuitive and easy to use. For example, an automatic filtering search bar for assets and replacing text fields with barcode scanners or other input methods.
+Kleek et al's \cite{van2007gui} study further focused on the structure of data entry on mobile devices, its importance, but also the importance of not creating interfaces that deter users from entering data. Highlighting a fine balance between the two. One of the sources of problems for the school is the lack of data ever being entered anywhere. If the project has an interface that dissuades users or is perceived as too tedious then it will not solve a key problem. This project takes upon the findings of this study to ensure that the interface is intuitive and easy to use. For example, an automatic filtering search bar for assets and replacing text fields with barcode scanners or other input methods.
 
 \subsection{Asset Identification \& Visualisation}
 \label{sec:technical}
 
-One key part that the project aimed to improve is the searchability of assets, i.e. finding the asset desired quickly and accurately through many means. The current method of asset identification is inconsistent with different naming conventions, ID codes, labels, no labels, hostnames etc. The Centre for the Protection of National Infrastructure (CPNI) produced a paper on the importance of asset management, specifying that, `all organisational assets and systems that are necessary for the delivery of effective operations or are of specific organisational value, should be identified.'\cite{cpni}.
+One key part that the project aims to improve is the searchability of assets, i.e. finding the asset desired quickly and accurately through many means. The current method of asset identification is inconsistent with different naming conventions, ID codes, labels, no labels, hostnames etc. The Centre for the Protection of National Infrastructure (CPNI) produced a paper on the importance of asset management, specifying that, `all organisational assets and systems that are necessary for the delivery of effective operations or are of specific organisational value, should be identified.'\cite{cpni}.
 
-Not only is it important to identify assets whilst they are in use, but also for documenting any changes, journal entries, ownership, location etc. This project also aimed to improve upon this, with a focus on the identification of assets being homogenous and consistent. Keeptrack uses the Netbox model IDs as unique identifiers for each asset, cable and interface. This way, they can be referred to individually and updated consistently. 
+Not only is it important to identify assets whilst they are in use, but also for documenting any changes, journal entries, ownership, location etc. This project also intends to improve upon this, with a focus on the identification of assets being homogenous and consistent. This project will use the Netbox model IDs as unique identifiers for each asset, cable and interface. This way, they can be referred to individually and updated consistently. 
 
-In this project, assets are considered to be physical server hardware, such as servers, switches, KVM`s, NAT etc. but also cabling, such as ethernet, fibre, SFP and power. To identify each of these assets uniquely it was decided that an encoded label would be best. A comparative study into barcodes, QR-codes and RFID systems in the library environment looked into the respective advantages and disadvantages of each \cite{lotlikar2013comparative}. Going by these attributes, it is more sensible to use Barcodes or QR codes for the project. RFID tags are more expensive, as well as have a higher risk of tag collisions. This occurs when many tags are in close proximity\cite{lotlikar2013comparative}, like that of a server room, and a reader misreads their value to be another. An issue like this would likely add to the time-consuming tasks and make for a more frustrating workflow. Further, a specialised reader is likely needed and so another handheld device would need to accompany the app. Additionally, a paper written on the review of QR codes highlights that QR codes can store more data in the same area, have data redundancy, are faster to scan and are `readable from any direction in 360\degree'\cite{mishra2017review}. Whilst these benefits seem to make it the clear choice over barcodes, QR codes contain data in both dimensions. Though this is a benefit in most use cases, it is likely to pose a problem when scanning codes stuck to ethernet cables.
-
-Where, barcodes contain data in one dimension which is then repeated vertically, allowing for their placement to be more dynamic, e.g. on a cable. This is clearly shown in Figure 3 of Mishra et al., fig. \ref{fig:barcode}. So, for this project, it was initially decided that it will use barcodes for cables, and then QR codes for other assets will be used. But after the interview processes and observations, it was decided that QR codes would be more beneficial as they can store more contextual data. It was realised following consultation with CGI, the global IT consulting firm, that having labels that only hold abstract data can be considered a single point of failure to gather information. Especially as it was initially decided that the information stored for cables will be a random short number assigned to each cable, suitable for barcodes - But completely abstract for humans to read. So in the situation of Netbox being inaccessible, or the QR code being damaged, the information stored on the label would be useless. Therefore a combination of a meaningful label and a QR code would be used. Each QR code can then store the Netbox unique ID for that cable. This way, the QR code can be scanned and the information can be retrieved from Netbox via the URL directly. This is a more robust system than just having a label with a randomly generated number. Additionally, storing the URL means that any device with QR-capable scanning will be able to be redirected to Netbox and the cable directly.
+In this project, assets will be considered to be physical server hardware, such as servers, switches, KVM`s, NAT etc. but also cabling, such as ethernet, fibre, SFP and power. To identify each of these assets uniquely it was previously decided that an encoded label would be best. A comparative study into barcodes, QR-codes and RFID systems in the library environment looked into the respective advantages and disadvantages of each \cite{lotlikar2013comparative}. Going by these attributes, it is more sensible to use Barcodes or QR codes for the project. RFID tags are more expensive, as well as have a higher risk of tag collisions. This occurs when many tags are in close proximity\cite{lotlikar2013comparative}, like that of a server room, and a reader misreads their value to be another. An issue like this would likely add to the time-consuming tasks and make for a more frustrating workflow. Further, a specialised reader is likely needed and so another handheld device would need to accompany the app. A paper written on the review of QR codes highlights that QR codes can store more data in the same area, have data redundancy, are faster to scan and are `readable from any direction in 360\degree'\cite{mishra2017review}. Whilst these benefits seem to make it the clear choice over barcodes, QR codes contain data in both dimensions. Though this is a benefit in most use cases, it is likely to pose a problem when scanning codes stuck to ethernet cables.
+Barcodes contain data in one dimension which is then repeated vertically, allowing for their placement to be more dynamic, e.g. on a cable. This is clearly shown in Figure 3 of Mishra et al., fig. \ref{fig:barcode}. So, for this project, it was initially decided that it will use barcodes for cables, and then QR codes for other assets will be used. But it was decided that QR codes would be more beneficial as they can store more contextual data. It was realised following consultation with CGI, the global IT consulting firm, that having labels that only hold abstract data can be considered a single point of failure to gather information. Especially as it was initially decided that the information stored for cables will be a random short number assigned to each cable, suitable for barcodes - But completely abstract for humans to read. So in the situation of Netbox being inaccessible, or the QR code being damaged, the information stored on the label would be useless. Therefore a combination of a meaningful label and a QR code will be used. Each QR code can then store the Netbox unique ID for that cable. This way, the QR code can be scanned and the information can be retrieved from Netbox via the URL directly. This is a more robust system than just having a label with a randomly generated number. Additionally, storing the URL means that any device with QR-capable scanning will be able to be redirected to Netbox and the cable directly.
 
 \begin{figure}[H]
 \centering
@@ -229,7 +227,13 @@ Where, barcodes contain data in one dimension which is then repeated vertically,
 \label{fig:barcode}
 \end{figure}
 
-Whilst the addition of the augmented reality visualisation stretch goal was dependent on time and the success of other elements. It was still important to consider related work with these features, especially as it could be a feature added on with future development. At the same time, already investigating Cloud3DView \cite{cloud3dview}, which uses 3D visualisation, a more apt implementation would be by using the QR codes placed on assets to aid in visualising data. This is very similar to the work outlined in the paper, `Applying QR code in augmented reality applications' \cite{applyingQR}. This paper displays how the elements of the QR code can be used to position elements in the AR scene and simultaneously generate information embedded in the QR code. Should this be a feature that can be implemented in the future, it is likely the best approach will be to follow a similar method as to what Kan et al. set out \cite{applyingQR}. Further, there already exists a cross-platform plugin for Augmented Reality in Flutter which can be utilised \cite{ar_flutter}, this would be a good starting point for future development. This feature would allow the user to scan the environment with the device's camera and see the assets in the room, as well as the cables connecting them as they walk around. Possibly allowing the user to see the cables in the room and their traces to find ports, locations etc. This would be a very useful feature for the user to have, as it would allow for a more intuitive and interactive way to visualise the data and the task of tracing connections. Though, the amount of time it would take to implement this feature would be significant, especially with the need to 3D map the server room as well significant development of a backend system to store the data.
+
+Whilst the addition of the augmented reality visualisation feature was dependent on time and the success of other elements, it was still important to consider related work with these features. Especially as it could be a feature added on with future development. An apt implementation of this feature would be by using the QR codes placed on assets to aid in visualising data. This is very similar to the work outlined in the paper, `Applying QR code in augmented reality applications' \cite{applyingQR}. This paper displays how the elements of the QR code can be used to position elements in the AR scene and simultaneously generate information embedded in the QR code. Should this be a feature that can be implemented in the future, it is likely the best approach will be to follow a similar method as to what Kan et al. set out \cite{applyingQR}. Further, there already exists a cross-platform plugin for Augmented Reality in Flutter which can be utilised \cite{ar_flutter}, this would be a good starting point for future development. This feature would allow the user to scan the environment with the device's camera and see the assets in the room, as well as the cables connecting them as they walk around. Possibly allowing the user to see the cables in the room and their traces to find ports, locations etc. This would be a very useful feature for the user to have, as it would allow for a more intuitive and interactive way to visualise the data and the task of tracing connections. Though, the amount of time it would take to implement this feature would be significant, especially with the need to 3D map the server room as well significant development of a backend system to store the data.
+
+\subsection{Summary}
+\label{sec:related_summary}
+
+The related work investigation has provided insight into different approaches to the project and the problems it aims to solve. By using its findings, such as the use of QR codes and specific data input methods, the project can be implemented with a more user-friendly solution. Additionally, the related products have provided a good starting point and source of inspiration for the project. But, importantly, also highlighted the areas that the project should avoid too.
 
 \section{Description of the Work}
 \label{sec:work}
@@ -238,13 +242,10 @@ This project aimed to create a mobile application that will allow users to add, 
 The project has built upon the API to create a more user-friendly and intuitive interface for server administrators to use. With this in mind, a second key aspect was to investigate the best interface for data entry in this context. This was done by interviewing and observing the system administrators at the school using iterative prototypes of increasing fidelity. This gave the project a human-centred design approach, allowing for the app to be tailored to the needs of the users.
 
 \subsection{Project Scope}
-\label{sec:stretchgoals}
+\label{sec:project_scope}
+One of the key activities was the interviews carried out during the current state analysis, these are discussed in section \ref{sec:current_state_analysis} and their results in section \ref{sec:current_state_interview_takeaways}. Following these interviews and the investigation of similar work, I considered a range of methods to tackle the project. The scope of the project is then defined in the aims and objectives section \ref{sec:objectives}. Below is an outline of the features that were considered to be out of scope for the project. Though, it is important to note that these features are not considered to be impossible to implement, but rather that they would require significant development time and would be out of scope for the project. 
 
-Following the interviews during the current state analysis and the investigation of similar work, I considered a range of methods to tackle the project. One of the most aspirational goals was to implement the augmented reality visualisation feature. This feature would allow users to visualise asset information and networking details in a highly interactive way. Due to the time constraints of the project, it wasn't something that was feasible for its time scale and it was deemed to be out of scope. 
-
-Below is an outline of the features that were considered to be out of scope for the project. Though, it is important to note that these features are not considered to be impossible to implement, but rather that they would require significant development time and would be out of scope for the project.
-
-\begin{itemize}
+\begin{itemize}[noitemsep,topsep=0pt]
 \item Journaling for assets, allowing for notes to be added to assets, e.g. when a new component is added, or when a component is removed.
 \begin{itemize}
     \item Originally it was intended to use the existing journaling feature in Netbox, but as of the time of writing this report, this feature did not a good exposure via the API and so would require significant development outside of the core focus. Though it is something that could easily be added.
@@ -260,13 +261,18 @@ Below is an outline of the features that were considered to be out of scope for 
     \item Whilst this was a great idea in the conceptualization of the project, a considerable oversight was the networking restrictions that would restrict this feature drastically. In the case of computer science and their current infrastructure, most server devices are under separate virtual LANs (VLANs). These VLANs don't have wireless capabilities and so a mobile device would not be able to connect. Whilst in other scenarios, this might be less of an issue and is a good concept to implement for quick testing/diagnosing. 
 \end{itemize} 
 
+\item Augmented reality visualisation
+\begin{itemize}
+    \item One of the most aspirational goals was to implement the augmented reality visualisation feature. This feature would allow users to visualise asset information and networking details in a highly interactive way. Due to the time constraints of the project, it wasn't something that was feasible for its time scale and it was deemed to be out of scope. 
 \end{itemize}
-
+\end{itemize}
+    
 \pagebreak
 
 \subsection{Functional Specification}
 \label{sec:func_spec}
-Below is the functional specification of the software outlying what the application will do.
+
+Below is the functional specification of the software outlying what the application will do. These were determined following the current state analysis and interviews with the system administrators. 
 \subsubsection{Authentication and Security}
 \label{sec:spec_auth}
 \begin{enumerate}[label={\fbox{AUTH\_SPEC\_\arabic*}}, leftmargin=*, labelindent=\parindent]
@@ -452,8 +458,7 @@ The primary themes that were identified from the interviews were:
 
 \end{itemize}
 
-With these themes in mind, the low-fidelity prototypes were then modified to address them and to ensure that the base requirements were considered. These modifications are outlined in the next section (\ref{sec:high_fidelity_prototypes}). 
-
+With these themes in mind, the low-fidelity prototypes were then modified to address them and to ensure that the base requirements were considered. These modifications are outlined in the next section (\ref{sec:high_fidelity_prototypes}). s
 
 Aside from the themes above, the most notable takeaway from the interviews was that there is a lack of documentation, with interviewee one explaining ``There's a lot of undocumented scripts, a lot of undocumented servers. There's a lot of undocumented all over." This is a core aspect that the project has aimed to address, intending to create a system that makes it easier to document and maintain the server room. 
 
@@ -547,12 +552,12 @@ Before the app could be implemented with these designs, its architecture first n
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{images/top-level-archi.png}
+    \includegraphics[width=0.6\textwidth]{images/top-level-archi2.png}
     \caption{System Architecture}
     \label{fig:architecture}
 \end{figure}
 
-The app uses Netbox's inbuilt Django user authentication system, which allows for tokens to be created via an API call. This token is then used to authenticate the user to fetch data and make changes to the Netbox instance, returning any errors should a permission problem arise. For proposed stretch goals, should the app feature more information or processing, the requests will still go through the same NGINX reverse proxy but to a different proposed API endpoint. In this case, the API would be built using Python and Flask \cite{flask}. 
+The app uses Netbox's inbuilt Django user authentication system, which allows for tokens to be created via an API call. This token is then used to authenticate the user to fetch data and make changes to the Netbox instance, returning any errors should a permission problem arise. Further, an optional extension for non-Netbox functionality is shown. Here requests would still go through the same NGINX reverse proxy but to a different proposed API endpoint. In this case, the API would be built using Python and Flask \cite{flask}. This would be used to serve features such as the virtual reality (VR) experience mentioned previously.
 
 The app has been structured using a Data Access Object (DAO) pattern\cite{dao}, to separate the data access from the logic. In a way, replicating the data objects that Netbox uses itself. This allows for the app to be easily extended and modified in the future. This is especially important with the possible addition of features and modifications to the Netbox API.
 
@@ -560,6 +565,12 @@ Further, there is a separation between views, API calls and providers. This give
 
 \section{Implementation}
 \label{sec:implementation}
+
+The following sections outline the implementation of the project, including the technology stack as well as details of the implemented app and its features. To see the code for the app, please visit the GitHub repository \cite{keeptrackgithub}.
+
+\subsection{Technology Stack}
+\label{sec:technologies}
+
 As mentioned in the methodology section (Section \ref{sec:methodology}), the app was built using Flutter and its Dart programming language. Flutter enables the app to be built for both Android and iOS whilst also having a single codebase. By using Flutter's built-in libraries as well as third-party libraries, the requirements of the app were met. The following is a list of third-party libraries used in the app:
 \begin{itemize}
     \item \textbf{flutter\_dotenv} - Used to load environment variables from a .env file. This is used to store sensitive information such as the Netbox API URL and the API token \cite{dot_env}.
@@ -572,6 +583,9 @@ As mentioned in the methodology section (Section \ref{sec:methodology}), the app
 
 Additionally, based on the findings from J.Myka et al's comparative analysis of data entry method on mobile devices \cite{myka2019comparative}, the app uses a varying number of input fields based on the type of data being entered. For example, when searching for a device by its number, the app shows a numerical keyboard only. Additionally, the use of drop-down menus and filtering lists are used through the app to reduce the amount of data the user needs to scroll through.
 
+\subsection{Implemented App}
+\label{sec:implemented_app}
+
 Below are the final implementation screenshots of the app. The first screenshot (Left fig.\ref{fig:login}) is the login page, where the user can enter their Netbox credentials and log in. There is a range of functions that are run at the route of the app to ensure that the phone has an internet connection, the user is logged in and the token is valid. The user is redirected to this login page by default if the login credentials are invalid. The second screenshot (Right fig. \ref{fig:login}) is the sidebar menu, this can be accessed from any root page. This shows the user's username, and the option to use dark and light modes as well as the current Netbox domain. Finally at the bottom of the menu is the app log-out button.
 
 \begin{figure}[H]
@@ -580,11 +594,12 @@ Below are the final implementation screenshots of the app. The first screenshot 
     \caption{Login Page and Side Menu}
     \label{fig:login}
 \end{figure}
+
 By default, the user is shown the search connection page if/after they have logged in (Left fig.\ref{fig:search_connection}). This page allows the user to search for a device either by hierarchy or by label QR code/number. For searching by hierarchy, the user first selects the location, e.g. floor/room etc, then the rack/desk, the device and finally the interface. An example of the list is shown second from left fig.\ref{fig:search_connection}. Additionally, a screenshot showing the list of interfaces (2nd from right fig.\ref{fig:search_connection}) shows the use of a chip icon to show what devices are connected and what is not. If the user clicks on an interface that isn't connected it redirects the user to the add connection page with one side auto-populated with this interface and device. Finally, once the user has scanned/searched for the connection desired - they are shown the connection information page (Right fig.\ref{fig:search_connection}). This page shows the information on the connection, the devices and interfaces involved as well as the cable information. The user can also delete the connection and go directly to the modify connection page from this page.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{images/final_search.png}
+    \includegraphics[width=0.8\textwidth]{images/final_search.png}
     \caption{Searching and Viewing a Connection}
     \label{fig:search_connection}
 \end{figure}
@@ -593,17 +608,16 @@ The add connection page (Left fig.\ref{fig:add_connection}) remained fairly simi
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{images/final_add.png}
+    \includegraphics[width=0.8\textwidth]{images/final_add.png}
     \caption{Adding a Connection}
     \label{fig:add_connection}
 \end{figure}
 
- 
 To modify a cable (Left fig.\ref{fig:modify_connection}), the user can either scan the existing cable ID or type one in - On scan/type submission, if the cable exists the UI is populated with the cable information. This includes the cable description, cable ID and cable colour. The user can then choose from a tab view of the cable termination devices and interfaces. The user can then choose the new termination device and interface and submit the changes. Here the app will automatically generate the new Cable Label with the scheme `DeviceA:InterfaceA \verb|>| DeviceB:InterfaceB'. This was to create a homogenous naming scheme and follow advice from the paper written by the CPNI \cite{cpni}. The user is then shown a confirmation dialogue showing the connection changes, and the user can then confirm the changes. Then, the API deletes the existing cable and creates a new one with the new information. Once completed the app loads the new connection automatically with the new cable ID. One big change here is that the user can now only modify the cable termination device and interface. This is due to the change in the approach to labelling cables. The cable itself is a fixed entity, so its colour and type should not be changed. This is covered more in-depth in the related technical work section (Section \ref{sec:technical}).
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{images/final_modify.png}
+    \includegraphics[width=0.8\textwidth]{images/final_modify.png}
     \caption{Modifying a Connection}
     \label{fig:modify_connection}
 \end{figure}
@@ -627,36 +641,80 @@ The modify connection page (Left fig.\ref{fig:modify_connection}) took the most 
 
 \section{Evaluation \& Testing}
 \label{sec:evaluation}
-Once the app was completed, I conducted a user study with 3 participants to evaluate the implementation and design. The process of this study is outlined in the methodology section \ref{sec:user_observations_and_interviews}. Below are the observations and changes that were made to the app based on the feedback from the participants. For the entire list of findings, please see Appendix \ref{sec:appendix_observations}. 
+
+Following the development of the app and the completion of the user study, the app was evaluated to determine its effectiveness and usability. The testing was split into two parts, firstly the app was tested to ensure that it met the requirements set out in the functional requirements section (Section \ref{sec:func_spec}). Secondly, the app was tested with 3 participants to evaluate the implementation and design. The process of this study is outlined in the methodology section \ref{sec:user_observations_and_interviews}. 
+
+Below is an exhaustive table of the requirements and whether they were met or not.
+
+\begin{table}[H]
+    \def\arraystretch{1.5}
+    \begin{tabular*}{\textwidth}{l|l|l}\toprule
+    \textbf{Requirement} & \textbf{Met} & \textbf{Notes} \\ \midrule
+    \ref{spec_auth_1} & \checkmark & \\ 
+    \ref{spec_auth_2} & \checkmark & \\
+    \ref{spec_auth_3} & \checkmark & Integrated at root level of the app \\
+    \ref{spec_auth_4} & \checkmark & The app does a root API call and verifies the authentication \\
+    \ref{spec_auth_5} & \checkmark & The user is immediately redirected to login with an invalid token.  \\
+    \ref{spec_auth_6} & \checkmark & \\
+    \ref{spec_auth_7} & \checkmark & The token is stored securely using flutter secure store \cite{securestorage} \\
+    \ref{spec_asset_1} & \checkmark & Assets being devices and Racks \\
+    \ref{spec_asset_2} & \checkmark & The solution for editing a cable is addressed in section \ref{sec:challenges} \\
+    \ref{spec_asset_3} & \checkmark & Assets are referred to as devices only.\\
+    \ref{spec_asset_4} & \checkmark & \\
+    \ref{spec_asset_5} & \checkmark & The app's requirement to scan barcodes was removed. \\
+    \ref{spec_asset_6} & \checkmark & \\
+    \ref{spec_asset_7} & \checkmark & \\
+    \ref{spec_ui_1} & \checkmark & More information on this is discussed in section \ref{sec:eval_specifications}\\
+    \ref{spec_ui_2} & \checkmark &  \\
+    \ref{spec_ui_3} & \checkmark &  \\
+    \ref{spec_ui_4} & \checkmark &  \\
+    \ref{spec_ui_5} & \checkmark &  
+    \end{tabular*}
+    \caption{Specification Evaluation}
+    \label{tab:specification_evaluation}
+    \end{table}
+
+
+\subsection{User Testing}
+\label{sec:eval_user_testing}
+
+Below are the observations and changes that were made to the app based on the feedback from the participants. For the entire list of findings, please see Appendix \ref{sec:appendix_observations}. 
+
+To begin, all three participants were able to complete all the tasks that were set out for them. Additionally, they all shared a positive sentiment towards the app and one interviewee particularly liked the design. This was a good sign that the app was intuitive and easy to use.
 
 The primary changes were focused on form entry, with all three observations having comments on the entry of data into the app. The main changes were the addition and changes to the labels, hints and error handling around the text boxes and drop-down menus. These changes were made to make the app more intuitive and easier to use and specifically address points 1, 9, 10, 14 and 15 (Appendix \ref{sec:user_observations_and_interviews}). 
 
 Additionally, there were a few bugs that were found during the user study, which were fixed. Specifically, on the modify connection page there was a bug where a cable's terminating interfaces were not being loaded correctly to the fields (Appendix \ref{sec:user_observations_and_interviews}[8]). Secondly, on the add connection page, there was a bug where if there was an error in the entry it would show a white dialogue rather than the error itself (Appendix \ref{sec:user_observations_and_interviews}[13]). Finally, there was a bug identified on the search by connection page where the location search field was not working correctly (Appendix \ref{sec:user_observations_and_interviews}[2]). These bugs were fixed and the app was retested to ensure that they were fixed.
 
-\pagebreak
 
-Finally, there were a set of feature and design suggestions that were made by the participants. Some of these were implemented, specifically, points 3, 6, 7, 11, 12 and 19 (Appendix \ref{sec:user_observations_and_interviews}). Other suggestions were not implemented due to time constraints and or technical limitations, such as points 4 and 5. Primarily a good suggestion was to integrate the app with a printer system to allow for the printing of labels (Appendix \ref{sec:user_observations_and_interviews}[20]). This would make the labelling of cables much easier and quicker. However, this would require significant research and development time to implement.
-
-Once these suggestions and changes were made, the app was retested to ensure that the changes did not break any functionality. This then made the final version of the app which is shown in the implementation section above (Section \ref{sec:implementation}).
-
+\subsection{App Testing}
+\label{sec:eval_app_testing}
 To test the app during its development and final implementation, a full run-through of all its features was conducted. This was done to ensure that the app was working as intended and that there were no bugs. This was done by myself and confirmed via the observations and interviews conducted during the user study. To ensure that the app was working as intended, I had a live Netbox instance running on a separate machine and the app was connected to this instance of Netbox. This allowed me to test the app as if it was being used in a real environment. For example, if a connection was added, ensure it was added to the Netbox instance and with the correct information. 
 
 Additionally, to ensure that the API calls were working correctly, I used the Postman application to test all the calls the app was making. This allowed me to see the response from the API and ensure that the app was receiving the correct data. Additionally, Postman provided great aid in the development of the app, as it allowed me to test the API calls and see the response before implementing them in the app.
 
 Aside from the bug mentioned in section \ref{sec:challenges} and the impacts it had on the `Modify' connection feature, the app has been completed without any major issues. The app is fully functional and can be used in a real environment. 
 
+Finally, there were a set of feature and design suggestions that were made by the participants. Some of these were implemented, specifically, points 3, 6, 7, 11, 12 and 19 (Appendix \ref{sec:user_observations_and_interviews}). Other suggestions were not implemented due to time constraints and or technical limitations, such as points 4 and 5. Primarily a good suggestion was to integrate the app with a printer system to allow for the printing of labels (Appendix \ref{sec:user_observations_and_interviews}[20]). This would make the labelling of cables much easier and quicker. However, this would require significant research and development time to implement.
+
+Once these suggestions and changes were made, the app was retested to ensure that the changes did not break any functionality. This then made the final version of the app which is shown in the implementation section above (Section \ref{sec:implementation}).
+
+\subsection{Evaluation of Specifications}
+\label{sec:eval_specifications}
+
 In regards to the functional requirements specified in section \ref{sec:func_spec}, the app meets all of them, but with some slight changes. Specifically, for requirement \ref{spec_asset_5}, the app no longer needs the ability to scan barcodes. Further, requirement \ref{spec_asset_3} is not fully met as the app only allows for the searching of devices rather than all assets. However, this was deemed to be an issue of specification granularity and not a functional issue. Additionally, specification \ref{spec_ui_1} was met with the use of the Material Design Theme builder \cite{material3ColourTool}. The tool was used to create a custom theme for the app, which was then used to style components. The theme the tool generates uses an algorithm which creates a colour palette that has a high contrast ratio. This ensures that the app is accessible to all users. Each colour combination is tested for accessibility against the WCAG 2.0 guidelines \cite{caldwell2008web} and is at minimum level AA conformant.
+
 \pagebreak
 \section{Summary and Reflections}
 \label{sec:summary}
 \subsection{Project Management}
 \label{sec:project_management_summary}
 
-The project management was split across two primary tools, Trello and a Gantt chart. Trello was used to aid in the Kanban agile methodology approach. Where new tasks were added to the backlog, and then moved to the `To Do' list when they were ready to be worked on. Once a task was being worked on, it was moved to the `Doing/Waiting' list. Once the task was completed, it was removed. Additionally, there was an `Issue' list for tasks that faced issues such as API bugs. This allowed for a clear overview of the project and what tasks were being worked on. Additionally, it allowed for the project to be broken down into smaller tasks, which made it easier to manage and complete. An example of the Trello board can be seen in Appendix \ref{sec:trello_board}.
+The project management was split across two primary tools, Trello and a Gantt chart. Trello was used to aid in the Kanban agile methodology approach. Where new tasks were added to the backlog, and then moved to the `To Do' list when they were ready to be worked on. Once a task was being worked on, it was moved to the `Doing/Waiting' list. Once the task was completed, it was removed. Additionally, there was an `Issue' list for tasks that faced issues such as API bugs. This allowed for a clear overview of the project and what tasks were being worked on. Further, it allowed for the project to be broken down into smaller tasks, which made it easier to manage and complete. An example of the Trello board can be seen in Appendix \ref{sec:trello_board}. Trello was used due to its ease of use and my historical success with it. In the past, I have used Trello to manage group projects as well as examination seasons and it has proved to be a great tool for project management.
 
 During weekly meetings with the project supervisor, we discussed the progress made and the work that needs to be completed. To keep track of the discussions, a document was maintained. At each meeting, I would write up a summary of topics that I wanted to discuss, and then during the meeting add notes to each section. Then following the meeting, I would review the Trello board to see what tasks I had completed and what tasks I needed to complete. Initially, I didn't assign dates to each task this was changed quickly after failing to achieve tasks in coordination with the work plan. Additionally, each task is also colour coded based on work type.
 
-The overall project management was aided by the Gantt chart. This allowed for a clear overview of the project and the tasks that needed to be completed. The chart took three revisions, initial, interim and final. The initial chart was created at the start of the project, then the interim was an updated version during the time of the interim report for the next stages. Finally, the final chart was created at the end of the project to show the final stages of the project. Primarily to reflect the longer development time than initially planned. The initial and final Gantt charts can be seen in Appendix \ref{sec:init_gantt_charts} and \ref{sec:updated_gantt_charts}. The granularity for durations of tasks was split into weeks which gave an accurate but flexible overview of the project.
+The overall project management was aided by the Gantt chart. This allowed for a clear overview of the project and the tasks that needed to be completed. The chart took three revisions, initial, interim and final. The initial chart was created at the start of the project, then the interim was an updated version during the time of the interim report for the next stages. Finally, the final chart was created at the end of the project to show the final stages of the project. Primarily to reflect the longer development time than initially planned. The initial and final Gantt charts can be seen in Appendix \ref{sec:init_gantt_charts} and \ref{sec:updated_gantt_charts}. The granularity for durations of tasks was split into weeks which gave an accurate but flexible overview of the project. The Gantt chart provided a useful aid in checking the progress of the project and ensuring that the project was on track. Further, it helped me identify areas when and where the project was falling behind and allowed me to re-plan the project to ensure that it was completed on time.
 
 The final Gantt chart was split into five main sections and six milestones:
 \begin{itemize}[noitemsep]
@@ -717,6 +775,7 @@ Due to the project involving human participants, I have had to complete the full
 Additionally, there are notices regarding the Data Protection Act (2018). The data collected was stored on a password-protected computer and will be deleted after the project has been completed.
 
 I believe that from a broader perspective, this project has not had significant implications for society. However, I believe that it has had a positive impact on the System Administrators (RST) and the wider system administrator community. I believe with the project being open source and with a focus on HCI, it is accessible to a wide range of people. Finally, giving DCIM software another platform to be accessed, I believe that the project has provided a positive step towards the future of DCIM software and data centre management.
+
 \pagebreak
 
 \bibliographystyle{ieeetr}
@@ -771,7 +830,7 @@ I believe that from a broader perspective, this project has not had significant 
     \item Make missing fields on the add connection page more obvious - red text or highlight.
     \item The home button on the interface display isn't clear. 
     \item What interfaces the cable is connected to is not clear.
-    \item Button to go from hierarchy to the device itself. 
+    \item Button to go from hierarchy to the device itself.
     \item Loading interfaces indication on add and modify connection.
     \item Further work suggestion to integrate the new connection addition to a printing system.
 \end{enumerate}

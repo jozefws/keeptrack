@@ -165,6 +165,11 @@ J.~Sieniawski, ``\relax index out of range bug for patch requests to cables api
   - issue 11901.'' URL:
   \url{https://github.com/netbox-community/netbox/issues/11901}, Mar 2023.
 
+\bibitem{securestorage}
+J.~Steenbakker, ``flutter secure storage.'' URL:
+  \url{https://pub.dev/packages/flutter_secure_storage/}, 2022.
+\newblock Accessed: 04-12-2022.
+
 \bibitem{caldwell2008web}
 B.~Caldwell, M.~Cooper, L.~G. Reid, G.~Vanderheiden, W.~Chisholm, J.~Slatin,
   and J.~White, ``Web content accessibility guidelines (wcag) 2.0,'' {\em WWW
