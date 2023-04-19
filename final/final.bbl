@@ -13,6 +13,7 @@ J.~Rosenblatt, ``Facebook photo-scanning suit is a multibillion-dollar
   threat.'' URL:
   \url{https://www.bloomberg.com/news/articles/2018-04-16/facebook-must-face-group-suit-claiming-it-stole-biometric-data},
   Apr 2018.
+\newblock Accessed: 21-03-2023.
 
 \bibitem{ideal_server_pic}
 J.~W. Sieniawski, {\em More ideal and realistic server space}.
@@ -106,10 +107,12 @@ V.~Braun and V.~Clarke, ``Using thematic analysis in psychology,'' {\em
 \bibitem{material3ColourTool}
 M.~Design, ``Material theme builder: Figma community.'' URL:
   \url{https://www.figma.com/community/plugin/1034969338659738588Material-Theme-Builder}.
+\newblock Accessed: 21-03-2023.
 
 \bibitem{material3DesignKit}
 M.~Design, ``Material 3 design kit: Figma community.'' URL:
   \url{https://www.figma.com/community/file/1035203688168086460/Material-3-Design-Kit}.
+\newblock Accessed: 21-03-2023.
 
 \bibitem{figma}
 Figma, ``Figma: the collaborative interface design tool.'' URL:
@@ -121,6 +124,7 @@ Figma, ``Figma: the collaborative interface design tool.'' URL:
   in 2022.'' URL:
   \url{https://www.uxdesigninstitute.com/blog/best-prototyping-tools-for-ux-designers/},
   02 2022.
+\newblock Accessed: 04-12-2022.
 
 \bibitem{materialDesign}
 \relax Material~Design, ``Material design 3.'' URL:
@@ -129,6 +133,7 @@ Figma, ``Figma: the collaborative interface design tool.'' URL:
 
 \bibitem{flask}
 Pallets, ``Flask.'' URL: \url{https://palletsprojects.com/p/flask/}.
+\newblock Accessed: 21-03-2023.
 
 \bibitem{dao}
 Oracle, ``Design patterns: Data access object.'' URL:
@@ -143,27 +148,33 @@ J.~Sieniawski, ``Keeptrack.'' URL: \url{https://github.com/jozefws/keeptrack},
 \bibitem{dot_env}
 mockturtl, ``Flutter dotenv.'' URL:
   \url{https://pub.dev/packages/flutter_dotenv}, Aug 2021.
+\newblock Accessed: 16-04-2023.
 
 \bibitem{secure_sec}
 J.~Steenbakker, ``Flutter secure storage.'' URL:
   \url{https://pub.dev/packages/flutter_secure_storage}, Feb 2023.
+\newblock Accessed: 16-04-2023.
 
 \bibitem{icon_launch}
 M.~O'Sullivan, ``Flutter launcher icons.'' URL:
   \url{https://pub.dev/packages/flutter_launcher_icons}, Apr 2023.
+\newblock Accessed: 16-04-2023.
 
 \bibitem{dropdown}
 salimdev, ``Dropdown search.'' URL:
   \url{https://pub.dev/packages/dropdown_search}, Feb 2023.
+\newblock Accessed: 16-04-2023.
 
 \bibitem{searchable}
 Unknown, ``Searchable listview.'' URL:
   \url{https://pub.dev/packages/searchable_listview}, Mar 2023.
+\newblock Accessed: 16-04-2023.
 
 \bibitem{netboxBug}
 J.~Sieniawski, ``\relax index out of range bug for patch requests to cables api
   - issue 11901.'' URL:
   \url{https://github.com/netbox-community/netbox/issues/11901}, Mar 2023.
+\newblock Accessed: 16-04-2023.
 
 \bibitem{securestorage}
 J.~Steenbakker, ``flutter secure storage.'' URL:
