@@ -1,0 +1,98 @@
+\subsection{Interview 1}
+\label {sec:thematicAnalysisInterview1}
+\begin{enumerate}  
+    \item Many systems in the workplace are in "legacy mode".
+    \item There is a knowledge gap due to the pandemic and staff being moved around.
+    \item Documentation is lacking and not helpful in troubleshooting.
+    \item When things go wrong, it takes a lot of time to diagnose and fix them.
+    \item There is a reliance on poorly documented "clever solutions".
+    \item There needs to be more flexibility and adaptability in the workplace.
+    \item There are many outdated servers that need to be replaced.
+    \item There is a lot of work to do in terms of reorganizing and replatforming systems.
+    \item There are multiple single point failures in the workplace.
+    \item There are unique challenges in balancing outdated and modern technology.
+    \item Third parties want to assess the data centre to see if it can be integrated into a larger facility. The school is hesitant about this because they want to maintain their current system and way of working.
+    \item Staff members have already expressed resistance to the idea of integrating into a larger facility.
+    \item Interviewee 1 is trying to get the CVL cluster into a state where it is clearly managed to the best practices
+    \item Interviewee 1 and Interviewer discuss the importance of well-labelled and well-thought-out cabling and documenting.
+    \item They mention the need for a dynamic system like Netbox to help with documentation.
+    \item They discuss the potential of allowing students access to the server room to learn about server management.
+    \item Interviewee 1 and Interviewer discuss the lack of historical data and the need for a journaling/auditing feature once they have a clean system.
+    \item It would be beneficial to capture a document that outlines a system's specifications, owner, and status, as well as the Ansible config used to build it.
+    \item A third party recommends killing and rebuilding virtual machines rather than upgrading them through Yum.
+    \item Changes made to a system should be documented in a journal to make troubleshooting easier in the future.
+    \item An inventory system for tracking physical devices (e.g., servers, switches, cables) is needed, and it should use unique identifiers for each connection.
+    \item QR codes should be placed on the front and back of servers to make identifying them easier.
+    \item Sockets on the back of servers are poorly annotated and need some kind of identifier.
+    \item A stretch goal is to develop an AR feature for visualizing the inventory system.
+    \item The project should be designed with future improvements in mind, as new people will come and go and may need to add to or modify the system.
+    \item Interviewee 1 has seen AR apps for data centres, but they look awful, and the students could do something better.
+    \item AI can do better than a human being in certain tasks, such as pathology.
+    \item There is a need for a simple dial to show cooling capacity in the data centre.
+    \item Power cables and distribution boards need to be documented and visualised.
+    \item Netbox is limited in terms of adding connections and searching, and its hierarchical structure is not ideal for adding devices.
+    \item Sunbird is too much for their needs.
+    \item There is a need for an app to navigate the data centre, like Pathfinder Mobile, to identify which devices are plugged in and their connections.
+    \item Interviewee 1 likes the hierarchical view in the master plan, especially in the rack view.
+    \item The hierarchical view is useful for visual navigation and interaction in the academic context.
+    \item Interviewee 1 acknowledges the importance of having accurate and up-to-date documentation of network points and devices in different rooms and locations within the building.
+    \item Interviewee 1 suggests combining the hierarchical view with documenting network cabinets or comms rooms in the future.
+    \item Interviewee 1 mentions the idea of using an app to capture live socket data to be able to trace back connections.
+    \item Interviewee 1 suggests adding the tracing feature after Interviewer’s dissertation.
+\end{enumerate}
+
+\subsection{Interview 2}
+\label {sec:thematicAnalysisInterview2}
+\begin{enumerate}
+    \item Interviewee 2 thinks that the current state of the server has massively improved and that the future of it is great.
+    \item The lighting improvements has made a massive difference, and power distribution has been sorted out properly without tripping.
+    \item Documenting and organizing the layout of cables is important, and a focus view on Netbox could be useful.
+    \item Replicating the journaling features of networks on an institute level could be beneficial.
+    \item End of life and warranty information should be easily accessible in an alert.
+    \item QR codes could be implemented to simplify the process of adding connections to assets.
+    \item The idea of scanning cables to see the trace of connections is good.
+    \item Too much information on one device can be overwhelming.
+    \item AR representation of the server room and its devices would be ideal.
+    \item Sunbird is too expensive and has too much information.
+    \item Netbox is easier to use and visually better than Sunbird.
+    \item A visual representation, such as AR, is easier to relate to than data.
+    \item Interviewee 2 likes the visual arrangement of Netbox and thinks it is feature-rich.
+    \item Having all the information in one place is helpful.
+    \item Knowing all the information beforehand is brilliant for diagnosing issues without a site visit.
+    \item The app could almost tell you what was going wrong if it's DNS DHCP issue.
+    \item People move rooms without telling you, so having an inventory is useful.
+    \item It would be good to have a history of changes to data.
+    \item The set tags that the university uses could be used for each PC asset.
+    \item A third party had all the information initially before all the walls in the building moved, and he could filter it down to Mac address and data point per switch.
+\end{enumerate}
+
+\subsection{Interview 3}
+\label {sec:thematicAnalysisInterview3}
+\begin{enumerate}
+    \item The lack of digital or physical records for devices in the server room is the biggest problem.
+    \item Modifications or upgrades of the servers are difficult due to the lack of documentation, especially for cables and console panels.
+    \item Sometimes it's hard to access the servers or devices, and most of them don't have a warranty anymore.
+    \item The error information needs to be gathered, and it's important to have well-considered ways to present data and record it.
+    \item The server room was not designed for the purpose, and it's not necessary to have a complex system or a massive software for recording data.
+    \item The app needs to have an easy and human-friendly way to add information, and form applications would be helpful.
+    \item Providing some basic tools like ping and console access remotely would be helpful.
+    \item Safety risks need to be considered for providing wireless signal or access to VLAN, and using a proxy could be a solution.
+    \item It would be interesting to simulate live sessions with a proxy, and existing solutions should be explored.
+    \item Interviewee 3 suggests that only certain people should be able to access the application.
+    \item Interviewee 3 proposes adding labels to devices to make it easier to locate them and scan with the same method as cables.
+    \item Interviewee 3 suggests improving the process of adding a connection by allowing users to scan device A, scan device B, and choose the interface.
+    \item Interviewee 3 agrees that a view connection feature that allows users to scan the cable and search by device would be helpful.
+    \item Interviewee 3 suggests that a network topology feature would be useful for viewing the entire topology of the room.
+    \item Interviewee 3 states that adding one interface at a time is fine for normal servers but suggests adding an option to create multiple interfaces in bulk for devices like switches.
+    \item Interviewee 3 recommends simplifying the process of showing devices by just scanning the device label and including information about interface connections.
+    \item There is a need to include information about hardware settings, such as CVL, for some servers.
+    \item There should be a way to view devices across different racks and filter them efficiently.
+    \item Adding new devices and fields is slow and needs improvement.
+    \item Interviewee 3 prefers Netbox over DC Track as it is more lightweight and less overwhelming.
+    \item There is a need to add a feature for upgrading or modifying existing devices, such as changing connections.
+    \item Interviewee 3 suggests adding quick links to important information, but it should be managed properly to prevent clutter.
+    \item Interviewee 3 prefers to use laptop instead of mobile app for filtering and searching assets.
+    \item Adding device make and model templates manually is tedious.
+    \item Existing tools are not designed for mobile phones and need to be more human-readable.
+    \item The viewing experience of Patch Manager on mobile is not great, but the UI looks better on the platform.
+\end{enumerate}

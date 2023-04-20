@@ -1,0 +1,1789 @@
+00:00:01 Interviewer
+Hello. Yeah. Interviewee 1. Six of the 12. Are you? Right. OK, so what's like, like an advert for for your own.
+00:00:21 Interviewer
+Well, right. What what what?
+00:00:25 Interviewer
+Are your current opinions on this current state?
+00:00:28 Interviewee 1
+How many things?
+00:00:32 Interviewee 1
+Ageing, everything's ageing. Everything is in some sense.
+00:00:39 Interviewee 1
+And a legacy mode lid pickle bomb.
+00:00:46 Interviewee 1
+Let's say there's a lot of.
+00:00:48 Interviewee 1
+A lot of issues coming to head at one point in time, a lot of our Brexit's coming towards end of life, a lot of undocumented scripts, a lot of undocumented servers.
+00:01:05 Interviewee 1
+That there's a lot of undocumented.
+00:01:07 Interviewee 1
+All over the place, there's a.
+00:01:12 Interviewee 1
+Because of pandemic and because of staffing issues, because of people being seconded away, there is a lot of.
+00:01:22 Interviewee 1
+There's a lot that there's a large knowledge gap.
+00:01:27 Interviewee 1
+That isn't filled by warbanner and wave of documentation. I mean people as they left didn't put documentation into place, but that documentation is hard to find and skimpy at best, very patchy. It's it's it documents the best case scenario.
+00:01:47 Interviewee 1
+So I know our our our backup document will tell you how the backup.
+00:01:51 Interviewee 1
+Works when it works.
+00:01:53 Interviewee 1
+It doesn't say anything about it.
+00:01:56 Interviewee 1
+Any bad modes or any way to work around bowl modes? Any common fail modes might be encountered and and and that's that's difficult to live with, yeah.
+00:02:08 Interviewer
+Because once things go.
+00:02:09 Interviewer
+To wrong then.
+00:02:10 Interviewee 1
+Yeah, you are basically debugging a system.
+00:02:15 Interviewee 1
+Live in production.
+00:02:18 Interviewee 1
+With no documentation and no knowledge of.
+00:02:24 Interviewee 1
+How things?
+00:02:24 Interviewee 1
+Book and you know you should be blind, hoping you're not gonna make it worse.
+00:02:30 Interviewer
+Yeah. OK.
+00:02:34 Interviewer
+I mean.
+00:02:36 Interviewer
+I mean I we, I.
+00:02:37 Interviewer
+Mean we've both witnessed first hand. Really. I mean, you're obviously everyday, but how it goes when things go wrong, it just takes an extended massive amount of time because, yeah.
+00:02:47 Interviewee 1
+Yeah, yeah. I mean, yesterday we had, but last week. So. So last week, one of our of it obviously is your where one of our 15 year old services started to disc fail and that server provides DNS and DHCP. So we lost the ACP and there is no.
+00:03:06 Interviewee 1
+There's no tooling to say what our problem is. As soon as it happens, so we don't get alerts and I came in well, I've got a teams message.
+00:03:16 Interviewee 1
+Also speaking my rabbit and saying don't mean to bother you, but don't.
+00:03:20 Interviewee 1
+Have any network?
+00:03:22 Interviewee 1
+So I headed.
+00:03:22 Interviewee 1
+In trying to diagnose things in the car.
+00:03:26 Interviewee 1
+My phone.
+00:03:28 Interviewee 1
+And then got in checked the switches were switches were fine. We don't.
+00:03:32 Interviewee 1
+Have any we?
+00:03:34 Interviewee 1
+We don't have any alerts on the switches, no. So we have to ask people if there are any alerts.
+00:03:39 Interviewee 1
+On the switches.
+00:03:42 Interviewer
+How to apply?
+00:03:43 Interviewee 1
+They were quite.
+00:03:44 Interviewee 1
+Quick in that in that defence to say that there were no problems with switches, but by the time I've done that, I.
+00:03:51 Interviewee 1
+Already checked the.
+00:03:51 Interviewee 1
+Lights. And then I had to diagnose what the problem was.
+00:03:56 Interviewee 1
+Find computing with that problem and then work out and then go through. You know, emailing William back and forth.
+00:04:03 Interviewee 1
+If you want him to say DSP.
+00:04:06 Interviewee 1
+And then find out which is the which of our DHCP server, then which of our services aren't.
+00:04:11 Interviewee 1
+The DHCP servers.
+00:04:12 Interviewee 1
+And then find the problem. And then yesterday we.
+00:04:14 Interviewee 1
+Had a roll on.
+00:04:15 Interviewee 1
+Problem, which was that said that the.
+00:04:19 Interviewee 1
+Staff, the next server was missing. Figured in tiny tiny misconfiguration in its network. Instead of DS1DS2 DS 3.3 different DNS servers, whoever.
+00:04:32 Interviewee 1
+Look at it.
+00:04:33 Interviewee 1
+Had the DNS one IP address denotes one IP address, DNS one IP address. So the instead of there being a chain of cascade of using DNS, it was all thought it was defaulting down and there was one DNS server and that was folly. The DNS server was collapsed last week, so it got DNS and so we had to.
+00:04:42 Interviewer
+Just different ones.
+00:04:53 Interviewee 1
+Find out why there was no out gap and then we tried to ping things and the things we were pinging were in its host files, so you know.
+00:05:00 Interviewer
+It's just endless. Just yeah.
+00:05:01 Interviewee 1
+There's there's things in host files and things not in host files, and then we then then I worked out what the problem was and and then, you know, then fixed it. But then you know that's.
+00:05:12 Interviewee 1
+That was half an hour, 45 minutes of trying. You know, you start with, you start with what problems, which is.
+00:05:19 Interviewer
+One for girl.
+00:05:20 Interviewee 1
+It wasn't mounting the file system and then you just checking that you have to cheque NFS on two systems and then you have.
+00:05:26 Interviewee 1
+To then you go for the logs and you find that can't be held up. Then you're getting held up and you're getting.
+00:05:31 Interviewee 1
+Held up and cheque your firewalls.
+00:05:33 Interviewee 1
+And you'll work out which firewalls running it was running shorewall, but it wasn't.
+00:05:38 Interviewee 1
+I mean I and you know it's it's that process and then you realise that it's a DNS problem and then you realise then you're lucky. Cheque.
+00:05:46 Interviewee 1
+It's network config and it's.
+00:05:47 Interviewee 1
+All the way right down to the bottom.
+00:05:49 Interviewee 1
+So we have to.
+00:05:50 Interviewee 1
+Test it from top to bottom.
+00:05:52 Interviewee 1
+And the top of the networking stack, the application level right the way down to driver config and.
+00:05:58 Interviewee 1
+There's like at the lowest level and and there's no documentation in this, there's there's no alerts on these, and you know this. This server was set up differently to.
+00:06:10 Interviewer
+Maybe 1?
+00:06:11 Interviewee 1
+Mersey and.
+00:06:14 Interviewee 1
+It should be from the same templates because Avon banned applied as soon as the and seven should all be from the same template.
+00:06:20 Interviewee 1
+They're basically the same thing, just with different users using it, but clearly they're not because one of them lost DNS because it's manual configuration of its.
+00:06:31 Interviewer
+And looking that.
+00:06:32 Interviewee 1
+I don't know. It's just and it's it's, it's things like that it it's it's it's things like that that's a that's a great example of things that go wrong in this place.
+00:06:43 Interviewer
+Once they do go wrong.
+00:06:44 Interviewer
+Then you're in cover. Then it's like a.
+00:06:46 Interviewee 1
+Our reliance on auto FS to mount.
+00:06:48 Interviewee 1
+File systems when people log in, I mean it's fine.
+00:06:51 Interviewee 1
+But it makes it impossible for it. So if the student says I can't log into Mersie, you can't debug it unless they're logged into mercy because you can't see what missions are there.
+00:07:00 Interviewee 1
+So somebody saying I can't my my website isn't running because and all that permissions issue and then you look to see the home area, it's not there because it mounted when they log in. And yeah, you have to basically sit them down and say.
+00:07:11 Interviewee 1
+Log in and I'll diagnose you, yeah.
+00:07:14 Interviewer
+Because once again, yeah.
+00:07:16 Interviewee 1
+People like people like, yeah, historically like the clever solutions, poorly documented, clever solutions rather than well documented, dumb solutions which.
+00:07:26 Interviewee 1
+Reliable and there's a lot.
+00:07:28 Interviewee 1
+Of clever solutions that have been put in place.
+00:07:32 Interviewee 1
+With code that you know, CS lectures look at and say that code is awful and the solar bone structure is underpinned by that.
+00:07:37 Interviewer
+Yeah, stretch.
+00:07:41 Interviewee 1
+And and so we have our Internet system because somebody didn't like the universities, our that system. And at the time, I imagine it was, it was bad and they are still saying they don't like the university adapt system.
+00:07:52 Interviewee 1
+But the.
+00:07:52 Interviewee 1
+University. That system? It doesn't.
+00:07:55 Interviewee 1
+Have nearly as many problems as it used to.
+00:07:57 Interviewee 1
+Have, but it hasn't been.
+00:07:58 Interviewee 1
+Checked recently, so we're still saying, well, we don't using.
+00:08:01 Interviewee 1
+And and and causing problems all the way down and then somebody.
+00:08:06 Interviewee 1
+Will come up with a.
+00:08:07 Interviewee 1
+Crafty reason they don't like the university's LDAP.
+00:08:10 Interviewee 1
+System and they're.
+00:08:11 Interviewee 1
+Because they're justifying historical decisions that have that.
+00:08:16 Interviewee 1
+You know, the facts have changed and but we're still sticking with. We don't like that because of X what was said and there are other reasons, things like these things rather than Xyl said. But could we just?
+00:08:28 Interviewee 1
+Maybe just.
+00:08:30 Interviewee 1
+Make people's lives easier.
+00:08:32 Interviewee 1
+By adapting ourselves a little bit, yeah, as we need to be.
+00:08:36 Interviewee 1
+A little bit more flexible.
+00:08:39 Interviewer
+It's it's like the freedom of Italy.
+00:08:41 Interviewee 1
+They like the freedom of that, that you've talked to people and that's all we, we've, we've.
+00:08:44 Interviewee 1
+Got our own DHCP and.
+00:08:45 Interviewee 1
+DNS in schools like. Yes, that's fine.
+00:08:49 Interviewee 1
+But you're not the people looking after it when it goes wrong. You're not the people fixing it. Yeah, and it goes wrong. Increasing it goes down as it ages, and it's, you know, it's got vulnerabilities.
+00:08:53 Interviewer
+You're my mountain has gone wrong.
+00:09:01 Interviewee 1
+Now, and we're not patching because.
+00:09:04 Interviewee 1
+It's running on Solaris 5.
+00:09:08 Interviewee 1
+And CentOS 6 these cannot be patched. They have to be replaced and they will replace them, which replace them with this university. Even better money.
+00:09:19 Interviewer
+Well, exactly. Well, well, increasingly.
+00:09:23 Interviewer
+Investing in it as well, I guess. Yeah. OK.
+00:09:29 Interviewee 1
+I mean, I feel like.
+00:09:29 Interviewer
+It's quite a very like a very abstract question.
+00:09:33 Interviewer
+What do you think?
+00:09:33 Interviewer
+Can be improved.
+00:09:35 Interviewee 1
+I mean.
+00:09:38 Interviewee 1
+Quickly, easily. Not much. No. Yeah, that's a problem.
+00:09:41 Interviewer
+You know.
+00:09:43 Interviewee 1
+It's, you know what you were. We're we're we're doing.
+00:09:46 Interviewer
+A lot already.
+00:09:47 Interviewee 1
+Which we know we do know what needs to be improved.
+00:09:51 Interviewee 1
+We need to we need to completely platform all of our virtual machines and all of our servers because there's a train heading down tracks which is lack of patching for centre.
+00:10:03 Interviewee 1
+7 The best case scenario of what we have in our service, but we need to.
+00:10:08 Interviewee 1
+We need to get rid of ancient servers.
+00:10:11 Interviewee 1
+We need we, but more, you know, step back.
+00:10:15 Interviewee 1
+From that we need to know what services are, who has them, who asked for them.
+00:10:20 Interviewee 1
+Do they still need them? Because I think if you said took an academic and said do you need this server and let's say I still running yeah, good 50% of the time.
+00:10:32 Interviewee 1
+And it's no, it's burning carpet.
+00:10:34 Interviewee 1
+Burning electricity, getting camped outside if they're used and and giving us a headache, we're in fact just be shut down and you know, a lot of these things, but that everything is, everything is independent, you know, we could we could shut down the legacy MySQL server by exporting the one database on it.
+00:10:54 Interviewee 1
+Porting it to the web server and Web SQL database and then just porting over and shutting it down. Yeah, but that relies on us having the web server MySQL database up, which relies on us having confidence that we're not.
+00:11:05 Interviewee 1
+Going to kill it by.
+00:11:06 Interviewee 1
+Moving servers down from one place to another, which is.
+00:11:09 Interviewee 1
+Depending on network going into and power going in and everything is independent and they've got.
+00:11:14 Interviewee 1
+A big stack.
+00:11:16 Interviewee 1
+Of of of.
+00:11:16 Interviewee 1
+Work compressing as as, as as time time pushes it on by and and and.
+00:11:22 Interviewee 1
+And there's just I feel going to be an explosion of work once, once one pressure thing is released of of power and network, there's gonna be an explosion of work because suddenly we'll be ohh.
+00:11:34 Interviewee 1
+It can move the service down, which is an enormous job, and then we can reconfigure the anywhere, which is an enormous job. And then.
+00:11:40 Interviewee 1
+We can be back on.
+00:11:41 Interviewee 1
+Service, which is an enormous job and then we can.
+00:11:43 Interviewee 1
+Deploying new new web platform which is an enormous job and we can move CBL to Red Hat 8 which is an enormous job.
+00:11:50 Interviewee 1
+There's so many.
+00:11:51 Interviewee 1
+Enormous jobs just coming down the track, and they're all just.
+00:11:55 Interviewee 1
+Just doubling up.
+00:11:58 Interviewer
+But so this is it is a a.
+00:12:00 Interviewer
+Normal of a.
+00:12:01 Interviewer
+Metaphor. Us right?
+00:12:03 Interviewer
+The train, the track isn't late. No, in the fact of power and networking, that kind of thing.
+00:12:09 Interviewer
+I mean, now we, I.
+00:12:10 Interviewer
+Suppose the I suppose power.
+00:12:11 Interviewer
+Is now coming now but.
+00:12:13 Interviewer
+Obviously still waiting on fine.
+00:12:14 Interviewer
+But yeah.
+00:12:16 Interviewer
+So you can see that as.
+00:12:19 Interviewee 1
+Second, you know it's.
+00:12:22 Interviewee 1
+So I'm sorting out the servers at the moment down there in deep 51 and getting them to be organised, getting recabled and and making sure that they will.
+00:12:31 Interviewee 1
+Be fine as they're plugged in going forwards but.
+00:12:37 Interviewer
+There's a.
+00:12:39 Interviewee 1
+It feels a lot of the time point, you know, make it work, but it's better. It's not. It's it's like it's like foundations to make sure that going forward you can just, you can just reinstall them and not have to worry about anything else. You just say right, that's done and then done and right align under it.
+00:12:59 Interviewee 1
+And so that's not gonna give any problems that we realistically care about happening going forward because it's got power, it's got data, it's got new operating system and.
+00:13:11 Interviewee 1
+It's done. We're just managing it.
+00:13:14 Interviewee 1
+All of the things which are problematic, heat, power and data will be sorted.
+00:13:20 Interviewee 1
+Yeah, but it does.
+00:13:24 Interviewee 1
+Organisation things that.
+00:13:26 Interviewee 1
+Be down within them.
+00:13:31 Interviewee 1
+But yeah.
+00:13:32 Interviewee 1
+Yeah, it's interesting.
+00:13:36 Interviewer
+I think it's quite a very interesting like scenario.
+00:13:39 Interviewer
+We're in because.
+00:13:40 Interviewer
+Of the dependency of everything all kind of hang in the balance, these multiple single point of failures.
+00:13:48 Interviewer
+And then, but then there's demand of then also ageing technology being the backbone. But then modern technology, like the CVL cluster with new GPU's then needing all the power.
+00:13:58 Interviewee 1
+Yeah, it's all.
+00:13:59 Interviewer
+Very, I don't know.
+00:14:01 Interviewer
+I think it's it's quite a unique.
+00:14:05 Interviewer
+Kind of scenario I think, yeah, yeah.
+00:14:08 Interviewer
+You know, usually.
+00:14:09 Interviewer
+In in a in in most other data centres, usually outdated technology just gets chopped away, you know.
+00:14:15 Interviewee 1
+Yeah. And that's. Yeah, it's not. So it's not something that happened and I mean DTS and CGI want to come in and assess our data centre to see whether it would be better sucked into a big.
+00:14:29 Interviewee 1
+Or big. Suddenly. And I don't think they understand that they would look at it and say, well, that needs to be binned and and replaced with stuff.
+00:14:37 Interviewee 1
+And it's like cool. That would be a.
+00:14:39 Interviewee 1
+£1,000,000 of.
+00:14:40 Interviewee 1
+Hardware and we're not paying. So off you go. Yeah, I'm alternatively, this is how we work. This is how we're starting worked.
+00:14:49 Interviewee 1
+It's almost certainly how we're going to work.
+00:14:51 Interviewee 1
+Going forward and you.
+00:14:52 Interviewee 1
+Really want to take this or just want to leave it aside and say that's a research dectis room and it's a very specific thing.
+00:15:03 Interviewer
+But also I just know that if there was, if they even tried to take it away, they people imagine people would fight back with these nails.
+00:15:10 Interviewee 1
+All would. Yes, people have seen people have heard of this and have already seen it. They're not doing it. Yeah.
+00:15:26 Interviewee 1
+Having invested all the time and effort into.
+00:15:29 Interviewee 1
+Do it be.
+00:15:30 Interviewee 1
+I mean well.
+00:15:31 Interviewee 1
+Making that making the case to people that you know you really don't want this, and this does actually have to look on display.
+00:15:37 Interviewer
+No. Yeah.
+00:15:41 Interviewer
+I mean, even though it's not the most ideal situation, it's like where it's like now. It's better than probably what they would be absorbing into all their stuff, I think.
+00:15:51 Interviewee 1
+Yeah, I don't think they want the headache of this because you know, these things are.
+00:15:57 Interviewee 1
+And there's that. And then there's the entropy that.
+00:16:01 Interviewee 1
+It's just accumulated so much.
+00:16:05 Interviewee 1
+Damage over the years and and that's.
+00:16:08 Interviewee 1
+What I'm trying?
+00:16:09 Interviewee 1
+To do is by the time that visit is to get the cilio cluster into a state wherein it's.
+00:16:17 Interviewee 1
+Bespoke hardware? Yeah, but clearly managed to the best practises that you could apply to it in terms of.
+00:16:25 Interviewee 1
+Of of, of power and and configuration and layout, and then just not let them log in. See but.
+00:16:32 Interviewee 1
+It's seven or seven.
+00:16:34 Interviewee 1
+You know what was?
+00:16:35 Interviewer
+Like as in like.
+00:16:37 Interviewer
+This is this is stuff that.
+00:16:38 Interviewer
+Was happening before. Yeah, but this.
+00:16:40 Interviewer
+Is what it should be and this is.
+00:16:41 Interviewer
+What's going to?
+00:16:42 Interviewer
+Be kind of thing.
+00:16:42 Interviewee 1
+Yeah. And this is what's going to be with our local VM Ware and you don't want anything.
+00:16:48 Interviewer
+To do with that no cause.
+00:16:49 Interviewee 1
+And and and this This Is Us and yeah, we we wanted a A you know brand new shiny.
+00:16:59 Interviewee 1
+Server that fits into the the the standard process of offer the data centre we would.
+00:17:07 Interviewee 1
+Probably buy one and.
+00:17:08 Interviewee 1
+You could host it for us.
+00:17:10 Interviewee 1
+But if somebody says, can we? Yeah, take this desktop PC which is in my office and it's running a complex server.
+00:17:19 Interviewee 1
+Can we put it in a place where it is better managed than just sitting in my office? Yeah. Yes, we can. And no, you don't want anything to.
+00:17:27 Interviewee 1
+Do with that.
+00:17:30 Interviewer
+Well, yeah.
+00:17:34 Interviewer
+When the member of staff.
+00:17:35 Interviewer
+And just suddenly turns up with like a, you know, like a, a trolley full of eight servers to.
+00:17:39 Interviewer
+Plug in.
+00:17:40 Interviewer
+Yeah, I'm so very glad I.
+00:17:44 Interviewer
+Saw that out that one day. I just.
+00:17:46 Interviewer
+Walked. I was like.
+00:17:50 Interviewer
+But I mean, but that was.
+00:17:52 Interviewer
+That is then, from my perspective, at least one of the one of the.
+00:17:56 Interviewer
+The causes of the problems as well is that then the access problems as well so much.
+00:18:03 Interviewer
+That, I mean, I I just don't know why.
+00:18:05 Interviewer
+That was never like that, put forward to us all.
+00:18:08 Interviewer
+Even spoken to us about.
+00:18:09 Interviewer
+It's just, it's interesting. But you know the that's what what Dan was trying to fix.
+00:18:15 Interviewer
+And with the.
+00:18:16 Interviewee 1
+Yeah. I mean, yeah and.
+00:18:19 Interviewee 1
+There was a lot of pushback from the.
+00:18:20 Interviewer
+Academics on that, yeah.
+00:18:22 Interviewee 1
+Yeah. Then I saw.
+00:18:26 Interviewee 1
+What Jamie had done with knowledge from other people, which was to put a.
+00:18:33 Interviewee 1
+32 amp commando Splitter onto a 32 three phase and suddenly you're thinking you know what? Dan had a point here because that is not a small piece of work.
+00:18:42 Interviewee 1
+Where was where's break for that and it's seriously.
+00:18:48 Interviewer
+I I think I think that one.
+00:18:49 Interviewer
+Day there's gonna be a thing. Where?
+00:18:52 Interviewer
+I think I think if.
+00:18:53 Interviewer
+You slashed as it was especially for example, when down left. I think it was left in that way and thinking they would probably been eventually some kind of big thing that.
+00:19:02 Interviewer
+Happened. Yeah. Where? Some either gets really badly hurt or I think just goes coming down. Yeah. And I think I suppose, you know.
+00:19:11 Interviewer
+It's just I.
+00:19:12 Interviewer
+Mean it just costs money and lots of time.
+00:19:13 Interviewer
+To fix it.
+00:19:14 Interviewer
+Doesn't it? It does. Yeah. OK.
+00:19:17 Interviewer
+I mean going.
+00:19:18 Interviewer
+Back to those very, very small aspect of it all.
+00:19:22 Interviewer
+Kind of more of a hardware level and cabling and and documenting cabling and stuff.
+00:19:32 Interviewer
+So the the moving of of the I mean it all started when I think.
+00:19:38 Interviewer
+I think when I first started sorting out the the server room. Really. Yeah. But at that point, that was generally just a cleaning job.
+00:19:45 Interviewer
+But I suppose the idea was that just to.
+00:19:48 Interviewer
+Help document it all. Yeah. Yeah. I mean, obviously.
+00:19:52 Interviewer
+You know, within the certain moving as well, so.
+00:19:57 Interviewer
+I mean, you know what?
+00:19:57 Interviewer
+My idea is is to use net.
+00:19:59 Interviewer
+Box as a.
+00:19:59 Interviewer
+Backbone. Yeah. And then just have a nice mobile app to sit on top of it.
+00:20:02 Interviewer
+Obviously a lot of this to help me judge my degree, but also I.
+00:20:06 Interviewer
+Generally believe they would help, yeah.
+00:20:08 Interviewee 1
+No, no, they, they they would absolutely help.
+00:20:11 Interviewee 1
+And it's, you know, they're saying.
+00:20:13 Interviewee 1
+Good code document itself and a A well laid out server room with minimal cables. Yes, cables that we've thought about so you understand what they are, they are well labelled. You know that go from 1.
+00:20:26 Interviewee 1
+Place to another.
+00:20:26 Interviewee 1
+Yeah. You know, you don't need to. You don't need to.
+00:20:30 Interviewee 1
+Think what does?
+00:20:31 Interviewee 1
+This do if you can immediately and identify what it is. You don't need to think what it is. You don't need to panic about it. You don't need to think. Yeah, it's. Yeah, it's.
+00:20:43 Interviewee 1
+And net boxes.
+00:20:45 Interviewee 1
+It's a it's a local town. I mean, I'm having something that's.
+00:20:52 Interviewee 1
+Yes, better than having 20 year old maps of.
+00:20:55 Interviewer
+That well, yeah. Well put that maps on that switch.
+00:20:59 Interviewee 1
+Don't have anymore for systems.
+00:21:01 Interviewee 1
+Yeah. No, and and as good as my spreadsheets are, they're hardly dynamic. Yeah.
+00:21:08 Interviewer
+I I was feeling quite interesting today about how one of the things you have to try and.
+00:21:13 Interviewer
+Do when you're designing this kind of stuff.
+00:21:15 Interviewer
+Just to make sure it's not so tedious that people don't.
+00:21:17 Interviewer
+Wanna do it? Yeah. I wonder whether that's been a barrier to the the documenting in the past. Yeah.
+00:21:22 Interviewee 1
+Oh, very much. Yeah. Yeah. I mean, yes, I mean it's.
+00:21:27 Interviewee 1
+People have limited time. People have limited capacity, they have lots of demands upon them and and the people who put these scripts together very much well-being.
+00:21:37 Interviewee 1
+That's done cool. Yeah. Off we.
+00:21:39 Interviewee 1
+Go and that'll work and yeah, yeah.
+00:21:42 Interviewee 1
+That's the URL app script that runs off every 15 minutes that been written by Nick.
+00:21:47 Interviewee 1
+Nordson only Chris Greenhill knew about when it came to. They said. Yeah, we need to change these service account password on that.
+00:21:55 Interviewee 1
+And yeah, you got.
+00:21:58 Interviewee 1
+I don't even know.
+00:21:59 Interviewee 1
+What it is and.
+00:22:00 Interviewee 1
+Then we had to find it and then, yes, work out.
+00:22:02 Interviewee 1
+What it was, why it was.
+00:22:05 Interviewee 1
+You know.
+00:22:05 Interviewer
+That we really need that.
+00:22:09 Interviewee 1
+Yeah. So it's, yeah, it's things like that and. And yeah, I understand why these things have historically been done like this, but I don't understand why.
+00:22:19 Interviewer
+No, that's not.
+00:22:22 Interviewee 1
+They should be.
+00:22:26 Interviewee 1
+5-10 years.
+00:22:28 Interviewer
+Yeah, yeah. I mean, there's there's plenty of, I think, I suppose, in the in the last five years or so, especially with things like well, love, love and so soft. And I was very much.
+00:22:38 Interviewer
+Almost equivalent to. Like you know, enterprise level stuff like that box for example. Or snipe for example as well.
+00:22:45 Interviewer
+So there's no, there's not really. There's other than the time aspect, I suppose that's the good thing about unique temps is that we've been able to.
+00:22:51 Interviewer
+Come in and do while you're kind.
+00:22:52 Interviewer
+Of still rolling on prod.
+00:22:54 Interviewer
+We can just kind of think.
+00:22:55 Interviewee 1
+Yeah. Yeah. It's also nice having you know.
+00:22:55 Interviewer
+It's not bad idea.
+00:23:00 Interviewee 1
+Having these these things in the building, another thing that which is the.
+00:23:06 Interviewer
+Pedological pedagogy pedagogical.
+00:23:08 Interviewee 1
+Aspect of it ship you. That's that very posh, dirty love teaching.
+00:23:15 Interviewee 1
+But yeah, have the ability to have a project at.
+00:23:21 Interviewee 1
+Sorting out security aspects and but that having, you know, allowing people to have an amount of access to an actual server room off some kind of scale to get an.
+00:23:32 Interviewee 1
+Idea of how?
+00:23:33 Interviewee 1
+It works, you know, because it's not let people into that. They wouldn't let me into their data centre.
+00:23:41 Interviewee 1
+And and you know, they they won't let people in because you know it's professionals and that that, you know that's fine but there is an aspect which you point you can but then you'd say death.
+00:23:51 Interviewee 1
+Yes. So we can teach student how to, you know, knock up at all to maybe do this or that or the other.
+00:23:56 Interviewee 1
+And it's like, oh, we're doing that, yeah.
+00:23:59 Interviewer
+I believe like you just to see.
+00:24:01 Interviewer
+What what there is like in there?
+00:24:04 Interviewee 1
+Yeah, I mean, you always think he's a, you know, shiny anybody. But in Leeds they they actually they're they're they got three or four HP season leads and one day at one time they documented the installation of the new HPC and it was not what I had.
+00:24:18 Interviewee 1
+Tuned in terms of the room that it would go point into.
+00:24:22 Interviewee 1
+And it was just.
+00:24:22 Interviewee 1
+When at least they had a concrete state.
+00:24:25 Interviewee 1
+But people who built BBQ right before they built the same kind of little BBQ, so it's very much like the BBQ just to match in that.
+00:24:31 Interviewee 1
+Yeah, and it's got.
+00:24:33 Interviewee 1
+Those concrete walls, most of the comparables cancer and they just knocked through occasionally and it was in.
+00:24:38 Interviewee 1
+So is it in a room a little narrower than this and they were just knocking concrete walls out and there was a lot of dust. It was relatively low ceilings, a lot of yeah, that.
+00:24:53 Interviewer
+Yeah, it was interesting. Yeah, it.
+00:24:54 Interviewee 1
+Was like, OK, that's not what.
+00:24:56 Interviewer
+I in my head, when you imagine the way that they can have like you think it's like this, you know, like a warehouse centre with.
+00:25:05 Interviewer
+Yeah, you know, gated security and they've.
+00:25:07 Interviewer
+Got power lines coming in with gold and cables coming down.
+00:25:10 Interviewee 1
+Yeah. No, in Leeds they're particularly constrained because all their buildings are like that. So to put to get a building that doesn't have Windows is nearly impossible.
+00:25:20 Interviewee 1
+So they have windows. Well, yeah. And they've also got constraints on them because it's a Grade 2 listed because it is.
+00:25:23 Interviewee 1
+OK.
+00:25:29 Interviewee 1
+Umm, built at the same time with the Barbican. It's great. Two listed so they can't just, you know. So we're gonna get rid of these windows and bring them up.
+00:25:37 Interviewee 1
+They had to.
+00:25:37 Interviewee 1
+You know, got high performance reflective stuff on, yeah, but they were limited on that as well. So yeah.
+00:25:46 Interviewer
+It I don't know. It's all very interesting I.
+00:25:48 Interviewer
+Think having windows.
+00:25:49 Interviewer
+In the server is always a. Well I mean.
+00:25:51 Interviewer
+The problems in.
+00:25:53 Interviewer
+See 36 is interesting, so yes.
+00:25:55 Interviewee 1
+Yeah, that's self facing.
+00:26:01 Interviewer
+Interesting. OK, I suppose one thing.
+00:26:07 Interviewer
+One thing I might notice.
+00:26:08 Interviewer
+That you might be quite.
+00:26:11 Interviewee 1
+That's Chris, computer centre.
+00:26:13 Interviewee 1
+At the back of the.
+00:26:13 Interviewee 1
+Tower, that's where they.
+00:26:15 Interviewee 1
+See this.
+00:26:16 Interviewee 1
+Is that a brick sharehouse? It's concrete brick tab. Yeah, it is right for car park. Yeah, that's where I think HBC, that, that thing there with all the the the route there. Yeah.
+00:26:28 Interviewer
+It was much cooler than expected.
+00:26:30 Interviewee 1
+No, and that would be the only place that they can put their combined facility in that, that Kingsmeadow across and it's right next to the tower where IDs.
+00:26:40 Interviewee 1
+For it to go.
+00:26:41 Interviewer
+At some point.
+00:26:43 Interviewee 1
+When they've got the money to fit.
+00:26:44 Interviewee 1
+It out. So if we were there.
+00:26:45 Interviewer
+Winterson or Castle Meadow.
+00:26:47 Interviewer
+Yeah, they will go kiss him. Yeah, probably.
+00:26:50 Interviewer
+That's. Yeah, that's yeah, that's.
+00:26:54 Interviewee 1
+Definitely than nowhere near better than ours now.
+00:26:56 Interviewer
+When I would be quite interesting to look inside them as in like the.
+00:27:02 Interviewer
+I don't know as in other procedures strong enough.
+00:27:05 Interviewer
+To actually, you know, maintain them to the grade that you might see in a proper data centre.
+00:27:12 Interviewee 1
+Yeah, they'll they'll say yes and then not enemy see it.
+00:27:17 Interviewer
+Exactly. But as far as like a an idea how? I'm just thinking about when you're talking earlier about kind of a lack of documentation.
+00:27:27 Interviewer
+One thing I noticed.
+00:27:28 Interviewer
+When I upgraded to a new version of an epops is that they've increased their kind of scope of journalling where you can add entries to essentially any device or asset in.
+00:27:43 Interviewer
+In a way of.
+00:27:46 Interviewer
+Working not working.
+00:27:47 Interviewer
+That kind of thing.
+00:27:49 Interviewee 1
+Do you think?
+00:27:50 Interviewer
+It would be beneficial to have, like a journaling kind of auditing feature where you can go around and you can say, yeah, that's fine, that's fine. That's not working or.
+00:28:00 Interviewer
+Just to have it.
+00:28:01 Interviewer
+Cause I think there's no historical data.
+00:28:03 Interviewee 1
+No, there's no. Yeah, it it would be going forward.
+00:28:08 Interviewee 1
+Once we have a.
+00:28:09 Interviewee 1
+Clean system. Yeah. Yeah. I think very much it's.
+00:28:14 Interviewee 1
+It would. It would.
+00:28:15 Interviewee 1
+Be good to capture a a document that says what the system is, who its owner is, and what its base base status is, and have some kind of.
+00:28:26 Interviewee 1
+Because we better push.
+00:28:26 Interviewee 1
+A lot of this configure and.
+00:28:28 Interviewee 1
+Support it would be.
+00:28:28 Interviewee 1
+Good to have capture the Ansible config that.
+00:28:33 Interviewee 1
+Got it. Yeah and.
+00:28:35 Interviewee 1
+And and Steve back is being on this, which is that.
+00:28:39 Interviewee 1
+We shouldn't be upgrading virtual machines, they go with Yum update, they've upgrade. We should just be killing them and rebuilding them.
+00:28:48 Interviewee 1
+Take a take a fresh platform, upgrade that and then push something back to it so it would be very useful to capture any changes that had happened to a system as its.
+00:28:59 Interviewee 1
+Ages because we weren't. We'll always with something in the actual content and we need to capture that to push it back into the company to get that back up. So yeah, that that would be a useful thing, yes.
+00:29:13 Interviewer
+As well as was.
+00:29:16 Interviewer
+One one thing I I do kind of make important is I don't make something that's gonna be useless because.
+00:29:22 Interviewer
+I mean, there's.
+00:29:23 Interviewer
+There's there's plenty of things you can add in to.
+00:29:24 Interviewer
+It that just?
+00:29:25 Interviewer
+Let it be used stuff and.
+00:29:28 Interviewee 1
+Numbers of frippery. You can put that the core core functionality is that going forward.
+00:29:30 Interviewee 1
+OK.
+00:29:35 Interviewee 1
+Three is basically is basically.
+00:29:38 Interviewee 1
+That which is, you know.
+00:29:39 Interviewee 1
+The problem we had with seven yesterday.
+00:29:42 Interviewee 1
+Shouldn't have happened.
+00:29:43 Interviewee 1
+Yeah, because that confliction never have existed and the conflict should be a standard CS config of these things and and and it should. It should just be. You know as is.
+00:29:54 Interviewee 1
+And we should every change happened to mercy over the years should have been documented at some at least some set, documented and kind of journal.
+00:30:03 Interviewee 1
+And then you know, instead of me spending 45 minutes with it trying to fix it would just be just pull the template.
+00:30:11 Interviewer
+Really grim.
+00:30:14 Interviewee 1
+Push the answer config.
+00:30:16 Interviewee 1
+Change his name, push it and then, yeah.
+00:30:18 Interviewee 1
+What happens? Just say that.
+00:30:19 Interviewee 1
+If that didn't work, something serious.
+00:30:22 Interviewee 1
+Beyond our understanding has happened.
+00:30:25 Interviewee 1
+And and that's how we should fix things, which is just roll back people's data. It should, it should be elsewhere.
+00:30:33 Interviewee 1
+It is elsewhere, so it's no great shakes on that. And then the config happens over time should be captured and should be maintained in some other state.
+00:30:46 Interviewee 1
+So yeah, that would be, yeah.
+00:30:47 Interviewer
+OK.
+00:30:49 Interviewer
+Fine. That's good. Yeah, because, I mean, you can, you can add it to essentially well, virtual machines. Yeah, servers. Which is cables everything. So, yeah. OK, fine. Yeah, I'll look.
+00:31:01 Interviewee 1
+And most of these.
+00:31:02 Interviewee 1
+Things won't or shouldn't change, but the other physical level, I mean we we plug things in switches and that's it.
+00:31:08 Interviewee 1
+Walk off. Yeah, they rarely do. If you're adding more, the new hardware would be the time for you to make changes to things like that, so they're they're pretty. You know, that's not that. That's.
+00:31:19 Interviewee 1
+Owners capture because you're doing it.
+00:31:23 Interviewee 1
+Once, twice, 3 * a year, maybe tops, and then rolling changes to virtual machines is something we need to capture anyway, so it would be good to have a common place to put it rather than, you know, there's a document.
+00:31:36 Interviewee 1
+Yeah, Word document.
+00:31:38 Interviewer
+And that's one thing that we've done is that we've kind of, especially with things like the SharePoint.
+00:31:44 Interviewer
+It's it's really hard to navigate that because like.
+00:31:46 Interviewee 1
+I mean, yeah.
+00:31:47 Interviewer
+There's no, there's no common, there's no formatting that.
+00:31:52 Interviewer
+Even if they watch, people don't follow it, and I even I know I.
+00:31:55 Interviewer
+Wouldn't. No, no. So I mean it's some kind.
+00:31:58 Interviewer
+Of unity as.
+00:31:59 Interviewer
+Well, OK.
+00:32:01 Interviewer
+Right, I'll.
+00:32:03 Interviewer
+Go on to the.
+00:32:04 Interviewer
+The more boring part I guess is.
+00:32:07 Interviewer
+I show you what my napkin prototypes are, because I'll have to follow HCI.
+00:32:12 Interviewee 1
+Yeah, you see.
+00:32:12 Interviewer
+I do intend for.
+00:32:15 Interviewer
+When development starts properly is that I will just come into the office and say do you think, yeah, do this pointless, do you think it's a ship? Whatever. Yeah, because I I.
+00:32:23 Interviewer
+I mean, like I said, I said this to Chris early on as I I would actually like to make something that is beneficial to to, to people. So that'd be that'd be.
+00:32:29 Interviewee 1
+Yeah, yeah, yeah, yeah.
+00:32:31 Interviewer
+Fun as well, OK.
+00:32:34 Interviewer
+I mean the core.
+00:32:35 Interviewer
+Features really are.
+00:32:37 Interviewer
+Networking, cabling and power and stuff. Yeah, he's a very, like, low fidelity prototypes. So very so Even so I spoke to leave by this already.
+00:32:46 Interviewer
+Is that when you had a connexion? This is gonna be a lot simpler cause we I think.
+00:32:50 Interviewer
+The plan is.
+00:32:51 Interviewer
+To I really spoke to you about.
+00:32:53 Interviewer
+This but to identify them using car codes.
+00:32:55 Interviewer
+Rather than yeah.
+00:32:57 Interviewer
+Because right now, we.
+00:32:57 Interviewer
+Kind of use.
+00:32:58 Interviewer
+It's kind of mixed basis of names and stuff where we are they need to be unique identity.
+00:33:04 Interviewer
+Yeah. Yeah. So when when Mika referred to them, that is exactly it, cause it needs to be like a constant that we can cross reference to.
+00:33:12 Interviewer
+So the way we can scan the devices is get essentially what we want to do. It is do. If you need to update the connexion or find it you you do you scan a yeah, scan the cable it's.
+00:33:21 Interviewer
+Can be and it's done. That's the connexion.
+00:33:24 Interviewer
+But I mean, obviously it's gonna be being probably in Lee's job when we end up replacing all.
+00:33:28 Interviewer
+The cabling and stuff.
+00:33:29 Interviewer
+But that's that aspect and then really connexion you simply then the idea is then you only have them get scan the cable one side. Yeah. And it tells you the traits of it entirely.
+00:33:39 Interviewer
+You can actually.
+00:33:41 Interviewer
+Search for a device as well, because if the cables **** yeah, label it's gone. Whether and then.
+00:33:47 Interviewer
+It shows then.
+00:33:48 Interviewer
+The connexion about what it is, what connexion the interface is plugged into. Yeah. And the good thing about Netbox is the serialisation, it's always.
+00:33:57 Interviewer
+So as soon as you know the interface and you can get information on the interface as well, yeah, or the device itself and that kind of thing really made a good point of having it so that it traces the connexion between mortal points, which is a feature net box allows you.
+00:34:12 Interviewer
+To do as well. Mm-hmm. And you can return it.
+00:34:14 Interviewer
+So you can.
+00:34:15 Interviewer
+Almost like scroll through so you can see.
+00:34:17 Interviewer
+If you know so, for example, it comes in in jest and then, yeah, and then it goes.
+00:34:21 Interviewer
+Then hops multiple times.
+00:34:23 Interviewee 1
+Yes. Yeah, we have. Yeah. Good number of things which are, yeah.
+00:34:28 Interviewee 1
+Yes, hard to, yeah. But these extensions brilliant sitting around it would be nice to see how that go. Yeah, I mean, better to know.
+00:34:32 Interviewer
+Yeah, yeah.
+00:34:35 Interviewer
+That wasn't clear. OK, OK.
+00:34:38 Interviewee 1
+Why, you know?
+00:34:43 Interviewer
+Updating connexion it's.
+00:34:44 Interviewer
+Always modular based kind of ideas of.
+00:34:48 Interviewer
+Same thing with updated connexion. You scan the ideas as they want to you you're able to scan the cable.
+00:34:54 Interviewer
+Yeah, you scan the updates and the set you've updated the cable. Yeah. So yeah, I mean, hopefully then people might actually do it because rather than have to log into a website, mainly find the cable, that kind of thing, it would just be a bit tedious.
+00:35:07 Interviewer
+And then again showing device information, I've kind of gone for this kind of nested layout. Yeah, of.
+00:35:14 Interviewer
+The things that.
+00:35:15 Interviewer
+I suppose don't really particularly matter to them. Things that do and and as well as the cause of his comments birth, but I suppose I'll add a thing now of historical changes as well.
+00:35:26 Interviewer
+Mm-hmm. And I'll add that to a higher fidelity prototype as well.
+00:35:31 Interviewer
+So if you have any, any kind of.
+00:35:36 Interviewee 1
+No other than.
+00:35:39 Interviewee 1
+On a server we need.
+00:35:40 Interviewee 1
+A QR code on the front and the back.
+00:35:42 Interviewee 1
+Good shots, I can tell you. I know I can look at those and say but nobody else can and it's.
+00:35:54 Interviewee 1
+Only two of.
+00:35:55 Interviewee 1
+Them I think have got a stick.
+00:35:56 Interviewee 1
+On the back of them.
+00:35:56 Interviewer
+Yeah, I think I think this is both.
+00:35:58 Interviewer
+CL something.
+00:35:59 Interviewee 1
+Yeah, yeah, only I can tell you what machine plus has got one. I think havoc has one on the. Yeah. Yeah. You know that and.
+00:36:02 Interviewer
+Patrol Montreal, please.
+00:36:14 Interviewee 1
+Oh, yeah, yeah. And they're all identical there.
+00:36:21 Interviewee 1
+So yes.
+00:36:22 Interviewer
+There's no until you remember with with you.
+00:36:26 Interviewer
+Know Prime local service.
+00:36:27 Interviewer
+I had to wait for the for the the host name.
+00:36:30 Interviewer
+To kind of rotate.
+00:36:31 Interviewer
+Around and the LCD was like.
+00:36:32 Interviewee 1
+Yeah. Yeah, yeah, yeah. Pulling cables out our cables.
+00:36:34 Interviewer
+What am I doing?
+00:36:36 Interviewer
+Well, yeah.
+00:36:37 Interviewee 1
+Out in PC.
+00:36:38 Interviewee 1
+36 And I'm tracking back, tracking back, and well, that goes into the second one down and that and.
+00:36:42 Interviewee 1
+Then you come round again.
+00:36:43 Interviewer
+Which one?
+00:36:44 Interviewer
+Is it?
+00:36:45 Interviewee 1
+Only back again is it.
+00:36:48 Interviewee 1
+I think something will go on in.
+00:36:52 Interviewee 1
+The back of the front of that one.
+00:36:55 Interviewee 1
+And then you find out how strong.
+00:36:57 Interviewee 1
+The the power supplies are.
+00:37:00 Interviewer
+OK. Yeah. I mean, it's already there's no, you can really give any feedback on.
+00:37:04 Interviewer
+This but I suppose.
+00:37:07 Interviewer
+I have started doing high fidelity one without, you know, user participation.
+00:37:15 Interviewer
+So Ray module based and this is essentially it, where would be if you want to search for a connexion, you scan the device and pick the.
+00:37:23 Interviewer
+Interface or scan the cable.
+00:37:24 Interviewer
+Mm-hmm. And that's it. And then it'll be able to come with the connexion. Yeah. And then the connexion there would be kind of.
+00:37:31 Interviewer
+You know you've got the name, the type of rack, IP address, Mac address. Mm-hmm. And then the interface. Then what type it is cable, cable type and colour. But probably that can be changed as well. Yeah.
+00:37:42 Interviewee 1
+Hello, good. Thank you. Visual thing.
+00:37:45 Interviewee 1
+The yeah, the.
+00:37:51 Interviewer
+Query then becomes.
+00:37:54 Interviewee 1
+So it's on the.
+00:37:55 Interviewee 1
+Back of the.
+00:37:55 Interviewee 1
+Service part badly annotated, very badly annotated.
+00:38:00 Interviewee 1
+So you'll need some at some point.
+00:38:04 Interviewee 1
+Some poor sod needs to, yes. And then yeah, put an identifier on them that we can understand if it's a coloured dot, I don't know.
+00:38:15 Interviewee 1
+Yeah. That we, we.
+00:38:15 Interviewee 1
+Have coloured dots down there that you.
+00:38:17 Interviewee 1
+We've we've got 6 colours. I've been sticking things on things just to track where they're going at the moment, but you could easily there's enough spec because there's not enough.
+00:38:26 Interviewee 1
+They're not spatially very.
+00:38:28 Interviewee 1
+Why they aren't?
+00:38:28 Interviewee 1
+Annotated well is that there's not much space.
+00:38:31 Interviewee 1
+They tend to print it into like tin.
+00:38:33 Interviewee 1
+And there's already.
+00:38:34 Interviewer
+Yeah, kind of.
+00:38:35 Interviewee 1
+And there's, you know, there's management interfaces.
+00:38:38 Interviewee 1
+In there, some of the servers.
+00:38:39 Interviewee 1
+Have four network sockets, yeah. And then someone will put a network card into for me another couple.
+00:38:48 Interviewee 1
+And we'll only use one or two of them, but we do need to know, so maybe some kind of colour coding on them that is not necessarily consistent between machines, but is recorded in the data and it's consistent to what's actually on machine so that you could have, you know.
+00:39:07 Interviewee 1
+They need to face coloured, possibly.
+00:39:11 Interviewee 1
+I think you'd go mad trying to.
+00:39:15 Interviewee 1
+A portion a consistent colour scheme onto them for you know you've come across one, it's got two management spaces that month. That was orange, yeah.
+00:39:27 Interviewer
+So that was on a on a.
+00:39:32 Interviewer
+Stretch goals. Chris mentioned AAR feature visualisation.
+00:39:37 Interviewee 1
+Yes, this is. I mean I've that is a very stretched goal because that's complicated. But yeah, I've I've said the same. I've just Mike that he can put that out to his.
+00:39:50 Interviewee 1
+A project at any point he wants that will never happen. You know, as as the as as more people hit it, we'll get more solutions to how it might happen. But you know, there's.
+00:40:02 Interviewer
+Yeah, I'm not sure. Also, my technical ability or.
+00:40:05 Interviewer
+Time frame but.
+00:40:07 Interviewee 1
+I've I've had a quick look.
+00:40:08 Interviewer
+And using QR codes yet to yeah use just.
+00:40:13 Interviewer
+The markers and.
+00:40:13 Interviewer
+Stuff it's not.
+00:40:14 Interviewee 1
+It's not. No, no, it's it's doable.
+00:40:17 Interviewer
+Public libraries as well, but it would depend on.
+00:40:21 Interviewer
+Again, maybe.
+00:40:24 Interviewer
+You know, maybe after the the deadline of this dissertation, it can add it.
+00:40:27 Interviewee 1
+Yeah. So there's.
+00:40:28 Interviewer
+In but.
+00:40:29 Interviewee 1
+There's, you know, there's a lot of projects in there that you would somebody say, oh, want an AR thing.
+00:40:34 Interviewee 1
+And then that's your.
+00:40:35 Interviewee 1
+Project where in actual fact you need a project to stay put QR poets around this room anyway.
+00:40:41 Interviewee 1
+Not just that book and then create a three-dimensional map at this through QR codes and then somebody else can come along at a later point and say you know, do some deep learning on this and point a camera at a Cisco switch with 48 networks.
+00:40:45 Interviewer
+Yeah, yeah, yeah.
+00:40:56 Interviewee 1
+And then.
+00:40:57 Interviewee 1
+And the poorer. And then I identify them. And then you you start to put these things together over time.
+00:40:57 Interviewer
+Like everything. Yeah, yeah.
+00:41:04 Interviewer
+Let's just.
+00:41:04 Interviewer
+One one thing is that what kind of things do is that when they mean very natural thing for universities so people couldn't.
+00:41:11 Interviewer
+And well I whether I whether I stay around longer than I do my degree, I don't know yet. But yeah, as soon as I've gone, if this is saying that you people are using they can then add upon it, yeah and prove it then I suppose.
+00:41:23 Interviewer
+That's something as well.
+00:41:24 Interviewee 1
+Yeah, because I've seen a apps for data centres, there's a couple of companies sell them.
+00:41:28 Interviewee 1
+And they look awful.
+00:41:30 Interviewee 1
+Yeah, absolutely trash. And, you know, our students could.
+00:41:37 Interviewee 1
+Better than that, they could do something simple and and better than that. And. And. Yeah, a lot of these things are, if if something looks awful, people would use it.
+00:41:47 Interviewee 1
+Discussion friend just cancer diagnosis and I was telling her about GPT 3, which got two one in security examined today.
+00:41:57 Interviewee 1
+The ChatGPT code 21 on a sound that's been set and gone to moderation, so that problem.
+00:42:06 Interviewee 1
+Yeah, but anyway, I was saying get. Yeah, this is where.
+00:42:09 Interviewee 1
+It is now after one week.
+00:42:10 Interviewee 1
+Just explosion like this.
+00:42:12 Interviewee 1
+People won't trust it to follow you.
+00:42:14 Interviewee 1
+You get, you know, you get 100,000, hard to annotate histopathology slides from cancer patients and then 50,000 didn't get it.
+00:42:23 Interviewee 1
+50,000 did you tell them an AI? You give it the full slice. I'll tell you. It will do that.
+00:42:29 Interviewee 1
+On the human thing.
+00:42:31 Interviewee 1
+Because they don't look at things.
+00:42:33 Interviewee 1
+The way you think they do.
+00:42:35 Interviewer
+No, listen. Yeah.
+00:42:37 Interviewee 1
+And people, you know, people take a picture of their rabbit and it'll say what's a dog. And, you know, people lose confidence in AI.
+00:42:43 Interviewee 1
+But you know then then you.
+00:42:45 Interviewee 1
+Have ask it to you know, define an SSH tunnel and it nails it anything.
+00:42:50 Interviewee 1
+OK.
+00:42:52 Interviewer
+I mean is it is?
+00:42:55 Interviewer
+It's a weird.
+00:42:55 Interviewer
+One, because then I I have had have trust in the AI to be able to identify.
+00:43:00 Interviewer
+The breed in the age of the rabbit.
+00:43:02 Interviewer
+Mm-hmm. Rather than.
+00:43:03 Interviewer
+Knowing it's a.
+00:43:04 Interviewer
+Rabbit. Yeah, it's.
+00:43:05 Interviewer
+Like I think it's like, yeah.
+00:43:07 Interviewee 1
+It's. Yeah, it's.
+00:43:09 Interviewer
+Yeah. OK. Yeah. What they.
+00:43:11 Interviewer
+Do or not.
+00:43:13 Interviewee 1
+Yeah, it's.
+00:43:15 Interviewer
+But something can be added on later on movie.
+00:43:17 Interviewee 1
+But you know a three-dimensional map, the room with QR codes that places things within, you know, a coordinate system is.
+00:43:25 Interviewee 1
+Is is such start that that anything can be placed within that you know by any other technology. It's it, you know it's walking around and saying even if just this is the location for.
+00:43:37 Interviewee 1
+About well, no, that's too that's.
+00:43:39 Interviewer
+Probably what would might be, yeah, very cutting on the scope is that you know you you pointed at a switch.
+00:43:45 Interviewer
+Maybe it was like, I don't know, like a H370 kind of like that. And then turn around and then it says then this is the interface you're looking for. That kind of thing.
+00:43:52 Interviewee 1
+Yeah, yeah.
+00:43:54 Interviewer
+You know.
+00:43:57 Interviewee 1
+Read the information comes out and then you know they could do image analysis to say.
+00:44:02 Interviewee 1
+Is it right? Is, is, is is what you.
+00:44:04 Interviewee 1
+Would expect to be there there, and that's a that's another step and then yeah.
+00:44:12 Interviewer
+Moving on then to.
+00:44:16 Interviewer
+Can't close afternoon anymore.
+00:44:19 Interviewer
+I suppose now on to the demo thing. There's not really much to. I mean, you know very much the net box and stuff. Yeah. If I show you one thing is.
+00:44:31 Interviewer
+And also what you were saying, so this is?
+00:44:32 Interviewer
+Sunbird, which is like a.
+00:44:34 Interviewer
+Very expensive piece of software that they've got involved which have like this kind of these built in features and stuff.
+00:44:45 Interviewer
+If I still was really.
+00:44:50 Interviewer
+Yeah, yeah, now.
+00:44:53 Interviewer
+I think I mean I I could have kind of thought this through in, in a way that one, this is really awful. Your life from my perspective as in like they to navigate through this.
+00:45:01 Interviewer
+Stuff is awful. Yeah, but.
+00:45:04 Interviewer
+I think this is kind of not what our problems lie with our kind of with our data centre right now.
+00:45:13 Interviewer
+Like, I don't think that this is the kind of thing that would solve most of our problems.
+00:45:19 Interviewer
+We we we know.
+00:45:20 Interviewer
+We lack most of the information.
+00:45:21 Interviewer
+We need to even kind of.
+00:45:23 Interviewee 1
+Yeah, I mean.
+00:45:26 Interviewee 1
+Between us, I mean it could draw out.
+00:45:28 Interviewee 1
+Basically on the 76.
+00:45:31 Interviewee 1
+In another room, blindfold.
+00:45:33 Interviewee 1
+So so yeah, it if you have, you know, multiple rooms in a in a WS warehouse then that.
+00:45:39 Interviewer
+That's where this applies.
+00:45:40 Interviewer
+Yeah, I think that's one of the kind of the.
+00:45:43 Interviewer
+Cruxes of this project is.
+00:45:45 Interviewer
+That did the situation where is very unique is with SMB's really small, medium enterprise. Because we if you consider some medium enterprise in this building alone, yeah, then most server server rooms like this look like ours. Yeah, right.
+00:46:00 Interviewer
+And the tooling for this.
+00:46:02 Interviewer
+This kind of stuff is so.
+00:46:04 Interviewee 1
+Yeah, huge.
+00:46:05 Interviewer
+So this this.
+00:46:06 Interviewer
+Has a a weather map on it or something.
+00:46:10 Interviewer
+Yeah, yeah. Whereas you know.
+00:46:14 Interviewer
+I could add it to the app if you wanted me to. Would you ever use it or be interested by information?
+00:46:18 Interviewer
+No, there's no point.
+00:46:19 Interviewee 1
+Walk with the weather.
+00:46:20 Interviewer
+Yeah, exactly. Yes, exactly. And.
+00:46:23 Interviewer
+You know and.
+00:46:23 Interviewer
+That kind of thing, it doesn't really matter so.
+00:46:26 Interviewer
+Yeah, OK, I'll just, I'll I'll say.
+00:46:28 Interviewer
+Well, maybe if you have any.
+00:46:30 Interviewer
+Sort of phone. Look at the assets for example.
+00:46:34 Interviewer
+Like I think this kind of filtering thing really made a good point. There is quite.
+00:46:38 Interviewer
+Nice to be.
+00:46:38 Interviewer
+Able to philtre through quite all these things and search them individually, but I think while end.
+00:46:43 Interviewer
+Of day is.
+00:46:44 Interviewer
+For for searching for devices and stuff, I'll just have a drop down column which allows you to kind of select one each one of.
+00:46:52 Interviewer
+These kind of yeah.
+00:46:53 Interviewer
+Attributes and then search for it. So say for example my IP address.
+00:46:57 Interviewer
+It's quite a nice.
+00:46:57 Interviewer
+Thing to have. Yeah. And that kind of.
+00:47:00 Interviewer
+But obviously this kind of system here they've got in this demo, they have three devices.
+00:47:06 Interviewer
+4732 we only have.
+00:47:12 Interviewer
+I don't know about this in the demo.
+00:47:13 Interviewer
+I think we have.
+00:47:14 Interviewer
+Like 250 devices in total.
+00:47:16 Interviewee 1
+All right.
+00:47:16 Interviewer
+You know, and so this kind of massive searching thing is just not in.
+00:47:21 Interviewee 1
+No, no, it's yeah, we.
+00:47:24 Interviewee 1
+We'd start at.
+00:47:25 Interviewee 1
+Far further down the the path in in most churches in the yeah.
+00:47:31 Interviewee 1
+Wanting to see something and we know what.
+00:47:32 Interviewee 1
+It is, yeah.
+00:47:34 Interviewee 1
+Exactly. Find it and get.
+00:47:34 Interviewer
+Thank you.
+00:47:35 Interviewee 1
+The information on it.
+00:47:36 Interviewer
+Yeah, well, that's that's the thing with in these kind.
+00:47:38 Interviewer
+Of things you, you you're looking at.
+00:47:40 Interviewer
+Like there's like 10 different sites in here. Whatever.
+00:47:42 Interviewee 1
+So yeah, yeah. I mean have be able to identify somebody comes to us with a.
+00:47:48 Interviewee 1
+People will come to us for the host name or IP address. Yeah. If they've got a problem and and then get into that information as quickly as possible. Here's our.
+00:47:49 Interviewer
+It's really.
+00:48:01 Interviewer
+OK.
+00:48:05 Interviewer
+I mean going then on to netbox.
+00:48:09 Interviewer
+Do you have any other comments generally about this?
+00:48:12 Interviewee 1
+Not really, no. I mean, yeah, it's just not.
+00:48:15 Interviewer
+Really what we need is it.
+00:48:16 Interviewee 1
+It's it's it's. Yeah, it's it's all too high.
+00:48:19 Interviewer
+Yeah, yeah, yeah. Like this guy like.
+00:48:22 Interviewer
+You know these?
+00:48:23 Interviewer
+Kind of things, you know, you got like tooling capacity and stuff. That's because each of this, which their racks have probably got.
+00:48:29 Interviewer
+Like a, you know its own kind.
+00:48:31 Interviewer
+Of yeah.
+00:48:31 Interviewee 1
+Yeah, and and we don't we have no insights into our building it just it's there. It's not we we do need and we will but you know performance more than capable dial says our current.
+00:48:44 Interviewee 1
+Current, current and we can capture nearly all of that by, you know, simple.
+00:48:51 Interviewee 1
+Pools various things that we do have in place already. We're just not doing it and that's something that is useful, which is just a dial, which is.
+00:48:59 Interviewer
+That's what it is.
+00:49:05 Interviewee 1
+Because the.
+00:49:08 Interviewer
+Yeah, in fact.
+00:49:11 Interviewee 1
+I mean.
+00:49:13 Interviewer
+Those that kind of statistics can be easily handed into the whole thing as well. So if you say for example, find a a rack if you wanna view an overall for the rack and Gen you wanna look its power draw, we've got information on bravana.
+00:49:25 Interviewer
+Then you can be easily. Yeah. Scrape from precursor then or wherever it goes to, yeah. Into the app, yeah.
+00:49:36 Interviewee 1
+OK, so all right. So of course cross wired.
+00:49:39 Interviewee 1
+And going forward.
+00:49:40 Interviewee 1
+As well, so the the power on a rack is not necessarily the powering, just that rap is.
+00:49:45 Interviewer
+Right thing.
+00:49:48 Interviewer
+Maybe the solution was.
+00:49:49 Interviewer
+Because we've got.
+00:49:50 Interviewee 1
+Checked out. You know we're not spending.
+00:49:55 Interviewee 1
+We got it because of CR. It's all the CR, but there's so much draw that.
+00:50:00 Interviewer
+So I think then maybe 1 aspect is that you one thing you did raise up actually was the power cables and distribution boards need to be kind of visualised as well, not visualised but documented and so.
+00:50:14 Interviewer
+Yeah, like you said, like knowing if you look at, say Colossus, yeah, and then you know, you know the networking, that's fine. But if it's not gonna.
+00:50:22 Interviewer
+Power. Then it's no matter. So if you know what.
+00:50:24 Interviewer
+Kind of power plugins and more discretionary.
+00:50:26 Interviewee 1
+What I know is if I go if I know something's down, they'd go distribution or see what switch tripped. I need to know.
+00:50:35 Interviewee 1
+And we could put QR codes on the distribution that switched the tricks in the distribution boards as well, so we could and what what that powers to go from there.
+00:50:45 Interviewer
+Yeah, yeah.
+00:50:48 Interviewee 1
+The that that the the the lowest point of the power we have is is those.
+00:50:52 Interviewee 1
+Is those trips.
+00:50:55 Interviewee 1
+And I don't know if I'm switching something off, could it? The other day what it turns off because I had to stick stick, I turned off, turned off virus, didn't somewhere would expect it, and the serial plus the red and look and saying yeah.
+00:50:58 Interviewer
+More turns.
+00:50:59 Interviewer
+Off, yeah.
+00:51:13 Interviewer
+CF do not turn off.
+00:51:17 Interviewer
+That's interesting. OK.
+00:51:19 Interviewer
+Yeah, I mean that's very easily done as well, yes.
+00:51:22 Interviewee 1
+Yeah, yeah.
+00:51:23 Interviewer
+I think that's a nice thing. Well, this is. Can I just you can just add it on like you know, OK, fine, so.
+00:51:31 Interviewer
+Networks, I mean, you've seen it, you've interacted.
+00:51:34 Interviewer
+With it, yeah.
+00:51:36 Interviewer
+The limitations I think is what?
+00:51:38 Interviewer
+I kind of based a lot of this.
+00:51:40 Interviewer
+Office but add.
+00:51:42 Interviewer
+Adding a surgeon for Connexions are quite tedious, you know.
+00:51:47 Interviewee 1
+Yeah, it's, it's, it's it. Some bits are easily discovered. Some bits are not easily stubborn. It. Yeah. And then you'll think I want to add 9 people and you can't.
+00:51:56 Interviewee 1
+And it's like, right?
+00:51:58 Interviewee 1
+No add button there and and then you gotta find it somewhere else and absent and it's.
+00:52:02 Interviewee 1
+Fine, you add in.
+00:52:03 Interviewee 1
+A something else. And it's you. Get to something else and then get something.
+00:52:07 Interviewee 1
+It gets the.
+00:52:07 Interviewee 1
+House it's when you get around.
+00:52:09 Interviewee 1
+It it's a different way of thinking.
+00:52:11 Interviewee 1
+And I'm not sure that you know it's.
+00:52:15 Interviewee 1
+Not worth just working out the different way of thinking.
+00:52:19 Interviewer
+It's well, it's just with this thing.
+00:52:22 Interviewer
+Works I guess.
+00:52:22 Interviewer
+Yeah, it's very hierarchical and like as in November when we first started, Northridge invites you to add a device type manufacturer and that kind of thing. And then usually from the manufacturer, then you kind of need to then.
+00:52:29 Interviewee 1
+Yes. Yeah.
+00:52:34 Interviewee 1
+Yeah, when I'm adding a device and it's, there's that little search box. It's like, why cannot just have plus.
+00:52:40 Interviewer
+Yeah, yeah, in in.
+00:52:45 Interviewer
+You can't add a cable, yeah.
+00:52:47 Interviewee 1
+You have to go.
+00:52:48 Interviewer
+Through to a device, but yeah.
+00:52:50 Interviewee 1
+You can import them.
+00:52:51 Interviewee 1
+Which is yet.
+00:52:53 Interviewer
+Because when you have to go to say for example, go to unnamed advice and you add a component and if it has an interface on it then you can then click on then the interface. Then you can add.
+00:53:04 Interviewer
+A connexion here? Hmm. Well, that's.
+00:53:07 Interviewer
+Yeah. Yeah. I just think it's for to do this for 200.
+00:53:11 Interviewer
+And 50 devices would be very strenuous.
+00:53:14 Interviewer
+Yeah, I mean it, it's done at some point, but OK, fine. I don't put words in my, but I mean usually this kind of it kind of things you talk about is very.
+00:53:23 Interviewer
+Obvious this is like Sunbird is too much.
+00:53:27 Interviewer
+You know too much to it was.
+00:53:33 Interviewer
+Find networks.
+00:53:42 Interviewer
+OK, fine.
+00:53:42 Interviewer
+Right.
+00:53:45 Interviewer
+And what I'm taking them too much of your time. So we'll move to the last thing. So this is Pathfinder mobile. It's the only app I could find.
+00:53:57 Interviewer
+Essentially that does similar to this. There's no other. There's one that's 10 hours.
+00:54:01 Interviewee 1
+So this is.
+00:54:02 Interviewer
+A kind of a companion to Pathfinder that looks like a another sunbird.
+00:54:08 Interviewer
+Where you're able to navigate in this hierarchical kind of structure. So if we go well, do you think it's quite?
+00:54:15 Interviewer
+1st floor, then equipment distribution area. You've got the kind of the rack view or you know they've got these kind of layouts and stuff.
+00:54:25 Interviewer
+Where you're able to kind of tap on the Connexions it takes you to that.
+00:54:29 Interviewer
+Kind of thing.
+00:54:32 Interviewer
+Or you can Scroll down to the interfaces.
+00:54:35 Interviewer
+So I think in somewhere I kind of want to kind of if I don't end up doing the AR view.
+00:54:41 Interviewer
+Something like this instead?
+00:54:45 Interviewer
+Say again one of those.
+00:54:47 Interviewer
+And what switches? Yeah.
+00:54:49 Interviewer
+We're doing the box.
+00:54:54 Interviewer
+But then it kind of identifying which is plugged in and all.
+00:54:56 Interviewee 1
+Yeah, yeah.
+00:54:56 Interviewer
+That kind of.
+00:54:57 Interviewer
+Thing so you know, have a mission and see what?
+00:55:00 Interviewer
+You think and you can't.
+00:55:05 Interviewee 1
+One track.
+00:55:12 Interviewer
+I'm not a I'm not a big fan of the hierarchical thing. There's no quick navigation to anything or.
+00:55:18 Interviewee 1
+No, it I mean it.
+00:55:28 Interviewee 1
+Yeah, it's it's it's. Yeah.
+00:55:31 Interviewee 1
+I can't. I can't like the I can't change the thing. Well, the right view. Well, the hierarchical just.
+00:55:37 Interviewee 1
+No, that's OK.
+00:55:39 Interviewee 1
+Started at this point, yeah, walking.
+00:55:39 Interviewer
+Making the sound.
+00:55:42 Interviewee 1
+Through what we've it's it's useful for.
+00:55:47 Interviewee 1
+Yeah, I yeah, I could. I could. Yeah. No, I don't.
+00:55:48 Interviewee 1
+OK.
+00:55:56 Interviewee 1
+Because it's kind of at the.
+00:55:57 Interviewee 1
+Level we have we have.
+00:55:59 Interviewee 1
+Rules and and and things in rooms and you start to have a visual interactional.
+00:56:08 Interviewee 1
+That it would.
+00:56:10 Interviewer
+Interactive interface, yeah.
+00:56:15 Interviewer
+It's academic worker. It is interactive, yeah.
+00:56:19 Interviewee 1
+OK.
+00:56:20 Interviewee 1
+It's it's nice to have.
+00:56:21 Interviewer
+That OK, but kind of.
+00:56:22 Interviewer
+Breaking it down or down?
+00:56:23 Interviewee 1
+We've kind of got that ready, but it's in Excel spreadsheets and word documents SharePoint, so it we do have that and it's useful and it's nice to know. Well, I think what, what data stocks I'm sitting on.
+00:56:27 Interviewer
+Yeah. OK.
+00:56:40 Interviewee 1
+And that they live. Yeah. So it's nice to have that as well in.
+00:56:41 Interviewer
+Well, that that's what this kind of thing does is it does have that.
+00:56:47 Interviewee 1
+Are overarching view of of the entire building.
+00:56:49 Interviewer
+I really, yeah.
+00:56:53 Interviewer
+This is scope, isn't it? Scope creep.
+00:56:53 Interviewee 1
+And then and then.
+00:56:55 Interviewee 1
+And then we'll go from there.
+00:56:57 Interviewee 1
+Just have to have racks.
+00:56:58 Interviewer
+Yeah, I mean, yeah.
+00:56:59 Interviewee 1
+Which is an explosion of that yeah, nature.
+00:57:02 Interviewer
+But yeah, OK.
+00:57:04 Interviewer
+What? What?
+00:57:05 Interviewee 1
+So I don't dislike that.
+00:57:06 Interviewer
+OK, OK, let's get that then.
+00:57:13 Interviewer
+What what I suppose?
+00:57:13 Interviewer
+What what would be quite good into it rather if if you cannot find or you don't wanna find a device by your code or barcode for example this kind of.
+00:57:23 Interviewer
+Break narrowing it down. Kind of.
+00:57:25 Interviewee 1
+Thing. Yeah, I mean, it's as long as it's update, it's accurate. And yeah, you know it it.
+00:57:30 Interviewee 1
+It's it's not.
+00:57:31 Interviewee 1
+That's fair especially.
+00:57:33 Interviewee 1
+You know, I'm six months in and I'll still go to the room and I a I don't know who's that room it is, but more importantly, you go into it and you.
+00:57:40 Interviewee 1
+Open it and it's.
+00:57:40 Interviewee 1
+Like ohh OK like when I went into.
+00:57:43 Interviewee 1
+Brianna's office is.
+00:57:44 Interviewer
+Like what the hell is all? Yeah.
+00:57:48 Interviewee 1
+OK.
+00:57:53 Interviewer
+OK.
+00:57:56 Interviewer
+Yeah, I suppose.
+00:58:00 Interviewer
+I'm doing an inventory of the the network points maybe?
+00:58:03 Interviewer
+Yeah, yeah.
+00:58:09 Interviewee 1
+It's useful. William Scott.
+00:58:16 Interviewee 1
+I'd love to.
+00:58:18 Interviewee 1
+Get the two things sort of combined and test and and find you.
+00:58:23 Interviewee 1
+Know where to use switch, yeah.
+00:58:26 Interviewee 1
+Yeah, and. And see, it's, you know that floor something doesn't work and then you go into and it's got like anything.
+00:58:30 Interviewee 1
+Thank you. OK.
+00:58:33 Interviewee 1
+That's not, that's.
+00:58:34 Interviewer
+Not right. So maybe yeah, because.
+00:58:36 Interviewer
+Because right now is that I've got a.
+00:58:38 Interviewer
+Very limited to just.
+00:58:40 Interviewer
+P51-A single location? Yeah. So maybe to bring it back a bit for future kind of documenting to add it back to adding.
+00:58:50 Interviewer
+The network cabinets that was called the comms comms.
+00:58:53 Interviewee 1
+Rooms. Yeah. Because we we you you can you walk to be 51 and just get absorbed in it but there are more computers and more network sockets in this building outside B 51 than there are in B51. It just happened to have a high a high density of of network and and computer.
+00:59:12 Interviewer
+Yeah, OK. I suppose in that context then this hierarchical view makes a lot more sense of saying you can go into Compsci 4123 and then no, and then it's room and stuff. Yeah. And then, but the idea in my head now about assets as well.
+00:59:31 Interviewer
+That night was worse than what?
+00:59:33 Interviewer
+Room, but that's then.
+00:59:35 Interviewer
+Solving problems? Maybe not, but what I'm trying to do here. Yeah, but yeah, that's that. Yeah. Well, because like.
+00:59:48 Interviewer
+Because life has a nice API.
+00:59:50 Interviewer
+As well, yeah.
+00:59:53 Interviewer
+Maybe I'll like. Yeah. OK.
+00:59:56 Interviewee 1
+It was there that, that, that that's accessible by the API from NETBOX and tonight's just.
+01:00:01 Interviewee 1
+Set the immediately, rapidly, easily or you know.
+01:00:07 Interviewee 1
+Don't go well.
+01:00:08 Interviewee 1
+But yeah.
+01:00:08 Interviewer
+So you're saying that PC's in that?
+01:00:11 Interviewee 1
+Floor socket. Yeah, that's connected. Yeah.
+01:00:14 Interviewer
+That would be.
+01:00:15 Interviewee 1
+And to know that somebody arrives into a one lane is.
+01:00:17 Interviewer
+Namely and then.
+01:00:19 Interviewee 1
+Doing their maps.
+01:00:19 Interviewee 1
+Of rooms and say we want to put a a student on that desk to know that there is a floor socket that we can trust and.
+01:00:28 Interviewee 1
+And that's kind of captured, but if it was.
+01:00:31 Interviewee 1
+Captured in a.
+01:00:32 Interviewee 1
+Walk around system that people have access to, yeah.
+01:00:34 Interviewer
+Yeah, it's clear.
+01:00:35 Interviewer
+Because, well, the the.
+01:00:36 Interviewer
+The entire the ideas in situ you.
+01:00:39 Interviewee 1
+Don't be carrying a laptop. No, no.
+01:00:40 Interviewer
+Especially SharePoint is horrific, yes, and phones.
+01:00:43 Interviewee 1
+You know and and you know, if somebody says work, we can get a student at that desk. If if it was like and and you you this app and she had access to it and she just say that that floor socket does have a a live socket and we can put some of that or alternative if we know students.
+01:00:57 Interviewee 1
+Arriving next week.
+01:01:00 Interviewee 1
+It'd be it'd be good to know that if floor something wasn't live and there was no floors like in in that room, we could trust that we could get a job, put in and have something made live. And before they turned up and we plug something in and say, oh, yeah, yeah, yeah.
+01:01:02 Interviewee 1
+You need to.
+01:01:14 Interviewer
+Yeah. Well, it's good now, isn't it?
+01:01:17 Interviewer
+OK. And also then being able to trace back say if I had offended emails again, I've gone on networking and then OK, he didn't reported it.
+01:01:26 Interviewer
+4534 and then goes in back into comms room on sea and then that goes into switched one and then down into then it'll be whatever. Yeah. Our entire trace would be.
+01:01:37 Interviewee 1
+Yeah, I mean, these things rarely happen, but they are going to increasingly happen as these building ages, yeah.
+01:01:44 Interviewer
+OK. Yeah. I mean pitch creep warning, but also maybe post Interviewer's dissertation or something that can be added easily as well. I think that's yeah. OK, fine. OK, lovely, great.
+01:02:00 Interviewer
+I suppose any other things, anything before the end or no, sorry.
+01:02:04 Interviewee 1
+No, I think.
+01:02:06 Interviewer
+Brilliant. Lovely. OK.
+01:02:08 Interviewer
+Thank you very much.
+01:02:14 Interviewer
+Thanks very much. Right. Hello. Right. Well, let me stop the recording, actually.
+
