@@ -11,7 +11,9 @@ import 'package:keeptrack/models/poweroutlet.dart';
 import 'package:keeptrack/models/powerport.dart';
 import 'package:keeptrack/models/racks.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
-import 'package:keeptrack/views/interfaceView.dart';
+import 'package:keeptrack/views/addconnection.dart';
+import 'package:keeptrack/views/deviceview.dart';
+import 'package:keeptrack/views/interfaceview.dart';
 
 class HierarchySearch extends StatefulWidget {
   const HierarchySearch(this.location, this.locationID, this.type, {super.key});
@@ -52,33 +54,6 @@ class _HierarchySearchState extends State<HierarchySearch> {
     return i;
   }
 
-  Future<List<Interface>?> _getInterfacesByDevice(String deviceID) async {
-    if (deviceID == "") {
-      return [];
-    }
-    final i =
-        await interfacesAPI.getInterfacesByDevice(await getToken(), deviceID);
-    return i;
-  }
-
-  Future<List<PowerPort>?> _getPowerPortsByDevice(String deviceID) async {
-    if (deviceID == "") {
-      return [];
-    }
-    final i =
-        await powerPortsAPI.getPowerPortsByDevice(await getToken(), deviceID);
-    return i;
-  }
-
-  Future<List<PowerOutlet>?> _getPowerOutletsByDevice(String deviceID) async {
-    if (deviceID == "") {
-      return [];
-    }
-    final i = await powerOutletsAPI.getPowerOutletsByDevice(
-        await getToken(), deviceID);
-    return i;
-  }
-
   Future<List<ComboModel>> _getMixedPortsByDeviceID(String deviceID) async {
     if (deviceID == "") {
       return [];
@@ -94,37 +69,38 @@ class _HierarchySearchState extends State<HierarchySearch> {
 
     // map all interfaces, powerports and poweroutlets to a single list
     await Future.wait([interfaces, powerPorts, powerOutlets]).then((value) {
-      value.forEach((element) {
-        if (element != null) {
-          element.forEach((e) {
-            if (e is Interface) {
-              comboList.add(ComboModel(
-                  id: e.id,
-                  name: e.name,
-                  url: e.url,
-                  objectType: "interface",
-                  occupied: e.occupied,
-                  interface: e));
-            } else if (e is PowerPort) {
-              comboList.add(ComboModel(
-                  id: e.id,
-                  name: e.name,
-                  url: e.url,
-                  objectType: "powerport",
-                  occupied: e.occupied,
-                  powerPort: e));
-            } else if (e is PowerOutlet) {
-              comboList.add(ComboModel(
-                  id: e.id,
-                  name: e.name,
-                  url: e.url,
-                  objectType: "poweroutlet",
-                  occupied: e.occupied,
-                  powerOutlet: e));
-            }
-          });
+      for (var element in value) {
+        for (var e in element) {
+          if (e is Interface) {
+            comboList.add(ComboModel(
+                deviceID: e.device.id,
+                id: e.id,
+                name: e.name,
+                url: e.url,
+                objectType: "interface",
+                occupied: e.occupied,
+                interface: e));
+          } else if (e is PowerPort) {
+            comboList.add(ComboModel(
+                deviceID: e.device?.id,
+                id: e.id,
+                name: e.name,
+                url: e.url,
+                objectType: "powerport",
+                occupied: e.occupied,
+                powerPort: e));
+          } else if (e is PowerOutlet) {
+            comboList.add(ComboModel(
+                deviceID: e.device?.id,
+                id: e.id,
+                name: e.name,
+                url: e.url,
+                objectType: "poweroutlet",
+                occupied: e.occupied,
+                powerOutlet: e));
+          }
         }
-      });
+      }
     });
     if (comboList.isEmpty) {
       return [];
@@ -140,22 +116,50 @@ class _HierarchySearchState extends State<HierarchySearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            // go to the next screen to display all devices in the rack
-            Navigator.popUntil(context, (route) => route.isFirst);
-          },
-          icon: const Icon(Icons.search),
-          label: const Text("New Search"),
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        ),
+        persistentFooterButtons: [
+          // Button to view device info if widget is a device
+          if (widget.type == "DEVICE")
+            FloatingActionButton.extended(
+              heroTag: "deviceInfo",
+              onPressed: () {
+                // go to the next screen to display all devices in the rack
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            DeviceView(widget.location, widget.locationID)));
+              },
+              icon: const Icon(Icons.info),
+              label: const Text("Device Info"),
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            ),
+
+          FloatingActionButton.extended(
+            heroTag: "displayInfo",
+            onPressed: () {
+              // go to the next screen to display all devices in the rack
+              Navigator.popUntil(context, (route) => route.isFirst);
+            },
+            icon: const Icon(Icons.search),
+            label: const Text("New Search"),
+            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          ),
+        ],
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           title: Text(
             widget.location,
             overflow: TextOverflow.ellipsis,
           ),
-          titleTextStyle: const TextStyle(fontSize: 16),
+          actions: [
+            IconButton(
+                key: GlobalKey(),
+                onPressed: () {
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                },
+                icon: const Icon(Icons.home))
+          ],
+          titleTextStyle: Theme.of(context).textTheme.bodyLarge,
         ),
         // display all racks in a vertical list
         body: Column(
@@ -200,13 +204,21 @@ class _HierarchySearchState extends State<HierarchySearch> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   return ListTile(
+                      //if the rack has no devices, display it in grey
+                      tileColor: snapshot.data![index].deviceCount == 0
+                          ? Theme.of(context).colorScheme.onInverseSurface
+                          : null,
                       title: Row(
                         children: [
                           Text(snapshot.data![index].name),
                           const Spacer(),
                           Chip(
                             backgroundColor:
-                                Theme.of(context).colorScheme.primaryContainer,
+                                snapshot.data![index].deviceCount != 0
+                                    ? Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer
+                                    : Theme.of(context).colorScheme.onError,
                             label: Text(
                                 "${snapshot.data![index].deviceCount} devices"),
                             side: BorderSide.none,
@@ -216,6 +228,9 @@ class _HierarchySearchState extends State<HierarchySearch> {
                       minVerticalPadding: 10,
                       contentPadding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                       onTap: () {
+                        if (snapshot.data![index].deviceCount == 0) {
+                          return;
+                        }
                         rack = snapshot.data![index];
                         // go to the next screen to display all devices in the rack
                         Navigator.push(
@@ -322,6 +337,7 @@ class _HierarchySearchState extends State<HierarchySearch> {
                           Text(
                             snapshot.data![index].name,
                             style: const TextStyle(fontWeight: FontWeight.w900),
+                            overflow: TextOverflow.clip,
                           ),
                           // if null only show the text in the (), e.g. (1GE)
                           Text(
@@ -329,6 +345,7 @@ class _HierarchySearchState extends State<HierarchySearch> {
                                 ? " | (${snapshot.data![index].interface?.typeLabel})"
                                 : "",
                             style: const TextStyle(fontWeight: FontWeight.w300),
+                            overflow: TextOverflow.clip,
                           ),
                         ],
                       ),
@@ -336,16 +353,30 @@ class _HierarchySearchState extends State<HierarchySearch> {
                           side: BorderSide.none,
                           backgroundColor: snapshot.data![index].occupied
                               ? Colors.green
-                              : Colors.deepOrange,
+                              : Colors.redAccent,
                           label: Icon(
                             snapshot.data![index].occupied
                                 ? Icons.settings_ethernet
-                                : Icons.close,
+                                : Icons.check_box_outline_blank_outlined,
                             color: Colors.white,
                           )),
                       minVerticalPadding: 10,
                       contentPadding: const EdgeInsets.fromLTRB(20, 8, 8, 0),
                       onTap: () {
+                        if (!snapshot.data![index].occupied) {
+                          // get device ID
+                          var deviceID = snapshot.data![index].deviceID ?? 0;
+                          if (deviceID == 0) {
+                            return;
+                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TreeAddConnection(
+                                    snapshot.data![index], deviceID)),
+                          );
+                          return;
+                        }
                         combo = snapshot.data![index];
                         // go to the next screen to display all devices in the rack
                         Navigator.push(
@@ -368,5 +399,35 @@ class _HierarchySearchState extends State<HierarchySearch> {
             ));
           }
         });
+  }
+}
+
+class TreeAddConnection extends StatefulWidget {
+  const TreeAddConnection(this.combo, this.deviceID, {super.key});
+  final ComboModel combo;
+  final int deviceID;
+
+  @override
+  State<TreeAddConnection> createState() => _TreeAddConnectionState();
+}
+
+class _TreeAddConnectionState extends State<TreeAddConnection> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Quick Add: ${widget.combo.name}"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              //push until root
+              Navigator.popUntil(context, (route) => route.isFirst);
+            },
+          ),
+        ],
+      ),
+      body: AddConnection(widget.combo, widget.deviceID),
+    );
   }
 }

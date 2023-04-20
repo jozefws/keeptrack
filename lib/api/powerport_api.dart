@@ -1,7 +1,7 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:keeptrack/models/cables.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:keeptrack/models/powerport.dart';
 
@@ -34,7 +34,6 @@ class PowerPortsAPI {
   Future<List<PowerPort>> getPowerPortsByDevice(
       String token, String deviceID) async {
     await dotenv.load();
-    // try {
     var response = await client.get(
         Uri.parse(
             '${dotenv.env['NETBOX_API_URL']}/api/dcim/power-ports/?device_id=$deviceID'),

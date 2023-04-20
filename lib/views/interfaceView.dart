@@ -16,6 +16,7 @@ import 'package:keeptrack/models/poweroutlet.dart';
 import 'package:keeptrack/models/powerport.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 import 'package:keeptrack/views/deviceview.dart';
+import 'package:keeptrack/views/modifyconnection.dart';
 
 class ComboView extends StatefulWidget {
   const ComboView(this.combo, {super.key});
@@ -115,8 +116,52 @@ class _ComboViewState extends State<ComboView> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           title: Text(widget.combo.name),
-          titleTextStyle: const TextStyle(fontSize: 16),
+          titleTextStyle: Theme.of(context).textTheme.bodyLarge,
           actions: [
+            //delete icon button but cofirmation dialog is shown first
+            IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  // show an alert dialog to confirm deletion
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Delete Connection"),
+                          content: const Text(
+                              "Are you sure you want to delete this connection?"),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Cancel")),
+                            TextButton(
+                                onPressed: () async {
+                                  String cableID = widget
+                                          .combo.interface?.cableID
+                                          .toString() ??
+                                      widget.combo.powerOutlet?.cable?.id
+                                          .toString() ??
+                                      widget.combo.powerPort?.cable?.id
+                                          .toString() ??
+                                      "";
+                                  Cable? cable = await _getCableByID(cableID);
+                                  if (cable != null) {
+                                    cablesAPI.deleteConnection(
+                                        await getToken(), cable);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    return;
+                                  }
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Delete")),
+                          ],
+                        );
+                      });
+                }),
             IconButton(
               icon: const Icon(Icons.home),
               onPressed: () {
@@ -147,11 +192,26 @@ class _ComboViewState extends State<ComboView> {
                 padding: const EdgeInsets.fromLTRB(32.0, 16.0, 32.0, 4.0),
                 child: ListView(children: [
                   //decode cable label in utf8
-                  Center(
-                    child: Text(
-                      utf8.decode(cable.label.runes.toList()),
-                      style: const TextStyle(fontSize: 20),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(utf8.decode(cable.label.runes.toList()),
+                            style: const TextStyle(fontSize: 20),
+                            overflow: TextOverflow.clip),
+                      ),
+                      FloatingActionButton(
+                          // go back to root and then go to modify connection with cable id
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TreeModifyConnection(
+                                      cable.id.toString())),
+                            );
+                          },
+                          child: const Icon(Icons.edit)),
+                    ],
                   ),
                   const SizedBox(height: 20),
                   const Text("Device A",
@@ -184,11 +244,14 @@ class _ComboViewState extends State<ComboView> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(utf8.decode(cable.label.runes.toList()),
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
+                            style: Theme.of(context).textTheme.titleMedium),
+                        Text(
+                          "Cable ID: ${cable.id.toString()}",
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
                         Text(cable.type ?? "",
                             style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w300)),
+                                fontSize: 14, fontWeight: FontWeight.w300)),
                       ],
                     ),
                     SizedBox(
@@ -196,7 +259,7 @@ class _ComboViewState extends State<ComboView> {
                       height: 200,
                       child: VerticalDivider(
                         color: cable.color == ""
-                            ? Colors.white
+                            ? Theme.of(context).colorScheme.inverseSurface
                             : Color(int.parse("0xFF${cable.color}")),
                         thickness: 8,
                       ),
@@ -252,14 +315,18 @@ class _ComboViewState extends State<ComboView> {
                   Row(
                     children: [
                       Expanded(
-                        child: Container(
-                          child: Text(device.name,
-                              style: Theme.of(context).textTheme.headlineSmall,
-                              overflow: TextOverflow.clip),
-                        ),
+                        child: Text(device.name,
+                            style: Theme.of(context).textTheme.headlineSmall,
+                            overflow: TextOverflow.clip),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.open_in_new),
+                      ActionChip(
+                        avatar: Icon(
+                          Icons.open_in_new,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.primaryContainer,
+                        side: BorderSide.none,
                         onPressed: () {
                           Navigator.push(
                               context,
@@ -267,6 +334,11 @@ class _ComboViewState extends State<ComboView> {
                                   builder: (context) =>
                                       DeviceView(device.name, device.id)));
                         },
+                        labelStyle: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer),
+                        label: const Text("View"),
                       )
                     ],
                   ),
@@ -293,11 +365,10 @@ class _ComboViewState extends State<ComboView> {
                           style: Theme.of(context).textTheme.bodyLarge),
                     ],
                   ),
-                  const Divider(
-                    height: 20,
-                    thickness: 2,
-                    color: Colors.white,
-                  ),
+                  Divider(
+                      height: 20,
+                      thickness: 2,
+                      color: Theme.of(context).colorScheme.onTertiary),
                   FutureBuilder(
                       future: _getInterfaceByID(interfaceID),
                       builder: (context, snapshot) {
@@ -347,13 +418,14 @@ class _ComboViewState extends State<ComboView> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     //device A name
                     Text(interface.name,
-                        style: Theme.of(context).textTheme.titleSmall),
-                    const Text(" | "),
-                    //show the text after the first (
-                    Text(interface.typeLabel,
+                        style: Theme.of(context).textTheme.titleMedium),
+                    //show the text after first space
+                    Text(interface.typeLabel.split(" ").last,
                         style: Theme.of(context).textTheme.bodyMedium),
                   ],
                 ),
@@ -541,7 +613,6 @@ class _ComboViewState extends State<ComboView> {
   }
 
   filterPortType(String type, String string, Color primaryContainer) {
-    print(type);
     if (type == "dcim.interface") {
       return displayInterfaceCard(string, primaryContainer);
     } else if (type == "dcim.powerport") {
@@ -553,5 +624,34 @@ class _ComboViewState extends State<ComboView> {
     } else {
       return const Text("Error");
     }
+  }
+}
+
+class TreeModifyConnection extends StatefulWidget {
+  const TreeModifyConnection(this.cableID, {super.key});
+  final String? cableID;
+
+  @override
+  State<TreeModifyConnection> createState() => _TreeModifyConnectionState();
+}
+
+class _TreeModifyConnectionState extends State<TreeModifyConnection> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Modify Connection ${widget.cableID}"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              //push until root
+              Navigator.popUntil(context, (route) => route.isFirst);
+            },
+          ),
+        ],
+      ),
+      body: ModifyConnection(widget.cableID),
+    );
   }
 }

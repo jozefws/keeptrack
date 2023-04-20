@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:keeptrack/models/customfields.dart';
 import 'package:keeptrack/models/device_role.dart';
 import 'package:keeptrack/models/device_types.dart';

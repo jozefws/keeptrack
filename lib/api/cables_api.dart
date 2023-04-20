@@ -1,7 +1,7 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:keeptrack/models/devices.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../models/cables.dart';
@@ -90,9 +90,13 @@ class CablesAPI {
   }
 
   // add cable
-  Future<String> addConnection(String token, Cable cable) async {
+  Future<String?> addConnection(String token, Cable cable) async {
     await dotenv.load();
     var uri = Uri.parse('${dotenv.env['NETBOX_API_URL']}/api/dcim/cables/');
+
+    String? terminationAType = checkTerminationType(cable.terminationAType);
+    String? terminationBType = checkTerminationType(cable.terminationBType);
+
     var response = await client.post(
       uri,
       headers: {
@@ -103,13 +107,13 @@ class CablesAPI {
       body: jsonEncode({
         'a_terminations': [
           {
-            'object_type': 'dcim.${cable.terminationAType}',
+            'object_type': '$terminationAType',
             'object_id': cable.terminationAId,
           }
         ],
         'b_terminations': [
           {
-            'object_type': 'dcim.${cable.terminationBType}',
+            'object_type': '$terminationBType',
             'object_id': cable.terminationBId,
           }
         ],
@@ -120,15 +124,16 @@ class CablesAPI {
         'color': cable.color ?? "111111",
       }),
     );
-    var responseBody = jsonDecode(response.body);
     if (response.statusCode == 403) {
-      throw Exception('Invalid token');
+      return null;
     }
     if (response.statusCode == 201) {
+      var responseBody = jsonDecode(response.body);
       return responseBody['id'].toString();
     } else {
-      print("Add Cable API: Error ${response.statusCode}, ${response.body}");
-      return "Error";
+      print(
+          "Add Cable API: Error ${response.statusCode}, ${response.body}, ${response.request}");
+      return null;
     }
   }
 
@@ -166,7 +171,7 @@ class CablesAPI {
       body: body,
     );
     try {
-      var responseBody = jsonDecode(response.body);
+      jsonDecode(response.body);
     } catch (e) {
       print("Update connection API: Error $e");
       return false;
@@ -185,8 +190,8 @@ class CablesAPI {
   // update cable via delete and create new one due to bug in netbox, issue #
   Future<String> updateConnectionBAD(String token, Cable cable) async {
     if (await deleteConnection(token, cable)) {
-      String newLabel = await addConnection(token, cable);
-      if (newLabel != "Error") {
+      String? newLabel = await addConnection(token, cable);
+      if (newLabel != null) {
         return newLabel;
       } else {
         return "false";
@@ -208,12 +213,6 @@ class CablesAPI {
         'Accept': 'application/json',
       },
     );
-    try {
-      var responseBody = jsonDecode(response.body);
-    } catch (e) {
-      print("Delete connection API: Error $e");
-      return false;
-    }
     if (response.statusCode == 403) {
       throw Exception('Invalid token');
     }
@@ -222,6 +221,19 @@ class CablesAPI {
     } else {
       print("Delete Cable API: Error ${response.statusCode}, ${response.body}");
       return false;
+    }
+  }
+
+  String? checkTerminationType(String? terminationType) {
+    // does it contain dcim. at the start
+    if (terminationType!.contains("dcim.")) {
+      // does it container only one dcim.
+      if (terminationType.contains("dcim.dcim.")) {
+        return terminationType.replaceAll("dcim.dcim.", "dcim.");
+      }
+      return terminationType;
+    } else {
+      return "dcim.$terminationType";
     }
   }
 }
