@@ -41,10 +41,20 @@ To login, enter your `Netbox` username and password and click the `Login` button
 
 <img src="./final/images/final_login_menu.png" alt="Login Screen" width=50%>
 
+> This process can be seen below.
+
+<img src="./final/images/login.gif" alt="Login Screen" width=25%>
+
+
 </br>
 
 ### Logging out
 To log out of Keeptrack, navigate to a root page (Search Page, Add Connection Page, Modify Connection Page, or Device Information and Searching Page) and click the `menu icon` in the top right corner. Then click the `logout` button at the bottom of the side menu. The app will then navigate to the login page and delete the user's credentials from the device.
+
+> This process can be seen below.
+
+<img src="./final/images/logout.gif" alt="Logout" width=25%>
+
 
 </br>
 
@@ -79,8 +89,9 @@ To complete this process following the steps below.
 - Further, the specific cable information is shown in the center of the page. This includes the cable ID, cable type, and cable color. (Right image above)
 
 
-This process can be seen in the gif below.
+> This process can be seen in the gif below.
 
+<img src="./final/images/search_h.gif" alt="Search Page" width=25%>
 
 </br>
 
@@ -92,8 +103,9 @@ Searching by cable ID allows the user to search for a connection by entering the
 3. On detection of the QR code, the app will then navigate to the connection information page. (Right image above).
 - Alternatively, the user can enter the cable ID into the text field and once submitted the app will navigate to the connection information page. (Right image above).
 
-This process can be seen in the gif below.
+> This process can be seen in the gif below.
 
+<img src="./final/images/search_l.gif" alt="Search Page" width=25%>
 </br>
 
 ---
@@ -112,7 +124,9 @@ Shown below is the add connection page. This page is used to add a new connectio
 5. Press the `Add Connection` button to add the connection to the Netbox database. (Right image above)
 6.  The app will then display a success dialog and clear parts of the form. Click the `OK` button to navigate back to add another connection. (Right image above)
 
-This process can be seen in the gif below.
+>This process can be seen in the gif below.
+
+<img src="./final/images/add.gif" alt="Add Connection Page" width=25%>
 
 </br>
 
@@ -135,7 +149,9 @@ Shown below is the modify connection page. This page is used to modify an existi
 5. The app will then display a confirmation dialog where the user is shown the summary of the changes. (Right image above). Select `Confirm` to confirm the changes or `Cancel` to cancel the changes.
 6. The app will then display a success snackbar and automatically update the app with the new cable ID and connection information.
 
-This process can be seen in the gif below.
+>This process can be seen in the gif below:
+
+<img src="./final/images/modify.gif" alt="Modify Connection Page" width=25%>
 
 </br>
 
@@ -160,7 +176,9 @@ Shown below is the device information and searching page. This page is used to v
 - The user can also view the device's interfaces by clicking the `Interfaces` button. (Right image above)
 - Finally the user can navigate back up the search tree or back to the home page by clicking the `Back` button. (Right image above). Additionally to navigate directly to the home page, the user can click the `Home` icon button in the top right. (Right image above)
 
-This process can be seen in the gif below.
+>This process can be seen in the gif below.
+
+<img src="./final/images/device.gif" alt="Device Information and Searching Page" width=25%>
 
 </br>
 
