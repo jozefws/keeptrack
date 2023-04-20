@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:keeptrack/models/devices.dart';
@@ -17,7 +19,6 @@ class DevicesAPI {
           'Accept': 'application/json',
         });
     var responseBody = jsonDecode(response.body);
-    var list = responseBody['results'] as List;
     if (response.statusCode == 200) {
       return (responseBody['results'] as List)
           .map((e) => Device.fromJson(e))

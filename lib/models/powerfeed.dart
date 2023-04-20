@@ -1,8 +1,6 @@
 import 'package:keeptrack/models/cables.dart';
 import 'package:keeptrack/models/powerpanel.dart';
 
-import 'devices.dart';
-
 class PowerFeed {
   final int id;
   final String url;

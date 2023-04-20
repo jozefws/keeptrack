@@ -1,11 +1,9 @@
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:keeptrack/api/devices_api.dart';
 import 'package:keeptrack/api/interfaces_api.dart';
 import 'package:keeptrack/models/devices.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 import 'package:keeptrack/views/deviceview.dart';
-import 'package:keeptrack/views/hierarchysearch.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 class DeviceSearch extends StatefulWidget {
@@ -26,23 +24,13 @@ class _DeviceInterfaceState extends State<DeviceSearch> {
   }
 
   genSnack(String message) {
+    hideSnack();
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
-  Future<List<DropdownMenuItem<String>>?> _getInterfacesByDevice(
-      String deviceID) async {
-    if (deviceID == "") {
-      return [];
-    }
-    final i =
-        await interfacesAPI.getInterfacesByDevice(await getToken(), deviceID);
-    return i
-        .map((e) => DropdownMenuItem(
-              value: e.id.toString(),
-              child: Text(e.name),
-            ))
-        .toList();
+  hideSnack() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
 
   Future<List<Device>> _getDevices() async {
@@ -67,10 +55,20 @@ class _DeviceInterfaceState extends State<DeviceSearch> {
                             .contains(q.toLowerCase()))
                         .toList();
                   },
+                  loadingWidget: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 16),
+                        Text("Loading devices..."),
+                      ],
+                    ),
+                  ),
                   inputDecoration: InputDecoration(
                       filled: true,
                       labelText: "Search for a device",
-                      border: InputBorder.none,
+                      border: const OutlineInputBorder(),
                       fillColor: Theme.of(context).colorScheme.surface),
                   builder: (device) => ListTile(
                     contentPadding: const EdgeInsets.fromLTRB(16, 0, 16, 0),

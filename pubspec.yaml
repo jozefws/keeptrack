@@ -20,6 +20,7 @@ dependencies:
   mobile_scanner: ^2.1.0
   dropdown_search: ^5.0.3
   searchable_listview: ^2.2.2
+  connectivity_plus: ^3.0.3
 
 dev_dependencies:
   flutter_test:
