@@ -163,3 +163,12 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
+final/final.fls
+final/final.aux
+final/final.bbl
+final/final.blg
+final/final.fdb_latexmk
+final/final.fls
+final/final.out
+final/final.synctex.gz
+final/final.toc
