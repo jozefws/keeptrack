@@ -10,50 +10,60 @@ class NetboxAuthProvider extends ChangeNotifier {
   FlutterSecureStorage? secureStorage;
   final client = http.Client();
 
+  // Initialize the secure storage
   initSecureStorage() async {
     secureStorage = const FlutterSecureStorage();
   }
 
+  // Set the username in secure storage
   Future setUsername(String username) async {
     await initSecureStorage();
     await secureStorage!.write(key: 'nb:username', value: username);
   }
 
+  // Set the token in secure storage
   Future setToken(String token) async {
     await initSecureStorage();
     await secureStorage!.write(key: 'nb:token', value: token);
   }
 
+  // Set the token ID in secure storage
   Future setTokenID(int id) async {
     await initSecureStorage();
     await secureStorage!.write(key: 'nb:tokenid', value: id.toString());
   }
 
+  // Set the token URL in secure storage
   Future setTokenURL(String tokenURL) async {
     await initSecureStorage();
     await secureStorage!.write(key: 'nb:tokenurl', value: tokenURL.toString());
   }
 
+  // Get the username from secure storage
   Future<String?> getUsername() async {
     await initSecureStorage();
     return await secureStorage!.read(key: 'nb:username');
   }
 
+  // Get the token URL from secure storage
   Future<String?> getTokenURL() async {
     await initSecureStorage();
     return await secureStorage!.read(key: 'nb:tokenurl');
   }
 
+  // Get the token from secure storage
   Future<String?> getToken() async {
     await initSecureStorage();
     return await secureStorage!.read(key: 'nb:token');
   }
 
+  // Get the token ID from secure storage
   Future<String?> getTokenID() async {
     await initSecureStorage();
     return await secureStorage!.read(key: 'nb:tokenid');
   }
 
+  // Check if the token is valid
   Future<bool> isAuthenticated() async {
     await initSecureStorage();
     String? token = await getToken();
@@ -66,6 +76,7 @@ class NetboxAuthProvider extends ChangeNotifier {
     }
   }
 
+  // Login the user and set the token in secure storage if successful
   Future<dynamic> login(String username, String password) async {
     await dotenv.load();
     final expiry =
@@ -106,6 +117,7 @@ class NetboxAuthProvider extends ChangeNotifier {
     }
   }
 
+  // Logout the user and delete the token from secure storage
   Future<bool> logout() async {
     await initSecureStorage();
     if (await deleteToken()) {
@@ -144,6 +156,7 @@ class NetboxAuthProvider extends ChangeNotifier {
     }
   }
 
+  // Check if the token is valid by requesting the token from netbox
   Future<bool> checkToken(String token, String tokenID) async {
     final client = http.Client();
     final url =
@@ -162,6 +175,7 @@ class NetboxAuthProvider extends ChangeNotifier {
     return false;
   }
 
+  // Check if the user is connected to the internet
   Future<bool> isConnected() async {
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {

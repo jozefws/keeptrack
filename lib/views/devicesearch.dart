@@ -13,26 +13,35 @@ class DeviceSearch extends StatefulWidget {
 }
 
 class _DeviceInterfaceState extends State<DeviceSearch> {
+  // Define the API classes to use in this view
   InterfacesAPI interfacesAPI = InterfacesAPI();
   DevicesAPI devicesAPI = DevicesAPI();
+
+  // Define the variables to use in this view
   String deviceName = "Search for a device";
   Device? device;
+
+  // Define the keys for the form
   final _searchDeviceKey = GlobalKey<FormState>();
 
+  // Get the token from the provider
   getToken() async {
     return await NetboxAuthProvider().getToken();
   }
 
+  // Show a snack bar with a message
   genSnack(String message) {
     hideSnack();
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
+  // Hide the snack bar
   hideSnack() {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
 
+  // Get the list of devices from the API
   Future<List<Device>> _getDevices() async {
     final d = await devicesAPI.getDevices(await getToken());
     return d;
@@ -47,6 +56,7 @@ class _DeviceInterfaceState extends State<DeviceSearch> {
             child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: SearchableList<Device>(
+                  // Filter function to search the list as you type
                   asyncListCallback: () => _getDevices(),
                   asyncListFilter: (q, list) {
                     return list

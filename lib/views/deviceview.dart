@@ -21,16 +21,19 @@ class DeviceView extends StatefulWidget {
 }
 
 class _DeviceViewState extends State<DeviceView> {
+  // Define the API classes to use in this view
   DevicesAPI devicesAPI = DevicesAPI();
   DeviceTypesAPI deviceTypesAPI = DeviceTypesAPI();
   PowerPortsAPI powerPortsAPI = PowerPortsAPI();
 
+  // Get the device details from the API by ID
   Future<Device?> getDeviceById() async {
     var i = await devicesAPI.getDeviceByID(
         await getToken(), widget.deviceID.toString());
     return i;
   }
 
+  // Get the power ports for the device
   Future<List<PowerPort>?> getPowerPortsByDevice(String id) async {
     if (id == "") {
       return null;
@@ -42,6 +45,7 @@ class _DeviceViewState extends State<DeviceView> {
     return null;
   }
 
+  // Fetch the device type details from the API
   Future<DeviceType?> getDeviceTypeById(int id) async {
     var i =
         await deviceTypesAPI.getDeviceTypeById(await getToken(), id.toString());
@@ -51,6 +55,7 @@ class _DeviceViewState extends State<DeviceView> {
     return null;
   }
 
+  // Get the token from the provider
   getToken() async {
     return await NetboxAuthProvider().getToken();
   }
@@ -114,6 +119,7 @@ class _DeviceViewState extends State<DeviceView> {
     );
   }
 
+  // Display the device details
   displayDevice(Device device) {
     List<ServerNetworkInterfaces?> serverNetworkInterfaces =
         device.customFields!.serverNetworkInterfaces;
@@ -497,6 +503,7 @@ class _DeviceViewState extends State<DeviceView> {
     );
   }
 
+  // Displays an error message if the device fails to load
   errorDisplayingDevice() {
     return Center(
       child: Column(

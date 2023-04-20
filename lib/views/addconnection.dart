@@ -30,6 +30,7 @@ class _AddConnectionState extends State<AddConnection>
   final _addConnectionKey = GlobalKey<FormState>();
   TabController? _tabController;
 
+  // Define local variables
   List<Device> devices = [];
 
   String deviceAName = "Device A", deviceBName = "Device B";
@@ -40,20 +41,24 @@ class _AddConnectionState extends State<AddConnection>
   ConnectionColour? connectionColours;
   String? cableType;
 
+  // Define API classes for use
   CablesAPI cablesAPI = CablesAPI();
   DevicesAPI devicesAPI = DevicesAPI();
   InterfacesAPI interfacesAPI = InterfacesAPI();
   PowerPortsAPI powerPortsAPI = PowerPortsAPI();
   PowerOutletsAPI powerOutletsAPI = PowerOutletsAPI();
 
+  // Define controllers for text fields
   final TextEditingController _cableBarcodeScanController =
       TextEditingController();
 
+  // Fetch all devices from Netbox
   Future<List<Device>> _getDevices() async {
     var i = await devicesAPI.getDevices(await getToken());
     return i;
   }
 
+  // Fetch a single device from Netbox by ID
   Future<Device?> _getDevicesByID(int? deviceID) async {
     if (deviceID == null) {
       return null;
@@ -66,6 +71,7 @@ class _AddConnectionState extends State<AddConnection>
     return i;
   }
 
+  // Fetch all interfaces from Netbox by device ID
   Future<List<ComboModel>?> _getMixedPortsByDeviceID(String deviceID) async {
     if (deviceID == "") {
       return [];
@@ -125,6 +131,7 @@ class _AddConnectionState extends State<AddConnection>
     checkRootInit();
   }
 
+  // Check if the root widget has passed a device ID
   void checkRootInit() async {
     if (widget.comboModel != null) {
       comboA = widget.comboModel;
@@ -134,20 +141,24 @@ class _AddConnectionState extends State<AddConnection>
     }
   }
 
+  // Show a snack bar with a message
   genSnack(String message) {
     hideSnack();
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
+  // Hide the current snack bar
   hideSnack() {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
 
+  // Get the token from the NetboxAuthProvider
   getToken() async {
     return await NetboxAuthProvider().getToken();
   }
 
+  // Add a new connection to Netbox using the API
   _addNewConnection() async {
     // String? barcode, type;
     String? type;
@@ -179,7 +190,6 @@ class _AddConnectionState extends State<AddConnection>
       poB = comboB?.powerOutlet;
     }
 
-    // if (barcode != null &&
     if (type != null &&
         comboA != null &&
         comboB != null &&
@@ -187,9 +197,10 @@ class _AddConnectionState extends State<AddConnection>
       String description =
           "$deviceAName:${comboA?.name} > $deviceBName:${comboB?.name}";
       String label = "${comboA?.name} > ${comboB?.name}";
+
+      // Create a new cable object with a fake ID
       Cable newCable = Cable(
           id: -1,
-          // label: barcode,
           label: label,
           type: type,
           color: connectionColours?.hexColor.toLowerCase(),
@@ -208,7 +219,6 @@ class _AddConnectionState extends State<AddConnection>
         setState(() {
           comboA = null;
           comboB = null;
-          // cableBarcodeScan = null;
           _cableBarcodeScanController.clear();
         });
         showSuccessDialog(result, label);
@@ -226,6 +236,7 @@ class _AddConnectionState extends State<AddConnection>
     return FutureBuilder<List<Device>>(
         future: _getDevices(),
         builder: (context, snapshot) {
+          // Show a loading screen if the data is not ready
           if (snapshot.hasData == false) {
             return Container(
               color: Theme.of(context).colorScheme.surface,
@@ -764,9 +775,11 @@ class _AddConnectionState extends State<AddConnection>
         });
   }
 
+  // Keep the state of the page when navigating from tab to tab
   @override
   bool get wantKeepAlive => true;
 
+  // Show a dialog with the new cable id and the cable description
   showSuccessDialog(String result, String cableDescription) {
     showDialog(
         context: context,
@@ -813,6 +826,7 @@ class _AddConnectionState extends State<AddConnection>
         });
   }
 
+  //  Clear all the fields in the form
   void clearFields() {
     setState(() {
       comboA = null;

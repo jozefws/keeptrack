@@ -1,20 +1,13 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:io';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:keeptrack/provider/netboxauth_provider.dart';
 import 'package:keeptrack/api/badcert_override.dart';
-import 'package:keeptrack/views/addconnection.dart';
-import 'package:keeptrack/views/devicesearch.dart';
-import 'package:keeptrack/views/modifyconnection.dart';
-import 'package:keeptrack/views/searchconnection.dart';
+import 'package:keeptrack/views/root.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'provider/config_provider.dart';
-import 'views/loginpage.dart';
 
 void main() async {
   // Load environment variables from .env file in root directory.
@@ -24,16 +17,18 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
   ));
+
+  // Enables http requests to be made to self-signed certificates
   HttpOverrides.global = DevHttpOverrides();
   runApp(const KeepTrack());
 }
 
-//stateless widget
 class KeepTrack extends StatelessWidget {
   const KeepTrack({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Define the light and dark themes
     final themeLight = ThemeData(
       colorSchemeSeed: const Color(0xFF003739),
       brightness: Brightness.light,
@@ -45,12 +40,15 @@ class KeepTrack extends StatelessWidget {
       useMaterial3: true,
     );
 
+    //Wrap the app in a MultiProvider to provide the theme and auth providers
     return FutureBuilder<SharedPreferences>(
         future: SharedPreferences.getInstance(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return MultiProvider(
                 providers: [
+                  // If the user has previously selected a theme, use that. Otherwise, use the system default.
+                  // Further listen to changes to the theme and update the theme accordingly.
                   ChangeNotifierProvider(
                       create: (_) => ThemeConfigProvider.initial(
                           (snapshot.data!.getBool('settings/dark-mode') ??
@@ -64,6 +62,7 @@ class KeepTrack extends StatelessWidget {
                         builder: ((context, themeProvider, child) {
                   return KeepTrackHome(authProvider: themeProvider);
                 })), builder: (c, themeProvider, child) {
+                  // Return the main app as a child to the MultiProvider
                   return MaterialApp(
                       debugShowCheckedModeBanner: false,
                       title: 'Keeptrack',
@@ -73,6 +72,8 @@ class KeepTrack extends StatelessWidget {
                       home: child);
                 }));
           }
+
+          // If the app is still loading, show a loading screen.
           return MaterialApp(
             title: 'Keeptrack',
             home: Builder(builder: (context) {
@@ -93,287 +94,5 @@ class KeepTrack extends StatelessWidget {
             }),
           );
         });
-  }
-}
-
-class KeepTrackHome extends StatefulWidget {
-  const KeepTrackHome({Key? key, required this.authProvider}) : super(key: key);
-  final NetboxAuthProvider authProvider;
-
-  @override
-  State<KeepTrackHome> createState() => _KeepTrackHomeState();
-}
-
-class _KeepTrackHomeState extends State<KeepTrackHome> {
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  late final SharedPreferences prefs;
-  static int selectedIndex = 2;
-  static String selectedTitle = "Welcome to KeepTrack";
-
-  static List<Widget> navPages = <Widget>[
-    const ModifyConnection(""),
-    const AddConnection(null, null),
-    const SearchConnection(),
-    const DeviceSearch(),
-  ];
-
-  void onItemTapped(int index) {
-    setState(() {
-      selectedIndex = index;
-      if (index == 0) {
-        selectedTitle = "Modify Connection";
-      } else if (index == 1) {
-        selectedTitle = "Add Connection";
-      } else if (index == 2) {
-        selectedTitle = "Search Connection";
-      } else if (index == 3) {
-        selectedTitle = "Device Information";
-      }
-    });
-  }
-
-  @override
-  //get username from auth provider
-  void initState() {
-    super.initState();
-    getPrefs();
-  }
-
-  Future<String> getUsername() async {
-    final provider = Provider.of<NetboxAuthProvider>(context, listen: false);
-    return (await provider.getUsername() ?? "loading username...");
-  }
-
-  Future<String> getDomain() async {
-    await dotenv.load();
-    return dotenv.env['NETBOX_API_URL'] ?? '';
-  }
-
-  void getPrefs() async {
-    prefs = await SharedPreferences.getInstance();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<NetboxAuthProvider>(builder: (context, provider, child) {
-      return FutureBuilder<bool>(
-          future: provider.isConnected(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              var connectivityResult = Connectivity().checkConnectivity();
-
-              return Scaffold(
-                body: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const CircularProgressIndicator(),
-                      const SizedBox(height: 10),
-                      Text("Checking Connection State...",
-                          style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(height: 10),
-                      Text("Connectivity Result: $connectivityResult",
-                          style: Theme.of(context).textTheme.titleMedium),
-                    ],
-                  ),
-                ),
-              );
-            } else {
-              if (snapshot.data == false) {
-                return const Scaffold(
-                  body: Center(
-                    child: Text("No internet connection"),
-                  ),
-                );
-              }
-              return FutureBuilder<bool>(
-                  future: provider.isAuthenticated(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data!) {
-                        return Scaffold(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.background,
-                          key: scaffoldKey,
-                          endDrawer: Drawer(
-                            child: settingsDrawer(scaffoldKey),
-                          ),
-                          appBar: AppBar(
-                              title: Text(selectedTitle),
-                              //show burger icon that opens drawer
-                              actions: <Widget>[
-                                IconButton(
-                                  icon: const Icon(Icons.settings),
-                                  onPressed: () =>
-                                      scaffoldKey.currentState?.openEndDrawer(),
-                                )
-                              ]),
-                          body: SafeArea(
-                            child: navPages.elementAt(selectedIndex),
-                          ),
-                          bottomNavigationBar: BottomNavigationBar(
-                            type: BottomNavigationBarType.shifting,
-                            selectedItemColor:
-                                Theme.of(context).colorScheme.primary,
-                            unselectedItemColor:
-                                Theme.of(context).colorScheme.onBackground,
-                            items: [
-                              BottomNavigationBarItem(
-                                  icon: const Icon(Icons.auto_fix_high),
-                                  label: 'Modify',
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .secondaryContainer),
-                              BottomNavigationBarItem(
-                                  icon: const Icon(Icons.add_link),
-                                  label: 'Add',
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .secondaryContainer),
-                              BottomNavigationBarItem(
-                                  icon: const Icon(Icons.cable_outlined),
-                                  label: 'Search Connection',
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .secondaryContainer),
-                              BottomNavigationBarItem(
-                                  icon: const Icon(
-                                      Icons.screen_search_desktop_outlined),
-                                  label: 'Devices',
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .secondaryContainer),
-                            ],
-                            currentIndex: selectedIndex,
-                            onTap: onItemTapped,
-                            //show label
-                            showUnselectedLabels: true,
-                          ),
-                        );
-                      } else {
-                        return const LoginPage();
-                      }
-                    } else {
-                      //if after 1 minute we still don't have a response, show error
-                      while (
-                          snapshot.connectionState == ConnectionState.waiting) {
-                        return Scaffold(
-                          body: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const CircularProgressIndicator(),
-                                const SizedBox(height: 10),
-                                Text("Checking Netbox Authentication...",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-                      return const LoginPage();
-                    }
-                  });
-            }
-          });
-    });
-  }
-
-  settingsDrawer(Key scaffoldKey) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Padding(
-          padding: EdgeInsets.only(top: 60.0, left: 20.0, right: 20.0),
-        ),
-        const Text("Settings", style: TextStyle(fontSize: 20)),
-        FutureBuilder<String>(
-            future: getUsername(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text("Welcome to keeptrack, ${snapshot.data!}!");
-              }
-              return const Text("Welcome to keeptrack!");
-            }),
-        const Padding(
-          padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-        ),
-        ListTile(
-            title: const Text('Dark Mode'),
-            trailing: Consumer<ThemeConfigProvider>(
-                builder: (c, themeProvider, child) {
-              return Switch(
-                  value: themeProvider.themeMode == ThemeMode.dark,
-                  onChanged: (value) => themeProvider.setSharedPreferencesTheme(
-                      value ? ThemeMode.dark : ThemeMode.light));
-            })),
-        const Padding(
-          padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-        ),
-        Column(
-          children: [
-            Text(
-              "Currently logged into:",
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-          ],
-        ),
-        FutureBuilder<String>(
-            future: getDomain(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text(snapshot.data!);
-              }
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const CircularProgressIndicator(),
-                  const SizedBox(height: 10),
-                  Text("Loading domain...",
-                      style: Theme.of(context).textTheme.titleMedium),
-                ],
-              );
-            }),
-        Expanded(
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: double.infinity,
-              margin: const EdgeInsets.all(20),
-              child: FloatingActionButton.extended(
-                  onPressed: () async {
-                    if (await Provider.of<NetboxAuthProvider>(context,
-                            listen: false)
-                        .logout()) {
-                      ScaffoldMessenger(
-                          key: scaffoldKey,
-                          child: const SnackBar(
-                              content: Text('Logout successful')));
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginPage()));
-                    } else {
-                      ScaffoldMessenger(
-                          key: scaffoldKey,
-                          child: const SnackBar(
-                              content: Text('Unable to delete token')));
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginPage()));
-                    }
-                  },
-                  label: const Text('Logout')),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }

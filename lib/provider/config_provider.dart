@@ -9,14 +9,17 @@ class ThemeConfigProvider extends ChangeNotifier {
     getSharedPreferencesTheme();
   }
 
+  // Initialize the theme mode
   ThemeConfigProvider.initial(ThemeMode mode) {
     themeMode = mode;
   }
 
+  // Initialize shared preferences
   initSharedPreferences() async {
     sharedPreferences ??= await SharedPreferences.getInstance();
   }
 
+  // Get the theme from shared preferences
   getSharedPreferencesTheme() async {
     await initSharedPreferences();
     themeMode = sharedPreferences!.getBool('theme/dark-mode') ?? false
@@ -24,6 +27,7 @@ class ThemeConfigProvider extends ChangeNotifier {
         : ThemeMode.light;
   }
 
+  // Set the theme in shared preferences
   setSharedPreferencesTheme(ThemeMode mode) async {
     themeMode = mode;
     await initSharedPreferences();

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+// Override the bad certificate callback to allow self-signed certificates
 class DevHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {

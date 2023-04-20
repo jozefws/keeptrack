@@ -27,6 +27,7 @@ class ComboView extends StatefulWidget {
 }
 
 class _ComboViewState extends State<ComboView> {
+  // Define the API classes to use in this view
   CablesAPI cablesAPI = CablesAPI();
   DevicesAPI devicesAPI = DevicesAPI();
   InterfacesAPI interfacesAPI = InterfacesAPI();
@@ -34,10 +35,12 @@ class _ComboViewState extends State<ComboView> {
   PowerPortsAPI powerportAPI = PowerPortsAPI();
   PowerFeedsAPI powerfeedsAPI = PowerFeedsAPI();
 
+  // Fetch the token from the provider
   getToken() async {
     return await NetboxAuthProvider().getToken();
   }
 
+  // Get a cable by its ID
   Future<Cable?> _getCableByID(String cableID) async {
     if (cableID == '') {
       return null;
@@ -51,6 +54,7 @@ class _ComboViewState extends State<ComboView> {
     }
   }
 
+  // Get a device by its ID
   Future<Device?> _getDeviceByID(String deviceID) async {
     if (deviceID == '') {
       return null;
@@ -59,6 +63,7 @@ class _ComboViewState extends State<ComboView> {
     return i;
   }
 
+  // Get an interface by its ID
   Future<Interface?> _getInterfaceByID(String interfaceID) async {
     if (interfaceID == '') {
       return null;
@@ -71,6 +76,7 @@ class _ComboViewState extends State<ComboView> {
     }
   }
 
+  // Get a power outlet by its ID
   Future<PowerOutlet?> _getPowerOutletByID(String powerOutletID) async {
     if (powerOutletID == '') {
       return null;
@@ -84,6 +90,7 @@ class _ComboViewState extends State<ComboView> {
     }
   }
 
+  // Get a power port by its ID
   Future<PowerPort?> _getPowerPortByID(String powerPortID) async {
     if (powerPortID == '') {
       return null;
@@ -97,6 +104,7 @@ class _ComboViewState extends State<ComboView> {
     }
   }
 
+  // Get a power feed by its ID
   Future<PowerFeed?> _getPowerFeedByID(String powerFeedID) async {
     if (powerFeedID == '') {
       return null;
@@ -118,11 +126,10 @@ class _ComboViewState extends State<ComboView> {
           title: Text(widget.combo.name),
           titleTextStyle: Theme.of(context).textTheme.bodyLarge,
           actions: [
-            //delete icon button but cofirmation dialog is shown first
+            // Delete connection button
             IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  // show an alert dialog to confirm deletion
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -162,6 +169,7 @@ class _ComboViewState extends State<ComboView> {
                         );
                       });
                 }),
+            // Button to navigate to the home view.
             IconButton(
               icon: const Icon(Icons.home),
               onPressed: () {
@@ -173,6 +181,7 @@ class _ComboViewState extends State<ComboView> {
         body: displayCombo(widget.combo));
   }
 
+  // Display the combo view of a connection, e.g. interface, power outlet, etc.
   displayCombo(ComboModel combo) {
     String cableID = combo.interface?.cableID.toString() ??
         combo.powerOutlet?.cable?.id.toString() ??
@@ -299,6 +308,7 @@ class _ComboViewState extends State<ComboView> {
         });
   }
 
+  // Display a card for a device. This is used for both device A and B.
   displayDeviceCard(cable, deviceID, interfaceID, color) {
     Cable _cable = cable;
     return FutureBuilder(
@@ -407,6 +417,7 @@ class _ComboViewState extends State<ComboView> {
     );
   }
 
+  // Display a card for interfaces. This is used for both interface A and B.
   displayInterfaceCard(String interfaceID, Color primaryContainer) {
     return FutureBuilder(
         future: _getInterfaceByID(interfaceID),
@@ -444,6 +455,7 @@ class _ComboViewState extends State<ComboView> {
         });
   }
 
+  // Display a card for power ports. This is used for both power port A and B if they are defined as power ports.
   displayPowerCard(String powerportID, Color primaryContainer) {
     return FutureBuilder(
         future: _getPowerPortByID(powerportID),
@@ -481,6 +493,7 @@ class _ComboViewState extends State<ComboView> {
         });
   }
 
+  // Display a card for power outlets. This is used for both power outlet A and B if they are defined as power outlets.
   displayOutletCard(String outletID, Color primaryContainer) {
     return FutureBuilder(
         future: _getPowerOutletByID(outletID),
@@ -517,6 +530,7 @@ class _ComboViewState extends State<ComboView> {
         });
   }
 
+  // Display a card for power feeds. This is used for both power feed A and B if they are defined as power feeds.
   displayRootFeedCard(feedID, color) {
     return FutureBuilder(
       future: _getPowerFeedByID(feedID),
@@ -576,6 +590,7 @@ class _ComboViewState extends State<ComboView> {
     );
   }
 
+  // Display a card for power feeds. This is used for both power feed A and B if they are defined as power feeds.
   displayFeedCard(String feedID, Color primaryContainer) {
     return FutureBuilder(
         future: _getPowerFeedByID(feedID),
@@ -612,6 +627,7 @@ class _ComboViewState extends State<ComboView> {
         });
   }
 
+  // Filter the type of port and return the correct card.
   filterPortType(String type, String string, Color primaryContainer) {
     if (type == "dcim.interface") {
       return displayInterfaceCard(string, primaryContainer);
@@ -627,6 +643,7 @@ class _ComboViewState extends State<ComboView> {
   }
 }
 
+// Class which aids in the navigation to the modify connection page from the interface page.
 class TreeModifyConnection extends StatefulWidget {
   const TreeModifyConnection(this.cableID, {super.key});
   final String? cableID;

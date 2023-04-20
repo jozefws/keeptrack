@@ -12,27 +12,32 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // Define the keys for the form
   final _loginForm = GlobalKey<FormState>();
   final textUsername = TextEditingController();
   final textPassword = TextEditingController();
 
   @override
+  // Clean up the controller when the widget is disposed.
   void dispose() {
     textPassword.dispose();
     textUsername.dispose();
     super.dispose();
   }
 
+  //Get the URL from the .env file
   Future<String> getNetboxUrl() async {
     await dotenv.load();
     return dotenv.env['NETBOX_API_URL'] ?? '';
   }
 
+  // Move to the home page
   void moveToHome() {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => const KeepTrack()));
   }
 
+  // Show a snack bar with a message if login fails
   void showLoginError(message) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text('Unable to login, $message')));

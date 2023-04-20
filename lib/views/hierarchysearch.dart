@@ -17,6 +17,7 @@ import 'package:keeptrack/views/interfaceview.dart';
 
 class HierarchySearch extends StatefulWidget {
   const HierarchySearch(this.location, this.locationID, this.type, {super.key});
+  // Define the parameters to pass to this view
   final String location;
   final String type;
   final int locationID;
@@ -25,26 +26,31 @@ class HierarchySearch extends StatefulWidget {
 }
 
 class _HierarchySearchState extends State<HierarchySearch> {
+  // Define the API classes to use in this view
   RacksAPI racksAPI = RacksAPI();
   DevicesAPI devicesAPI = DevicesAPI();
   InterfacesAPI interfacesAPI = InterfacesAPI();
   PowerPortsAPI powerPortsAPI = PowerPortsAPI();
   PowerOutletsAPI powerOutletsAPI = PowerOutletsAPI();
 
+  // Define the variables to use in this view
   late Rack rack;
   late Device device;
   late ComboModel combo;
 
+  // Function to get the token from the provider
   getToken() async {
     return await NetboxAuthProvider().getToken();
   }
 
+  // Get the list of racks from the API by location
   Future<List<Rack>> _getRacksByLocation() async {
     var i =
         await racksAPI.getRacksByLocation(await getToken(), widget.location);
     return i;
   }
 
+  // Get the list of devices from the API by rack
   Future<List<Device>> _getDevicesByRack() async {
     var i = await devicesAPI.getDevicesByRack(
         await getToken(), widget.locationID.toString());
@@ -54,6 +60,7 @@ class _HierarchySearchState extends State<HierarchySearch> {
     return i;
   }
 
+  // Get the list of interfaces from the API by device
   Future<List<ComboModel>> _getMixedPortsByDeviceID(String deviceID) async {
     if (deviceID == "") {
       return [];
@@ -67,7 +74,6 @@ class _HierarchySearchState extends State<HierarchySearch> {
 
     List<ComboModel> comboList = [];
 
-    // map all interfaces, powerports and poweroutlets to a single list
     await Future.wait([interfaces, powerPorts, powerOutlets]).then((value) {
       for (var element in value) {
         for (var e in element) {
@@ -172,6 +178,7 @@ class _HierarchySearchState extends State<HierarchySearch> {
         ));
   }
 
+  // Function to display the correct list based on the widget type
   filterDisplay() {
     if (widget.type == "LOCATION") {
       return rackList();
@@ -184,6 +191,7 @@ class _HierarchySearchState extends State<HierarchySearch> {
     }
   }
 
+  // Function to display the list of racks
   rackList() {
     return FutureBuilder(
         future: _getRacksByLocation(),
@@ -248,6 +256,7 @@ class _HierarchySearchState extends State<HierarchySearch> {
         });
   }
 
+  // Function to display the list of devices
   deviceList() {
     return FutureBuilder(
         future: _getDevicesByRack(),
@@ -312,6 +321,7 @@ class _HierarchySearchState extends State<HierarchySearch> {
         });
   }
 
+  // Function to display the list of interfaces
   interfaceList() {
     return FutureBuilder(
         future: _getMixedPortsByDeviceID(widget.locationID.toString()),
@@ -402,6 +412,7 @@ class _HierarchySearchState extends State<HierarchySearch> {
   }
 }
 
+// Class which aids in the navigation to the add connection page from the hierarchy page.
 class TreeAddConnection extends StatefulWidget {
   const TreeAddConnection(this.combo, this.deviceID, {super.key});
   final ComboModel combo;

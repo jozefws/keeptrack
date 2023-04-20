@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:keeptrack/api/poweroutlets_api.dart';
@@ -160,6 +159,7 @@ class _ModifyConnectionState extends State<ModifyConnection>
     return comboList;
   }
 
+  // Get all interfaces, power ports and poweroutlets from the API based on the given device ID and type
   Future<ComboModel?> getComboModel(
       String? terminationId, String? terminationType) async {
     if (terminationId == null || terminationType == null) {
@@ -202,6 +202,7 @@ class _ModifyConnectionState extends State<ModifyConnection>
     }
   }
 
+  // Clear the current information from the screen
   void _clearCurrentInformation() {
     setState(() {
       _cableBarcodeScanController.text = "";

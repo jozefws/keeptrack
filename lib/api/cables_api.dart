@@ -187,7 +187,7 @@ class CablesAPI {
     }
   }
 
-  // update cable via delete and create new one due to bug in netbox, issue #
+  // update cable via delete and create new one due to bug in netbox, issue #11901
   Future<String> updateConnectionBAD(String token, Cable cable) async {
     if (await deleteConnection(token, cable)) {
       String? newLabel = await addConnection(token, cable);
